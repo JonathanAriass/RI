@@ -1,0 +1,10 @@
+INDEX VERSION 1.131+C:\Users\byjon\Desktop\UNI\3o\RI\Teoria\15-09-2022\WS\.metadata\.plugins\org.eclipse.jdt.core
+236340108.index
+2864984521.index
+1881339816.index
+1136229722.index
+3882553119.index
+3351195697.index
+784497826.index
+3906242849.index
+24501500.index

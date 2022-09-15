@@ -1,0 +1,39 @@
+package uo.ri.tema1;
+
+// Instalacion de drives de JDBC
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class Ejemplo1 {
+
+	private static Connection connection = null;
+	private static Statement statement = null;
+	
+	public static void Main(String[] args) {
+		// el metodo getConnection esta sobrecargado y se necesita pasarle la url de la base de datos
+		// asi como la IP del servidor
+		// La url de jdbc se formara con el siguiente codigo: jdbc::oracle:thin:@hostname:portnumber:sid
+		// Para hsqldb sera:
+		try {
+			// Se carga el driver y realiza la conexion
+			connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost");
+			
+			// Ahora se crea la sentencia
+			statement = connection.createStatement();
+			
+			// Ahora se ejecuta la sentencia
+			statement.execute("SELECT * FROM TVEHICLES where model = 'GOLF'");
+			
+			// Ahora mismo ya se creo la conexion y se ejecuto la sentencia pero ahora
+			// es necesario recoger los resultados con ResultSet
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

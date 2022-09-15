@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 2 elements to &apos;lib&apos;&#x0D;&#x0A;- Original project: &apos;ResultSet-Scrollability-HSQLDB&apos;&#x0D;&#x0A;- Destination element: &apos;lib&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     ojdbc8.jar&#x0D;&#x0A;     hsqldb.jar" description="Copy files" element1="lib/ojdbc8.jar" element2="lib/hsqldb.jar" files="2" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1663230839699" target="/ResultSet-Sensitivity-Oracle/lib" units="0" version="1.0"/>
+</session>
