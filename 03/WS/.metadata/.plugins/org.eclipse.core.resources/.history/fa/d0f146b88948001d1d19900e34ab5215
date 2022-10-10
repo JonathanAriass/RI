@@ -1,0 +1,80 @@
+package uo.ri.cws.application.business.mechanic.crud.commands;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import assertion.Argument;
+import jdbc.Jdbc;
+import uo.ri.cws.application.business.BusinessException;
+import uo.ri.cws.application.persistence.PersistenceException;
+import uo.ri.cws.application.persistence.PersistenceFactory;
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
+import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
+
+public class DeleteMechanic implements Command<Void> {
+	
+	private Connection c = null;
+	private PreparedStatement pst = null;
+	private ResultSet rs = null;
+	
+	private MechanicGateway mg = PersistenceFactory.forMechanic();
+	private WorkOrderGateway wg = PersistenceFactory.forWorkOrder();
+	private String id = "";
+	
+	public DeleteMechanic(String id) {
+		validate(id);
+		this.id = id;
+	}
+
+	public Void execute() throws BusinessException {
+		try {
+			try {
+				c = Jdbc.createThreadConnection();
+				c.setAutoCommit(false);
+				
+				// Check if mechanic exist with this id
+				if (existMechanic(id)) {
+					throw new BusinessException("Repeated mechanic");
+				}
+				if (!notWorkorders(id)) {
+					throw new BusinessException("Repeated mechanic");
+				}
+				mg.remove(id);
+				
+				c.commit();
+			} catch (BusinessException be) {
+				c.rollback();
+				throw be;
+			}			
+		} catch (SQLException | PersistenceException e) {
+			throw new RuntimeException(e);
+		} finally {
+			Jdbc.close(c);
+		}
+	}
+
+	private boolean existMechanic(String id) throws SQLException, BusinessException {
+		if (mg.findById(id).isPresent()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean notWorkorders(String id) throws SQLException, BusinessException {
+		if (wg.findByMechanic(id).isEmpty()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private void validate(String arg) {
+		// usar clase del proyecto util Argumen
+		Argument.isNotEmpty(arg, "Null or empty id");
+	}
+	
+}

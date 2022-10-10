@@ -1,0 +1,96 @@
+package uo.ri.cws.application.business.mechanic.crud.commands;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.UUID;
+
+import assertion.Argument;
+import jdbc.Jdbc;
+import uo.ri.cws.application.business.BusinessException;
+import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
+import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
+import uo.ri.cws.application.persistence.PersistenceException;
+import uo.ri.cws.application.persistence.PersistenceFactory;
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway.MechanicDALDto;
+
+
+public class AddMechanic {
+
+	// Codigo DAL
+	private Connection c = null;
+	private ResultSet rs = null;
+	
+	
+	// Codigo Business
+	private MechanicBLDto mechanic = null;
+	private MechanicGateway mg = PersistenceFactory.forMechanic();
+	
+	public AddMechanic(MechanicBLDto arg) {
+		validate(arg);
+		mechanic = arg;
+	}
+	
+	public MechanicBLDto execute() throws BusinessException {
+		// Process
+		try {
+			try {
+				
+
+				c = Jdbc.createThreadConnection();
+	
+				/**
+				 * Como se realiza mas de una consulta tenemos que garantizar que ambas se ejecuten como una transaccion
+				 * por lo que debemos deshabilitar el auto-commit y tendremos que commitear al final para garantizar el commit.
+				 */
+				c.setAutoCommit(false);
+				
+				// Check UNIQUE DNI
+				if (existMechanic(mechanic.dni)) {
+					throw new BusinessException("Repeated mechanic");
+				}
+				insertMechanic(mechanic);
+				
+				c.commit();
+
+				return mechanic;
+			} catch (BusinessException be) {
+				c.rollback();
+				throw be;
+			}
+		} catch (SQLException | PersistenceException e) {
+			throw new RuntimeException(e);
+		} finally {
+			Jdbc.close(c);
+		}
+	}
+
+	private void insertMechanic(MechanicBLDto mechanic) throws SQLException {
+		// DTO completed
+		mechanic.id = UUID.randomUUID().toString();
+		mechanic.version = 1L;
+		
+		MechanicDALDto  m = MechanicAssembler.toDALDto(mechanic);
+		mg.add(m);
+	}
+
+	// Throw business exception if there is a mechanic with this DNI in DDBB
+	private boolean existMechanic(String dni) throws BusinessException, SQLException {
+		if (mg.findByDni(dni).isPresent()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private void validate(MechanicBLDto arg) {
+		// usar clase del proyecto util Argumen
+		Argument.isNotNull(arg, "Null mechanic");
+		Argument.isNotEmpty(arg.dni, "Null or empty dni");
+		Argument.isNotEmpty(arg.name, "Null or empty name");
+		Argument.isNotEmpty(arg.surname, "Null or empty surname");
+		
+	}
+	
+}

@@ -1,0 +1,17 @@
+package uo.ri.cws.application.business.mechanic.crud.commands;
+
+import assertion.Argument;
+
+public class FindMechanicById {
+
+	public FindMechanicById(String arg) {
+		validate(arg);
+		
+	}
+	
+	private void validate(String arg) {
+		// usar clase del proyecto util Argumen
+		Argument.isNotEmpty(arg, "Null or empty id");
+	}
+	
+}

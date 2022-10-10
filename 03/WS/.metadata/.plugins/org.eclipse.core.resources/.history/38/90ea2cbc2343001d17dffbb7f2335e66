@@ -1,0 +1,16 @@
+package uo.ri.cws.application.business.mechanic.crud.commands;
+
+import java.sql.Connection;
+
+public class UpdateMechanic {
+
+	private static String SQL_UPDATE = 
+			"update TMechanics " +
+				"set name = ?, surname = ?, version = version+1 " +
+				"where id = ?";
+		private static final String URL = "jdbc:hsqldb:hsql://localhost:1522/";
+		private static final String USER = "sa";
+		private static final String PASSWORD = "";
+		private Connection c = null;
+	
+}

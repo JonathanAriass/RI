@@ -1,0 +1,50 @@
+package uo.ri.cws.application.business.mechanic.crud.commands;
+
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import assertion.Argument;
+
+public class FindMechanicById {
+
+	private static final String SQL = "select * from TMechanics where id = ?";
+	private static final String URL = "jdbc:hsqldb:hsql://localhost:1522/";
+	private static final String USER = "sa";
+	private static final String PASSWORD = "";
+	
+	private String id = "";
+	
+	public FindMechanicById(String arg) {
+		validate(arg);
+		this.id = arg;
+	}
+	
+	public void execute() {
+		try {
+			c = DriverManager.getConnection(URL, USER, PASSWORD);
+			c.setAutoCommit(false);
+		
+			// Check if mechanic exist with this id
+			mechanicExists(id);
+			notWorkorders(id);
+			deleteMechanic(id);
+
+			pst.executeUpdate();
+			
+			c.commit();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		finally {
+			if (rs != null) try { rs.close(); } catch(SQLException e) { /* ignore */ }
+			if (pst != null) try { pst.close(); } catch(SQLException e) { /* ignore */ }
+			if (c != null) try { c.close(); } catch(SQLException e) { /* ignore */ }
+		}
+	}
+	
+	private void validate(String arg) {
+		// usar clase del proyecto util Argumen
+		Argument.isNotEmpty(arg, "Null or empty id");
+	}
+	
+}
