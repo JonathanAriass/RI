@@ -15,6 +15,12 @@ import uo.ri.cws.application.persistence.workorder.assembler.WorkOrderAssembler;
 public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 	private String TWORKORDERS_FINDBYMECHANIC = "select * from TWORKORDERS where mechanic_id = ?";
+	private String TWORKORDERS_FINDNOTINVOICED = "select a.id, a.description, a.date, a.state, a.amount " +
+			"from TWorkOrders as a, TVehicles as v, TClients as c " +
+			"where a.vehicle_id = v.id" +
+			"	and v.client_id = c.id" +
+			"	and state <> 'INVOICED'" +
+			"	and dni like ?";
 	
 	@Override
 	public void add(WorkOrderDALDto t) {
@@ -69,8 +75,23 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 	@Override
 	public List<WorkOrderDALDto> findNotInvoicedForVehicles(List<String> vehicleIds) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TWORKORDERS_FINDNOTINVOICED);
+			pst.setString(1, id);
+			
+			rs = pst.executeQuery();
+			return WorkOrderAssembler.toWorkOrderDALDtoList(rs);
+		} catch (SQLException e) {
+			throw new PersistenceException (e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 	}
 
 	@Override

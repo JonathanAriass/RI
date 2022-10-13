@@ -22,7 +22,7 @@ public class DeleteMechanic implements Command<Void> {
 
 	public Void execute() throws BusinessException {
 				// Check if mechanic exist with this id
-				if (existMechanic(id)) {
+				if (!existMechanic(id)) {
 					throw new BusinessException("Repeated mechanic");
 				}
 				if (!notWorkorders(id)) {

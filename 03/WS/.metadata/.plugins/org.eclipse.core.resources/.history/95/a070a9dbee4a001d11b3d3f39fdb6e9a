@@ -1,0 +1,59 @@
+package uo.ri.cws.application.business.mechanic.crud.commands;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
+
+import assertion.Argument;
+import uo.ri.cws.application.business.BusinessException;
+import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
+import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
+import uo.ri.cws.application.persistence.PersistenceFactory;
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway.MechanicDALDto;
+
+public class FindMechanicById {
+	
+	private String id = "";
+	private MechanicGateway mg = PersistenceFactory.forMechanic();
+	
+	public FindMechanicById(String arg) {
+		validate(arg);
+		this.id = arg;
+	}
+	
+	public Optional<MechanicBLDto> execute() throws BusinessException {
+		Optional<MechanicBLDto> result = null;
+
+		mechanicExists(id);	
+		result = findMechanicById(id);
+		return result ;
+
+	}
+	
+	
+	private Optional<MechanicBLDto> findMechanicById(String id) throws SQLException {
+		MechanicDALDto m = mg.findById(id);
+		return ;
+	}
+
+	private void mechanicExists(String id) throws SQLException, BusinessException {
+		String q = "select * from TMECHANICS where id = ?";
+
+		pst = c.prepareStatement(q);
+		pst.setString(1, id);
+		rs = pst.executeQuery();
+
+		if (!rs.next()) {
+			throw new BusinessException("Mechanic doesn't exist");
+		}
+	}
+	private void validate(String arg) {
+		// usar clase del proyecto util Argumen
+		Argument.isNotEmpty(arg, "Null or empty id");
+	}
+	
+}

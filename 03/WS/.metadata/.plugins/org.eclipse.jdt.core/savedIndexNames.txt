@@ -17,9 +17,10 @@ INDEX VERSION 1.131+C:\Users\byjon\Desktop\UNI\3o\RI\Laboratorio\03\WS\.metadata
 1065132338.index
 3077954647.index
 3176941734.index
+3011209426.index
 698459414.index
-1826366474.index
 2537754073.index
+1826366474.index
 3476333181.index
 1671108926.index
 2687987449.index
