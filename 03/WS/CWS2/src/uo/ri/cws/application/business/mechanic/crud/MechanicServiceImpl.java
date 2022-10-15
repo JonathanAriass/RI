@@ -29,27 +29,22 @@ public class MechanicServiceImpl implements MechanicService {
 
 	@Override
 	public void updateMechanic(MechanicBLDto mechanic) throws BusinessException {
-		UpdateMechanic update = new UpdateMechanic(mechanic);
-		update.execute();
+		executor.execute(new UpdateMechanic(mechanic));
 	}
 
 	@Override
 	public Optional<MechanicBLDto> findMechanicById(String idMechanic) throws BusinessException {
-		FindMechanicById mechanic = new FindMechanicById(idMechanic);
-		return mechanic.execute();
+		return executor.execute(new FindMechanicById(idMechanic));
 	}
 
 	@Override
 	public Optional<MechanicBLDto> findMechanicByDni(String dniMechanic) throws BusinessException {
-		FindMechanicByDni mechanic = new FindMechanicByDni(dniMechanic);
-		return mechanic.execute();
+		return executor.execute(new FindMechanicByDni(dniMechanic));
 	}
 
 	@Override
 	public List<MechanicBLDto> findAllMechanics() throws BusinessException {
-		FindAllMechanics find = new FindAllMechanics();
-		return find.execute();
-		 	
+		return executor.execute(new FindAllMechanics());
 	}
 
 }

@@ -1,74 +1,62 @@
 package uo.ri.cws.application.business.invoice.create.commands;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import console.Console;
+import assertion.Argument;
 import uo.ri.cws.application.business.invoice.InvoicingService.WorkOrderForInvoicingBLDto;
 import uo.ri.cws.application.business.invoice.assembler.InvoicingAssembler;
+import uo.ri.cws.application.business.util.command.Command;
+import uo.ri.cws.application.persistence.PersistenceFactory;
+import uo.ri.cws.application.persistence.client.ClientGateway;
+import uo.ri.cws.application.persistence.vehicle.VehicleGateway;
+import uo.ri.cws.application.persistence.vehicle.VehicleGateway.VehicleDALDto;
+import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
+import uo.ri.cws.application.persistence.workorder.WorkOrderGateway.WorkOrderDALDto;
 
-public class FindNotInvoicedWorkOrders {
-
-	private static final String URL = "jdbc:hsqldb:hsql://localhost:1522/";
-	private static final String USER = "sa";
-	private static final String PASS = "";
-	
-	/**
-	 * Process:
-	 * 
-	 *   - Ask customer dni
-	 *    
-	 *   - Display all uncharged workorder  
-	 *   		(state <> 'INVOICED'). For each workorder, display 
-	 *   		id, vehicle id, date, state, amount and description
-	 */
-
-	private static final String SQL =
-		"select a.id, a.description, a.date, a.state, a.amount " +
-		"from TWorkOrders as a, TVehicles as v, TClients as c " +
-		"where a.vehicle_id = v.id" +
-		"	and v.client_id = c.id" +
-		"	and state <> 'INVOICED'" +
-		"	and dni like ?";
+public class FindNotInvoicedWorkOrders implements Command<List<WorkOrderForInvoicingBLDto>>{
 	
 	private String dni;
 	
 	public FindNotInvoicedWorkOrders(String dni) {
-		//validate(dni);
+		validate(dni);
 		this.dni = dni;
 	}
 	
+	private ClientGateway cw = PersistenceFactory.forClient();
+	private VehicleGateway vw = PersistenceFactory.forVehicle();
+	private WorkOrderGateway ww = PersistenceFactory.forWorkOrder();
+	
 	public List<WorkOrderForInvoicingBLDto> execute() {
-		List<WorkOrderForInvoicingBLDto> result = new ArrayList<WorkOrderForInvoicingBLDto>();
 		
-		Connection c = null;
-		PreparedStatement pst = null;
-		ResultSet rs = null;
+		// Sacar el cliente por el dni
+		String idCliente = cw.findByDni(dni).get().id;
+		
+		// Buscar coches en funcion del dni
+		List<VehicleDALDto> clientVehicles = vw.findByClient(idCliente);
+		
+		// Sacar los ids de los coches
+		List<String> vehicleIds =  getVehicleIds(clientVehicles);
+		
+		// Ver cuales tienen workorders <> 'INVOICED'
+		List<WorkOrderDALDto> notInvoiced = ww.findNotInvoicedForVehicles(vehicleIds);
+		
+		// Sacar lista con el invoice assembler
+		return InvoicingAssembler.toInvoicingWorkOrderList(notInvoiced);
+	}
 
-		try {
-			c = DriverManager.getConnection(URL, USER, PASS);
-			
-			pst = c.prepareStatement(SQL);
-			pst.setString(1, dni);
-			
-			rs = pst.executeQuery();
-			
-			result = InvoicingAssembler.toWorkOrderForInvoicingDtoList(rs);
-			
-			return result;
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
+	private List<String> getVehicleIds(List<VehicleDALDto> clientVehicles) {
+		List<String> result = new ArrayList<String>();
+		for (VehicleDALDto v : clientVehicles) {
+			result.add(v.id);
 		}
-		finally {
-			if (rs != null) try { rs.close(); } catch(SQLException e) { /* ignore */ }
-			if (pst != null) try { pst.close(); } catch(SQLException e) { /* ignore */ }
-			if (c != null) try { c.close(); } catch(SQLException e) { /* ignore */ }
-		}
+		return result;
+	}
+	
+	private void validate(String arg) {
+		// usar clase del proyecto util Argumen
+		Argument.isNotNull(arg, "Null dni");
+		Argument.isNotEmpty(arg, "Null or empty dni");
 	}
 	
 }

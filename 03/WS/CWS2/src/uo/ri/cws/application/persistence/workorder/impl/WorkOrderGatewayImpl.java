@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,12 +16,7 @@ import uo.ri.cws.application.persistence.workorder.assembler.WorkOrderAssembler;
 public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 	private String TWORKORDERS_FINDBYMECHANIC = "select * from TWORKORDERS where mechanic_id = ?";
-	private String TWORKORDERS_FINDNOTINVOICED = "select a.id, a.description, a.date, a.state, a.amount " +
-			"from TWorkOrders as a, TVehicles as v, TClients as c " +
-			"where a.vehicle_id = v.id" +
-			"	and v.client_id = c.id" +
-			"	and state <> 'INVOICED'" +
-			"	and dni like ?";
+	private String TWORKORDERS_FINDNOTINVOICED = "select a.id, a.description, a.date, a.state, a.amount from TWorkOrders where vehicle_id = ? and state <> 'INVOICED'";
 	
 	@Override
 	public void add(WorkOrderDALDto t) {
@@ -79,14 +75,21 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		
+		List<WorkOrderDALDto>  result = new ArrayList<WorkOrderDALDto>();
+		
 		try {
 			c = Jdbc.getCurrentConnection();
 			
 			pst = c.prepareStatement(TWORKORDERS_FINDNOTINVOICED);
-			pst.setString(1, id);
 			
-			rs = pst.executeQuery();
-			return WorkOrderAssembler.toWorkOrderDALDtoList(rs);
+			for (String vehicleId : vehicleIds) {
+				pst.setString(1, vehicleId);
+				
+				rs = pst.executeQuery();
+				result.addAll(WorkOrderAssembler.toWorkOrderDALDtoList(rs));				
+			}
+			
+			return result;
 		} catch (SQLException e) {
 			throw new PersistenceException (e);
 		} finally {

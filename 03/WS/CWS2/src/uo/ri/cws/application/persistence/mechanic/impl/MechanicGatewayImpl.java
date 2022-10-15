@@ -17,6 +17,7 @@ public class MechanicGatewayImpl implements MechanicGateway {
 
 	private static String TMECHANICS_ADD = "insert into TMechanics(id, dni, name, surname, version) values (?, ?, ?, ?, ?)";
 	private static String TMECHANICS_DELETE = "delete from TMechanics where id = ?";
+	private static String TMECHANICS_UPDATE =  "update TMechanics set name = ?, surname = ?, version = version+1 where id = ?";
 	private static String TMECHANICS_FINDBYDNI = "select * from TMECHANICS where dni = ?";
 	private static String TMECHANICS_FINDBYID = "select id, dni, name, surname, version from TMechanics where id = ?";
 	private static String TMECHANICS_FINDALL = "select id, dni, name, surname, version from TMechanics";
@@ -64,8 +65,23 @@ public class MechanicGatewayImpl implements MechanicGateway {
 
 	@Override
 	public void update(MechanicDALDto t) {
-		// TODO Auto-generated method stub
+		Connection c = null;
+		PreparedStatement pst = null;
 		
+		try {
+			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
+
+			pst = c.prepareStatement(TMECHANICS_UPDATE);
+			pst.setString(1, t.name);
+			pst.setString(2, t.surname);
+			pst.setString(3, t.id);
+			
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(pst);
+		}
 	}
 
 	@Override

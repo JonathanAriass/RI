@@ -7,11 +7,12 @@ import assertion.Argument;
 import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
 import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
+import uo.ri.cws.application.business.util.command.Command;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 
-public class FindMechanicById {
+public class FindMechanicById implements Command<Optional<MechanicBLDto>> {
 	
 	private String id = "";
 	private MechanicGateway mg = PersistenceFactory.forMechanic();

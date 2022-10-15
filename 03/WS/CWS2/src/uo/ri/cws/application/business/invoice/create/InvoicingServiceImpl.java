@@ -7,8 +7,11 @@ import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.invoice.InvoicingService;
 import uo.ri.cws.application.business.invoice.create.commands.CreateInvoice;
 import uo.ri.cws.application.business.invoice.create.commands.FindNotInvoicedWorkOrders;
+import uo.ri.cws.application.business.util.command.CommandExecutor;
 
 public class InvoicingServiceImpl implements InvoicingService {
+	
+	private CommandExecutor executor = new CommandExecutor();
 
 	@Override
 	public InvoiceBLDto createInvoiceFor(List<String> workOrderIds) throws BusinessException {
@@ -23,8 +26,7 @@ public class InvoicingServiceImpl implements InvoicingService {
 
 	@Override
 	public List<WorkOrderForInvoicingBLDto> findNotInvoicedWorkOrdersByClientDni(String dni) throws BusinessException {
-		FindNotInvoicedWorkOrders list = new FindNotInvoicedWorkOrders(dni);
-		return list.execute();
+		return executor.execute(new FindNotInvoicedWorkOrders(dni));
 	}
 
 	@Override

@@ -1,28 +1,17 @@
 package uo.ri.cws.application.business.mechanic.crud.commands;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import assertion.Argument;
 import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
+import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
+import uo.ri.cws.application.business.util.command.Command;
+import uo.ri.cws.application.persistence.PersistenceException;
+import uo.ri.cws.application.persistence.PersistenceFactory;
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 
-public class UpdateMechanic {
+public class UpdateMechanic implements Command<Void> {
 
-	private static String SQL_UPDATE = 
-			"update TMechanics " +
-				"set name = ?, surname = ?, version = version+1 " +
-				"where id = ?";
-		private static final String URL = "jdbc:hsqldb:hsql://localhost:1522/";
-		private static final String USER = "sa";
-		private static final String PASSWORD = "";
-		
-		private Connection c = null;
-		private PreparedStatement pst = null;
-		private ResultSet rs = null;
+		private MechanicGateway mg = PersistenceFactory.forMechanic();
 		
 		private MechanicBLDto mechanic = null;
 		
@@ -31,45 +20,21 @@ public class UpdateMechanic {
 			this.mechanic = arg;
 		}
 		
-		public void execute() throws BusinessException {
-			try {
-				c = DriverManager.getConnection(URL, USER, PASSWORD);
-				c.setAutoCommit(false);
-				
-				mechanicExists(mechanic.id);
-				
-				updateMechanic(mechanic);
-				
-				c.commit();
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
+		public Void execute() throws BusinessException {
+			if (!existMechanic(mechanic.id)) {
+				throw new BusinessException("Repeated mechanic");
 			}
-			finally {
-				if (rs != null) try { rs.close(); } catch(SQLException e) { /* ignore */ }
-				if (pst != null) try { pst.close(); } catch(SQLException e) { /* ignore */ }
-				if (c != null) try { c.close(); } catch(SQLException e) { /* ignore */ }
-			}
+			mg.update(MechanicAssembler.toDALDto(mechanic));
+
+			return null;
 		}
 		
-		private void mechanicExists(String id) throws BusinessException, SQLException {
-			String q = "select * from TMECHANICS where id = ?";
-
-			pst = c.prepareStatement(q);
-			pst.setString(1, id);
-			rs = pst.executeQuery();
-
-			if (!rs.next()) {
-				throw new BusinessException("Mechanic doesn't exist");
+		private boolean existMechanic(String id) throws PersistenceException {
+			if (mg.findById(id).isPresent()) {
+				return true;
+			} else {
+				return false;
 			}
-		}
-
-		private void updateMechanic(MechanicBLDto mechanic) throws SQLException {
-			pst = c.prepareStatement(SQL_UPDATE);
-			pst.setString(1, mechanic.name);
-			pst.setString(2, mechanic.surname);
-			pst.setString(3, mechanic.id);
-			
-			pst.executeUpdate();
 		}
 
 		private void validate(MechanicBLDto arg) {
