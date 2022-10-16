@@ -1,5 +1,0 @@
-package uo.ri.cws.application.ui.manager.action;
-
-public class FindMechanicByIdAction implements Action {
-
-}

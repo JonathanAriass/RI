@@ -2,6 +2,12 @@
 <typeInfoHistroy>
     <typeInfo handle="=CWS1/src&lt;uo.ri.cws.application.business.mechanic{MechanicService.java[MechanicService" modifiers="513" timestamp="1664788281005"/>
     <typeInfo handle="=CWS2/C:\/Program Files\/Java\/jdk-18.0.2.1\/lib\/jrt-fs.jar`jdk.hotspot.agent=/module=/true=/&lt;sun.jvm.hotspot.debugger.bsd(BsdDebuggerLocal$WorkerThreadTask.class[WorkerThreadTask" modifiers="1544" timestamp="1663434936465"/>
-    <typeInfo handle="=CWS2/src&lt;uo.ri.cws.application.persistence.workorder{WorkOrderGateway.java[WorkOrderGateway" modifiers="513" timestamp="1664788281504"/>
+    <typeInfo handle="=CWS2/src&lt;uo.ri.cws.application.persistence.workorder{WorkOrderGateway.java[WorkOrderGateway" modifiers="513" timestamp="1665956012613"/>
     <typeInfo handle="=CWS2/src&lt;uo.ri.cws.application.persistence.invoice{InvoiceGateway.java[InvoiceGateway" modifiers="513" timestamp="1664788281431"/>
+    <typeInfo handle="=CWS2/src&lt;uo.ri.cws.application.business.workorder{WorkorderService.java[WorkorderService" modifiers="513" timestamp="1664788281084"/>
+    <typeInfo handle="=CWS2/C:\/Program Files\/Java\/jdk-18.0.2.1\/lib\/jrt-fs.jar`jdk.jshell=/module=/true=/&lt;jdk.jshell(TaskFactory$Worker.class[Worker" modifiers="1544" timestamp="1663434936465"/>
+    <typeInfo handle="=CWS2/C:\/Program Files\/Java\/jdk-18.0.2.1\/lib\/jrt-fs.jar`jdk.compiler=/module=/true=/&lt;com.sun.tools.javac.api(JavacTaskPool$Worker.class[Worker" modifiers="1545" timestamp="1663434936465"/>
+    <typeInfo handle="=CWS2/src&lt;uo.ri.cws.application.business.client{ClientService.java[ClientService" modifiers="513" timestamp="1664788280951"/>
+    <typeInfo handle="=CWS2/src&lt;uo.ri.cws.application.persistence.client{ClientGateway.java[ClientGateway" modifiers="513" timestamp="1665951032550"/>
+    <typeInfo handle="=CWS2/src&lt;uo.ri.cws.application.business.paymentmean{PaymentMeanService.java[PaymentMeanService" modifiers="513" timestamp="1664788281030"/>
 </typeInfoHistroy>

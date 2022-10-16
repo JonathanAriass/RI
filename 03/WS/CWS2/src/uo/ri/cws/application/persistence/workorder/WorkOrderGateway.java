@@ -13,6 +13,10 @@ public interface WorkOrderGateway extends Gateway<WorkOrderDALDto> {
 	List<WorkOrderDALDto> findByIds(List<String> arg);
 	List<WorkOrderDALDto> findByInvoice(String id) ;
 	List<WorkOrderDALDto> findInvoiced() ;
+	
+	// Propio finds
+	String findState(String id);
+	Double findAmount(String id);
 
 	public class WorkOrderDALDto {
 		public String id;

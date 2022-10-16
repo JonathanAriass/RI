@@ -14,6 +14,9 @@ public interface InvoiceGateway extends Gateway<InvoiceDALDto>{
 	 */
 	Optional<InvoiceDALDto> findByNumber(Long number);
 	
+	// Propio
+	Long findLastInvoiced();
+	
 	/**
 	 * @return next invoice number to assign; that is, one greater than the 
 	 * 			greatest number already assigned to an invoice + 1 

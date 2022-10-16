@@ -4,7 +4,6 @@ package uo.ri.cws.application.business.mechanic.crud.commands;
 import java.util.Optional;
 
 import assertion.Argument;
-import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
 import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
 import uo.ri.cws.application.business.util.command.Command;
@@ -22,11 +21,11 @@ public class FindMechanicById implements Command<Optional<MechanicBLDto>> {
 		this.id = arg;
 	}
 	
-	public Optional<MechanicBLDto> execute() throws BusinessException {
+	public Optional<MechanicBLDto> execute() {
 		Optional<MechanicBLDto> result = null;
 
 		if (!existMechanic(id)) {
-			throw new BusinessException("Mechanic does not exist");
+			return Optional.empty();
 		}
 		result = findMechanicById(id);
 		return result ;

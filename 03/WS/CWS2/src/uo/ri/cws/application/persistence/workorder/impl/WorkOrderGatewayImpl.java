@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import jdbc.Jdbc;
+import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
 import uo.ri.cws.application.persistence.workorder.assembler.WorkOrderAssembler;
@@ -17,6 +18,9 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 	private String TWORKORDERS_FINDBYMECHANIC = "select * from TWORKORDERS where mechanic_id = ?";
 	private String TWORKORDERS_FINDNOTINVOICED = "select a.id, a.description, a.date, a.state, a.amount from TWorkOrders where vehicle_id = ? and state <> 'INVOICED'";
+	private String TWORKORDERS_FINDSTATE = "select state from TWorkOrders where id = ?";
+	private String TWORKORDERS_FINDBYIDS = "select * from TWorkOrders where id = ?";
+	private String TWORKORDERS_FINDAMOUNT = "select amount from TWorkOrders where id = ?";
 	
 	@Override
 	public void add(WorkOrderDALDto t) {
@@ -105,8 +109,30 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 	@Override
 	public List<WorkOrderDALDto> findByIds(List<String> arg) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		List<WorkOrderDALDto> result = new ArrayList<>();
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TWORKORDERS_FINDBYIDS);
+
+			for (String workOrderID : arg) {
+				pst.setString(1, workOrderID);
+
+				rs = pst.executeQuery();
+				result.add(WorkOrderAssembler.toWorkOrderDALDto(rs).get());
+			}
+			
+			return result;
+		} catch (SQLException e) {
+			throw new PersistenceException (e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 	}
 
 	@Override
@@ -119,6 +145,55 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 	public List<WorkOrderDALDto> findInvoiced() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String findState(String id) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TWORKORDERS_FINDSTATE);
+
+			pst.setString(1, id);
+				
+			rs = pst.executeQuery();
+
+			return rs.getString("state");
+		} catch (SQLException e) {
+			throw new PersistenceException (e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public Double findAmount(String id) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		Double money = 0.0;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TWORKORDERS_FINDAMOUNT);
+
+			pst.setString(1, id);
+
+			rs = pst.executeQuery();
+
+			money = rs.getDouble(1);
+			
+			return money;
+		} catch (SQLException e) {
+			throw new PersistenceException (e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 	}
 
 }

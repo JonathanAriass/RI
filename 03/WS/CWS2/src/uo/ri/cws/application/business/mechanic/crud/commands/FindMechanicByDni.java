@@ -25,7 +25,7 @@ public class FindMechanicByDni implements Command<Optional<MechanicBLDto>> {
 		Optional<MechanicBLDto> result = null;
 
 		if (!existMechanic(dni)) {
-			throw new BusinessException("Mechanic does not exist");
+			return Optional.empty();
 		}
 		result = findMechanicByDni(dni);
 		return result ;
