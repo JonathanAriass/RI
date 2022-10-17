@@ -18,7 +18,7 @@ public interface WorkOrderGateway extends Gateway<WorkOrderDALDto> {
 	String findState(String id);
 	Double findAmount(String id);
 
-	public class WorkOrderDALDto {
+	public class  WorkOrderDALDto {
 		public String id;
 		public Long version;
 		

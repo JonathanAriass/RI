@@ -11,7 +11,6 @@
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.mechanic.crud.commands.FindMechanicById"/>
     <fullyQualifiedTypeName name="menu.Action"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto"/>
-    <fullyQualifiedTypeName name="java.util.Optional"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.BusinessFactory"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.invoice.InvoicingService.InvoiceBLDto"/>
     <fullyQualifiedTypeName name="java.sql.Date"/>
@@ -24,7 +23,6 @@
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.invoice.InvoicingService.WorkOrderForInvoicingBLDto"/>
     <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="uo.ri.cws.application.business.BusinessException"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.persistence.mechanic.MechanicGateway"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.persistence.mechanic.assembler.MechanicAssembler"/>
     <fullyQualifiedTypeName name="jdbc.Jdbc"/>
@@ -47,4 +45,11 @@
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.invoice.assembler.InvoicingAssembler"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.persistence.invoice.assembler.InvoiceAssembler"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.persistence.invoice.InvoiceGateway.InvoiceDALDto"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.application.persistence.workorder.WorkOrderGateway.WorkOrderDALDto"/>
+    <fullyQualifiedTypeName name="java.util.Optional"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.application.business.contract.ContractService.ContractBLDto"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.application.business.contract.ContractService.ContractState"/>
+    <fullyQualifiedTypeName name="com.sun.tools.javac.resources.ct"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.application.business.contracttype.ContractTypeService.ContractTypeBLDto"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.application.business.BusinessException"/>
 </qualifiedTypeNameHistroy>

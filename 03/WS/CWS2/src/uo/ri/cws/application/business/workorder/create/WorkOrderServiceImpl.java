@@ -1,7 +1,7 @@
 package uo.ri.cws.application.business.workorder.create;
 
-import uo.ri.cws.application.business.workorder.WorkorderService;
+import uo.ri.cws.application.business.workorder.WorkOrderService;
 
-public class WorkOrderServiceImpl implements WorkorderService {
+public class WorkOrderServiceImpl implements WorkOrderService {
 
 }

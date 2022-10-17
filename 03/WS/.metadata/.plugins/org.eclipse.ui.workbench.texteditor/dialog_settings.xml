@@ -4,18 +4,19 @@
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="t"/>
+		<item key="selection" value="ClientBLDto"/>
 		<list key="findhistory">
+			<item value="ct"/>
+			<item value="Client_BLDto"/>
+			<item value="SQL_MARK_WORKORDER_AS_INVOICED"/>
 			<item value="dto"/>
 			<item value="SQL_INSERT_INVOICE"/>
 			<item value="SQL_LAST_INVOICE_NUMBER"/>
 			<item value="SQL_FIND_WORKORDER_AMOUNT"/>
 			<item value="SQL_CHECK_WORKORDER_STATE"/>
-			<item value="FindMechanicById"/>
-			<item value="find"/>
-			<item value="displa"/>
 		</list>
 		<list key="replacehistory">
+			<item value="ClientBLDto"/>
 			<item value="t"/>
 		</list>
 	</section>

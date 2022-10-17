@@ -17,7 +17,7 @@ public interface ClientService {
 	 * @throws IllegalArgumentException when argument is null or dni is null or empty string
 	 * @throws BusinessException if there already exists another client with the same dni
 	 */
-	Client_BLDto addClient(Client_BLDto client, String recommenderId) throws BusinessException;
+	ClientBLDto addClient(ClientBLDto client, String recommenderId) throws BusinessException;
 
 	/**
 	 * @param idClient the id of the client to be deleted
@@ -35,14 +35,14 @@ public interface ClientService {
 	 * @throws BusinessException if the client does not exist 
 	 * @throws IllegalArgumentException when the argument is null or id is null or empty 
 	 */
-	void updateClient(Client_BLDto client) throws BusinessException;
+	void updateClient(ClientBLDto client) throws BusinessException;
 
 	/**
 	 * @return the list of all clients registered in the system. It might be an empty list if there is no client
 	 *
 	 * DOES NOT @throws BusinessException
 	 */
-	List<Client_BLDto> findAllClients() throws BusinessException;
+	List<ClientBLDto> findAllClients() throws BusinessException;
 
 	/**
 	 * @param idClient The id of the client to find
@@ -50,7 +50,7 @@ public interface ClientService {
 	 * @throws IllegalArgumentException when argument is null or empty string
 	 *        DOES NOT throw BusinessException
 	 */
-	Optional<Client_BLDto> findClientById(String idClient) throws BusinessException;
+	Optional<ClientBLDto> findClientById(String idClient) throws BusinessException;
 
 	/**
 	 * @param sponsorID The id of the client who recommended the workshop to this client
@@ -58,9 +58,9 @@ public interface ClientService {
 	 * @throws IllegalArgumentException when argument is null or empty string
 	 *        DOES NOT throw BusinessException
 	 */
-	List<Client_BLDto> findClientsRecommendedBy(String sponsorID) throws BusinessException;
+	List<ClientBLDto> findClientsRecommendedBy(String sponsorID) throws BusinessException;
 
-	public class Client_BLDto {
+	public class ClientBLDto {
 		public String id;
 		public long version;
 		

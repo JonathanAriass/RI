@@ -2,7 +2,7 @@ package uo.ri.cws.application.business.workorder;
 
 import java.time.LocalDateTime;
 
-public interface WorkorderService {
+public interface WorkOrderService {
     
     
  

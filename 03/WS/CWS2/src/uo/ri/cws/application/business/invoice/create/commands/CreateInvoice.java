@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import math.Round;
@@ -21,6 +22,7 @@ import uo.ri.cws.application.persistence.invoice.InvoiceGateway;
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway.InvoiceDALDto;
 import uo.ri.cws.application.persistence.invoice.assembler.InvoiceAssembler;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
+import uo.ri.cws.application.persistence.workorder.WorkOrderGateway.WorkOrderDALDto;
 
 public class CreateInvoice {
 
@@ -224,17 +226,16 @@ public class CreateInvoice {
 	 */
 	private void markWorkOrderAsInvoiced(List<String> ids) throws SQLException {
 
-		PreparedStatement pst = null;
-		try {
-			pst = connection.prepareStatement(SQL_MARK_WORKORDER_AS_INVOICED);
-
-			for (String id: ids) {
-				pst.setString(1, id);
-
-				pst.executeUpdate();
+		WorkOrderDALDto aux = null;
+		// Obtenemos el DALDto para tener toda la informacion y acualizar sobre este
+		for (String id: ids) {
+			Optional<WorkOrderDALDto> dto = ww.findById(id);
+			
+			if (dto.isPresent()) {
+				aux = dto.get();
+				aux.state = "INVOICED";
+				ww.update(aux);
 			}
-		} finally {
-			if (pst != null) try { pst.close(); } catch(SQLException e) { /* ignore */ }
 		}
 	}
 	

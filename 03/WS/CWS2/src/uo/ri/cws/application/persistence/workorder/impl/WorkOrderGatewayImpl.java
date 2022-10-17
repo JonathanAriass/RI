@@ -16,10 +16,11 @@ import uo.ri.cws.application.persistence.workorder.assembler.WorkOrderAssembler;
 
 public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
+	private String TWORKORDERS_UPDATE = "update TWORKORDERS set amount = ?, date = ?, description = ?, state = ?, version = ?, invoice_id = ?, mechanic_id = ?, vehicle_id = ? where id = ?";
 	private String TWORKORDERS_FINDBYMECHANIC = "select * from TWORKORDERS where mechanic_id = ?";
 	private String TWORKORDERS_FINDNOTINVOICED = "select a.id, a.description, a.date, a.state, a.amount from TWorkOrders where vehicle_id = ? and state <> 'INVOICED'";
 	private String TWORKORDERS_FINDSTATE = "select state from TWorkOrders where id = ?";
-	private String TWORKORDERS_FINDBYIDS = "select * from TWorkOrders where id = ?";
+	private String TWORKORDERS_FINDBYID = "select * from TWorkOrders where id = ?";
 	private String TWORKORDERS_FINDAMOUNT = "select amount from TWorkOrders where id = ?";
 	
 	@Override
@@ -36,14 +37,49 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 	@Override
 	public void update(WorkOrderDALDto t) {
-		// TODO Auto-generated method stub
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
 
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TWORKORDERS_FINDBYID);
+
+			pst.setString(1);
+			pst.setString(6, t.id);
+
+			rs = pst.executeQuery();
+			
+			return WorkOrderAssembler.toWorkOrderDALDto(rs);
+		} catch (SQLException e) {
+			throw new PersistenceException (e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 	}
 
 	@Override
 	public Optional<WorkOrderDALDto> findById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TWORKORDERS_FINDBYID);
+
+			pst.setString(1, id);
+
+			rs = pst.executeQuery();
+			
+			return WorkOrderAssembler.toWorkOrderDALDto(rs);
+		} catch (SQLException e) {
+			throw new PersistenceException (e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 	}
 
 	@Override
@@ -118,7 +154,7 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TWORKORDERS_FINDBYIDS);
+			pst = c.prepareStatement(TWORKORDERS_FINDBYID);
 
 			for (String workOrderID : arg) {
 				pst.setString(1, workOrderID);
