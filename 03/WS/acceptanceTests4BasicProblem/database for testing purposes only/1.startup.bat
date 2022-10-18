@@ -1,1 +1,1 @@
-java -classpath hsqldb.jar org.hsqldb.Server
+java -classpath hsqldb.jar org.hsqldb.Server --port 1522

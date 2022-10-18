@@ -12,10 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import java.util.Date;
-
 import jdbc.Jdbc;
-import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
 import uo.ri.cws.application.persistence.workorder.assembler.WorkOrderAssembler;
@@ -24,7 +21,7 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 	private String TWORKORDERS_UPDATE = "update TWORKORDERS set amount = ?, date = ?, description = ?, state = ?, version = ?, invoice_id = ?, mechanic_id = ?, vehicle_id = ? where id = ?";
 	private String TWORKORDERS_FINDBYMECHANIC = "select * from TWORKORDERS where mechanic_id = ?";
-	private String TWORKORDERS_FINDNOTINVOICED = "select a.id, a.description, a.date, a.state, a.amount from TWorkOrders where vehicle_id = ? and state <> 'INVOICED'";
+	private String TWORKORDERS_FINDNOTINVOICED = "select * from TWorkOrders where vehicle_id = ? and state <> 'INVOICED'";
 	private String TWORKORDERS_FINDSTATE = "select state from TWorkOrders where id = ?";
 	private String TWORKORDERS_FINDBYID = "select * from TWorkOrders where id = ?";
 	private String TWORKORDERS_FINDAMOUNT = "select amount from TWorkOrders where id = ?";
@@ -50,7 +47,7 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TWORKORDERS_FINDBYID);
+			pst = c.prepareStatement(TWORKORDERS_UPDATE);
 
 			pst.setDouble(1, t.amount);
 			
@@ -65,7 +62,7 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 			pst.setString(6, t.invoice_id);
 			pst.setString(7, t.mechanic_id);
 			pst.setString(8, t.vehicle_id);
-			pst.setString(6, t.id);
+			pst.setString(9, t.id);
 
 			rs = pst.executeQuery();
 			

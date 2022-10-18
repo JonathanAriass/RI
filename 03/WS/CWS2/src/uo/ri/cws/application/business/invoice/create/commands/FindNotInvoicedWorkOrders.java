@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import assertion.Argument;
+import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.invoice.InvoicingService.WorkOrderForInvoicingBLDto;
 import uo.ri.cws.application.business.invoice.assembler.InvoicingAssembler;
 import uo.ri.cws.application.business.util.command.Command;
+import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.client.ClientGateway;
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 import uo.ri.cws.application.persistence.vehicle.VehicleGateway;
 import uo.ri.cws.application.persistence.vehicle.VehicleGateway.VehicleDALDto;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
@@ -27,7 +30,12 @@ public class FindNotInvoicedWorkOrders implements Command<List<WorkOrderForInvoi
 	private VehicleGateway vw = PersistenceFactory.forVehicle();
 	private WorkOrderGateway ww = PersistenceFactory.forWorkOrder();
 	
-	public List<WorkOrderForInvoicingBLDto> execute() {
+	public List<WorkOrderForInvoicingBLDto> execute() throws BusinessException {
+		
+		// Comprobar si el dni existe
+		if (!existClient(dni)) {
+			throw new BusinessException("Repeated mechanic");
+		}
 		
 		// Sacar el cliente por el dni
 		String idCliente = cw.findByDni(dni).get().id;
@@ -43,6 +51,16 @@ public class FindNotInvoicedWorkOrders implements Command<List<WorkOrderForInvoi
 		
 		// Sacar lista con el invoice assembler
 		return InvoicingAssembler.toInvoicingWorkOrderList(notInvoiced);
+	}
+
+	
+	
+	private boolean existClient(String dni) throws PersistenceException {
+		if (cw.findByDni(dni).isPresent()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private List<String> getVehicleIds(List<VehicleDALDto> clientVehicles) {

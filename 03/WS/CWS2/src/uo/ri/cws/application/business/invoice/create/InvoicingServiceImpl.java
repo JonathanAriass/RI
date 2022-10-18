@@ -15,8 +15,9 @@ public class InvoicingServiceImpl implements InvoicingService {
 
 	@Override
 	public InvoiceBLDto createInvoiceFor(List<String> workOrderIds) throws BusinessException {
-		CreateInvoice create = new CreateInvoice(workOrderIds);
-		return create.execute();
+//		CreateInvoice create = new CreateInvoice(workOrderIds);
+//		return create.execute();
+		return executor.execute(new CreateInvoice(workOrderIds));
 	}
 
 	@Override

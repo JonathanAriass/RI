@@ -10,8 +10,10 @@ import uo.ri.conf.Factory;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-		features= {		"test/uo/ri/cws/application/service/mechanic",
+		features= {	"test/uo/ri/cws/application/service/invoice"
 		},
+		
+//				"test/uo/ri/cws/application/service/mechanic"
 	plugin = {"pretty", "html:target/cucumber-results.html"},
 	snippets = SnippetType.CAMELCASE
 )

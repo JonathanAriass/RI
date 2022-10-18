@@ -90,7 +90,7 @@ public interface PaymentMeanService {
     	
     }
     
-    public class Cash_BLDto extends PaymentMeanBLDto {
+    public class CashBLDto extends PaymentMeanBLDto {
 
     }
     

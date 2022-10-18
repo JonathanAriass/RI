@@ -25,11 +25,10 @@ public class MechanicGatewayImpl implements MechanicGateway {
 	@Override
 	public void add(MechanicDALDto mechanic) {
 		PreparedStatement pst = null;
-		
 		Connection c = null;
-		c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 		
 		try {
+			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 			pst = c.prepareStatement(TMECHANICS_ADD);
 			pst.setString(1, mechanic.id);
 			pst.setString(2, mechanic.dni);

@@ -1,10 +1,6 @@
 package uo.ri.cws.application.business.invoice.create.commands;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,57 +10,15 @@ import java.util.UUID;
 import math.Round;
 import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.invoice.InvoicingService.InvoiceBLDto;
-import uo.ri.cws.application.business.invoice.InvoicingService.InvoiceBLDto.InvoiceState;
-import uo.ri.cws.application.business.invoice.assembler.InvoicingAssembler;
+import uo.ri.cws.application.business.util.command.Command;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway;
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway.InvoiceDALDto;
-import uo.ri.cws.application.persistence.invoice.assembler.InvoiceAssembler;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway.WorkOrderDALDto;
 
-public class CreateInvoice {
-
-	private static final String URL = "jdbc:hsqldb:hsql://localhost:1522/";
-	private static final String USER = "sa";
-	private static final String PASSWORD = "";
-
-	
-	// Se tiene que hacer un findWorkorderStateById()
-	private static final String SQL_CHECK_WORKORDER_STATE = 
-			"select state from TWorkOrders where id = ?";
-
-	//  Se tiene que hacer un findLastInvoiceNumber() en invoice
-	private static final String SQL_LAST_INVOICE_NUMBER = 
-			"select max(number) from TInvoices";
-
-	// Se tiene que hacer un findWorkorderAmount()
-	private static final String SQL_FIND_WORKORDER_AMOUNT = 
-			"select amount from TWorkOrders where id = ?";
-	
-	// Se tiene que hacer un addInvoice() en invoice
-	private static final String SQL_INSERT_INVOICE = 
-			"insert into TInvoices(id, number, date, vat, amount, state, version) "
-					+ "	values(?, ?, ?, ?, ?, ?, ?)";
-
-	// Se tiene que hacer un update en workorder
-	private static final String SQL_LINK_WORKORDER_TO_INVOICE = 
-			"update TWorkOrders set invoice_id = ? where id = ?";
-
-	// Se tiene que hacer un update en workorder
-	private static final String SQL_MARK_WORKORDER_AS_INVOICED = 
-			"update TWorkOrders set state = 'INVOICED' where id = ?";
-
-	// Se hace un select de workorders 
-	private static final String SQL_FIND_WORKORDERS = 
-			"select * from TWorkOrders where id = ?";
-	
-	// Se tiene que hacer un update en workorder
-	private static final String SQL_UPDATEVERSION_WORKORDERS = 
-			"update TWorkOrders set version=version+1 where id = ?";
-	
-	private Connection connection;	
+public class CreateInvoice implements Command<InvoiceBLDto> {
 
 	private InvoiceBLDto dto = null;
 	
@@ -103,19 +57,20 @@ public class CreateInvoice {
 	}
 	
 	
-	private void updateVersion(List<String> workOrderIds) throws SQLException {
-		PreparedStatement pst = null;
+	private void updateVersion(List<String> workOrderIds) throws PersistenceException {
 		
-		try {
-			pst = connection.prepareStatement(SQL_UPDATEVERSION_WORKORDERS);
-
-			for (String workOrderID : workOrderIds) {
-				pst.setString(1, workOrderID);
-				pst.executeUpdate();
-				}
-		} finally {
-			if (pst != null) try { pst.close(); } catch(SQLException e) { /* ignore */ }
-		}		
+		WorkOrderDALDto aux = null;
+		// Obtenemos el DALDto para tener toda la informacion y acualizar sobre este
+		for (String id: workOrderIds) {
+			Optional<WorkOrderDALDto> dto = ww.findById(id);
+			
+			if (dto.isPresent()) {
+				aux = dto.get();
+				aux.version = aux.version + 1;
+				ww.update(aux);
+			}
+		}
+		
 	}
 	
 	/*
@@ -203,28 +158,27 @@ public class CreateInvoice {
 	/*
 	 * Set the invoice number field in work order table to the invoice number generated
 	 */
-	private void linkWorkordersToInvoice (String invoiceId, List<String> workOrderIDS) throws SQLException {
-
-		PreparedStatement pst = null;
-		try {
-			pst = connection.prepareStatement(SQL_LINK_WORKORDER_TO_INVOICE);
-
-			for (String workOrderId : workOrderIDS) {
-				pst.setString(1, invoiceId);
-				pst.setString(2, workOrderId);
-
-				pst.executeUpdate();
+	private void linkWorkordersToInvoice (String invoiceId, List<String> workOrderIDS) throws PersistenceException {
+		
+		WorkOrderDALDto aux = null;
+		// Obtenemos el DALDto para tener toda la informacion y acualizar sobre este
+		for (String id: workOrderIDS) {
+			Optional<WorkOrderDALDto> dto = ww.findById(id);
+			
+			if (dto.isPresent()) {
+				aux = dto.get();
+				aux.invoice_id=invoiceId;
+				ww.update(aux);
 			}
-		} finally {
-			if (pst != null) try { pst.close(); } catch(SQLException e) { /* ignore */ }
 		}
+		
 	}
 
 
 	/*
 	 * Sets state to INVOICED for every workorder
 	 */
-	private void markWorkOrderAsInvoiced(List<String> ids) throws SQLException {
+	private void markWorkOrderAsInvoiced(List<String> ids) throws PersistenceException {
 
 		WorkOrderDALDto aux = null;
 		// Obtenemos el DALDto para tener toda la informacion y acualizar sobre este

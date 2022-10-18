@@ -225,7 +225,7 @@ public class InvoicingSteps {
 			workordersIds = ((List<WorkOrderBLDto>) this.ctx.get(TestContext.Key.WORKORDERS))
 			.stream().filter(wo -> wo.state.equals("FINISHED")).map(wo -> wo.id).collect(Collectors.toList());
 		}
-		invoice = BusinessFactory.forInvoicingService().createInvoiceFor(workordersIds).get();
+		invoice = BusinessFactory.forInvoicingService().createInvoiceFor(workordersIds);
 	}
 	
 	
