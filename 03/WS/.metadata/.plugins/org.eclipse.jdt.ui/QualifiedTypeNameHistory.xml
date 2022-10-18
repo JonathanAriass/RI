@@ -13,8 +13,6 @@
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.BusinessFactory"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.invoice.InvoicingService.InvoiceBLDto"/>
-    <fullyQualifiedTypeName name="java.sql.Date"/>
-    <fullyQualifiedTypeName name="java.util.Date"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.invoice.create.commands.CreateInvoice"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.ui.util.Printer"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.invoice.create.InvoicingServiceImpl"/>
@@ -52,4 +50,9 @@
     <fullyQualifiedTypeName name="com.sun.tools.javac.resources.ct"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.contracttype.ContractTypeService.ContractTypeBLDto"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.business.BusinessException"/>
+    <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
+    <fullyQualifiedTypeName name="java.time.ZoneId"/>
+    <fullyQualifiedTypeName name="java.time.Instant"/>
+    <fullyQualifiedTypeName name="java.util.Date"/>
+    <fullyQualifiedTypeName name="java.sql.Date"/>
 </qualifiedTypeNameHistroy>

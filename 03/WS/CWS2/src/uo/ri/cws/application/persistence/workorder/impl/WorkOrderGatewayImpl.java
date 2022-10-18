@@ -1,12 +1,18 @@
 package uo.ri.cws.application.persistence.workorder.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import java.util.Date;
 
 import jdbc.Jdbc;
 import uo.ri.cws.application.business.BusinessException;
@@ -46,12 +52,24 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 			
 			pst = c.prepareStatement(TWORKORDERS_FINDBYID);
 
-			pst.setString(1);
+			pst.setDouble(1, t.amount);
+			
+			LocalDateTime localTime = t.date;
+			Instant instant = localTime.atZone(ZoneId.systemDefault()).toInstant();
+			Date date = new java.sql.Date(Date.from(instant).getTime()) ;
+			
+			pst.setDate(2, date);
+			pst.setString(3,  t.description);
+			pst.setString(4, t.state);
+			pst.setLong(5, t.version);
+			pst.setString(6, t.invoice_id);
+			pst.setString(7, t.mechanic_id);
+			pst.setString(8, t.vehicle_id);
 			pst.setString(6, t.id);
 
 			rs = pst.executeQuery();
 			
-			return WorkOrderAssembler.toWorkOrderDALDto(rs);
+			c.commit();
 		} catch (SQLException e) {
 			throw new PersistenceException (e);
 		} finally {
