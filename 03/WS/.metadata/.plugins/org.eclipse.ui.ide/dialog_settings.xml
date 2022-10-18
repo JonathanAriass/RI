@@ -3,18 +3,20 @@
 	<section name="ExternalProjectImportWizard">
 		<item key="WizardProjectsImportPage.STORE_NESTED_PROJECTS" value="false"/>
 		<item key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID" value="false"/>
-		<item key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED" value="true"/>
+		<item key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED" value="false"/>
 		<item key="WizardProjectsImportPage.STORE_CLOSE_CREATED_PROJECTS_ID" value="false"/>
 		<item key="WizardProjectsImportPage.STORE_HIDE_CONFLICTING_PROJECTS_ID" value="false"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="C:\Users\byjon\OneDrive\Escritorio\uni\3o\1 cuatri\RI\RI\03\CarWorkshop-20221003\gettingStarted\gettingStarted\Util"/>
+			<item value="C:\Users\byjon\OneDrive\Escritorio\uni\3o\1 cuatri\RI\RI\03\WS"/>
 			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\git\03\CarWorkshop-20221003\acceptanceTests4BasicProblem"/>
 			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\git\03\CarWorkshop-20221003\gettingStarted\gettingStarted\Util"/>
 			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\git\03\CarWorkshop-20221003\gettingStarted\gettingStarted\cws_extended_acceptance_tests_for_basic_problem"/>
 			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Laboratorio\03\CarWorkshop-20221003\gettingStarted\gettingStarted"/>
 		</list>
 		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
-			<item value="C:\Users\byjon\Downloads\ExtensionMaterialUPDATED(17Oct)\ExtensionMaterial\acceptanceTestsProjects.zip"/>
 			<item value=""/>
+			<item value="C:\Users\byjon\Downloads\ExtensionMaterialUPDATED(17Oct)\ExtensionMaterial\acceptanceTestsProjects.zip"/>
 		</list>
 	</section>
 </section>
