@@ -6,6 +6,7 @@ import uo.ri.cws.application.ui.manager.action.AddMechanicAction;
 import uo.ri.cws.application.ui.manager.action.DeleteMechanicAction;
 import uo.ri.cws.application.ui.manager.action.FindAllMechanicsAction;
 import uo.ri.cws.application.ui.manager.action.FindMechanicByIdAction;
+import uo.ri.cws.application.ui.manager.action.FindMechanicsWithContractAction;
 import uo.ri.cws.application.ui.manager.action.UpdateMechanicAction;
 
 public class MechanicMenu extends BaseMenu {
@@ -19,6 +20,7 @@ public class MechanicMenu extends BaseMenu {
 			{ "Delete mechanic", 				DeleteMechanicAction.class }, 
 			{ "List mechanic", 				FindMechanicByIdAction.class },
 			{ "List mechanics", 				FindAllMechanicsAction.class },
+			{ "List mechanics with in force contracts", FindMechanicsWithContractAction.class}
 		};
 	}
 

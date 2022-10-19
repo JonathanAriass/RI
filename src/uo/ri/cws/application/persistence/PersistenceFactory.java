@@ -2,6 +2,8 @@ package uo.ri.cws.application.persistence;
 
 import uo.ri.cws.application.persistence.client.ClientGateway;
 import uo.ri.cws.application.persistence.client.impl.ClientGatewayImpl;
+import uo.ri.cws.application.persistence.contract.ContractGateway;
+import uo.ri.cws.application.persistence.contract.impl.ContractGatewayImpl;
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway;
 import uo.ri.cws.application.persistence.invoice.impl.InvoiceGatewayImpl;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
@@ -34,5 +36,8 @@ public class PersistenceFactory {
 		return new VehicleGatewayImpl();
 	}
 	
+	public static ContractGateway forContract() {
+		return new ContractGatewayImpl();
+	}
 }
 

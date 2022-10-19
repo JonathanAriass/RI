@@ -1,5 +1,7 @@
 package uo.ri.cws.application.business;
 
+import uo.ri.cws.application.business.contract.ContractService;
+import uo.ri.cws.application.business.contract.create.ContractServiceImpl;
 import uo.ri.cws.application.business.invoice.InvoicingService;
 import uo.ri.cws.application.business.invoice.create.InvoicingServiceImpl;
 //import uo.ri.cws.application.business.client.ClientService;
@@ -18,6 +20,11 @@ public class BusinessFactory {
 	public static InvoicingService forInvoicingService() {
 		return new InvoicingServiceImpl();
 	}
+	
+	public static ContractService forContractService() {
+		return new ContractServiceImpl();
+	}
+	
 //
 //	public static WorkOrderService forWorkOrderService() {
 //		throw new RuntimeException("Not yet implemented");

@@ -64,6 +64,33 @@ public interface MechanicService {
 	 */
 	List<MechanicBLDto> findAllMechanics() throws BusinessException;
 
+	/**
+	 * 
+	 * 						ONLY FOR EXTENSION
+	 * 
+	 * @return the list of all mechanics registered in the system
+	 * with a contract in force. It might be an empty list if there is no mechanic
+	 *
+	 * DOES NOT @throws BusinessException
+	 */
+	List<MechanicBLDto> findMechanicsInForce() throws BusinessException;
+
+	/**
+	 * @return the list of mechanics with contracts in force in a contract type, or 
+	 * 		an empty list if there is none
+	 * @throws IllegalArgumentException if
+	 * 		- id is null or empty
+	 * @throws BusinessException DOES NOT
+	 */
+	List<MechanicBLDto> findMechanicsWithContractInForceInContractType(String name) throws BusinessException;
+
+	/**
+	 * @return the list of mechanis in a professional group, or 
+	 * 		an empty list if there is none
+	 * @throws BusinessException DOES NOT
+	 */
+	List<MechanicBLDto> findMechanicsInProfessionalGroups(String name) throws BusinessException;
+
 	public class MechanicBLDto {
 
 		public String id;
