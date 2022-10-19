@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import assertion.Argument;
 import math.Round;
 import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.invoice.InvoicingService.InvoiceBLDto;
@@ -15,6 +16,7 @@ import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway;
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway.InvoiceDALDto;
+import uo.ri.cws.application.business.invoice.assembler.InvoicingAssembler;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway.WorkOrderDALDto;
 
@@ -28,6 +30,7 @@ public class CreateInvoice implements Command<InvoiceBLDto> {
 	private InvoiceGateway iw = PersistenceFactory.forInvoice();
 	
 	public CreateInvoice(List<String> workOrdersIds) {
+		validate(workOrdersIds);
 		this.workOrderIds = workOrdersIds;
 	}
 	
@@ -77,9 +80,14 @@ public class CreateInvoice implements Command<InvoiceBLDto> {
 	 * checks whether every work order exist	 
 	 */
 	private boolean checkWorkOrdersExist(List<String> workOrderIDS) throws PersistenceException {
-		if (ww.findByIds(workOrderIDS).isEmpty()) {
-			return false;
+		
+		for (String workOrderID : workOrderIDS) {
+			Optional<WorkOrderDALDto> aux = ww.findById(workOrderID);
+			if (!aux.isPresent()) {
+				return false;
+			}
 		}
+		
 		return true;
 	}
 
@@ -90,7 +98,8 @@ public class CreateInvoice implements Command<InvoiceBLDto> {
 
 		for (String workOrderID : workOrderIDS) {
 			String state = ww.findState(workOrderID);
-			if (!"FINISHED".equalsIgnoreCase(state)) {
+			System.out.println(state.toLowerCase());
+			if (!"finished".equals(state.toLowerCase())) {
 				return false;
 			}
 		}
@@ -149,6 +158,9 @@ public class CreateInvoice implements Command<InvoiceBLDto> {
 		t.number = numberInvoice;
 		t.date = dateInvoice;
 		t.state = "NOT_YET_PAID";
+		t.amount = total;
+		
+		dto = InvoicingAssembler.toDto(t);
 		
 		iw.add(t);
 
@@ -193,5 +205,14 @@ public class CreateInvoice implements Command<InvoiceBLDto> {
 		}
 	}
 	
+	private void validate(List<String> workOrdersIds) {
+		Argument.isNotNull(workOrdersIds);
+		Argument.isTrue(!workOrdersIds.isEmpty());
+		for (String id : workOrdersIds) {
+			Argument.isNotNull(id, "Null id");
+			Argument.isNotEmpty(id, "Null or empty id");
+		}
+	}
+
 	
 }

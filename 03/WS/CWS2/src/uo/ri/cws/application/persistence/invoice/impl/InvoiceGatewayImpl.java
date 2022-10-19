@@ -20,7 +20,6 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
 	public void add(InvoiceDALDto t) {
 		Connection c = null;
 		PreparedStatement pst = null;
-		ResultSet rs = null;
 
 		try {
 			c = Jdbc.getCurrentConnection();
@@ -38,7 +37,7 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
 		} catch (SQLException e) {
 			throw new PersistenceException (e);
 		} finally {
-			Jdbc.close(rs, pst);
+			Jdbc.close(pst);
 		}
 	}
 

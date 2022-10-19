@@ -64,9 +64,8 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 			pst.setString(8, t.vehicle_id);
 			pst.setString(9, t.id);
 
-			rs = pst.executeQuery();
+		   pst.executeUpdate();
 			
-			c.commit();
 		} catch (SQLException e) {
 			throw new PersistenceException (e);
 		} finally {
@@ -175,7 +174,18 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 				pst.setString(1, workOrderID);
 
 				rs = pst.executeQuery();
-				result.add(WorkOrderAssembler.toWorkOrderDALDto(rs).get());
+
+				Optional<WorkOrderDALDto> opt;
+				
+				do {
+					opt = WorkOrderAssembler.toWorkOrderDALDto(rs);
+					if (opt.isPresent()) result.add(opt.get());
+				} while (opt.isPresent());
+				
+//				if (WorkOrderAssembler.toWorkOrderDALDto(rs).isPresent()) {
+//					result.add(WorkOrderAssembler.toWorkOrderDALDto(rs).get());										
+//				}
+
 			}
 			
 			return result;
@@ -213,7 +223,10 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 				
 			rs = pst.executeQuery();
 
-			return rs.getString("state");
+			if (rs.next()) {
+				return rs.getString("state");				
+			}
+			return "";
 		} catch (SQLException e) {
 			throw new PersistenceException (e);
 		} finally {
@@ -237,7 +250,9 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 			rs = pst.executeQuery();
 
-			money = rs.getDouble(1);
+			if (rs.next()) {
+				money = rs.getDouble(1);				
+			}
 			
 			return money;
 		} catch (SQLException e) {
