@@ -4,17 +4,19 @@ import menu.BaseMenu;
 
 public class MainMenu extends BaseMenu {
 
-	public MainMenu() {
-		menuOptions = new Object[][] { 
-			{ "Administrator", null },
-			{ "Mechanics management", 			MechanicMenu.class }, 
-			{ "Spare parts management", 			SparePartMenu.class },
-			{ "Vehicle types management", 	VehicleTypeMenu.class },
-		};
-	}
+    public MainMenu() {
+	menuOptions = new Object[][] { { "Administrator", null },
+		{ "Mechanics management", MechanicMenu.class },
+		{ "Spare parts management", SparePartMenu.class },
+		{ "Vehicle types management", ContractTypeMenu.class },
+		{ "Contracts management", ContractsMenu.class },
+		{ "Payroll management", PayrollManagementMenu.class }
 
-	public static void main(String[] args) {
-		new MainMenu().execute();
-	}
+	};
+    }
+
+    public static void main(String[] args) {
+	new MainMenu().execute();
+    }
 
 }
