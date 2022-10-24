@@ -30,7 +30,7 @@ public class AddProfessionalGroup implements Command<ProfessionalGroupBLDto> {
 		
 		insertProfessionalGroup();
 		
-		return null;
+		return group;
 	}
 
 	private boolean existProfessionalGroup(String name) {

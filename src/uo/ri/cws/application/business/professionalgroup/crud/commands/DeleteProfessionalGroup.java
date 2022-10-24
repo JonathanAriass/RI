@@ -8,11 +8,10 @@ import uo.ri.cws.application.business.util.command.Command;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
-import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway.ProfessionalGroupDALDto;
 
 public class DeleteProfessionalGroup implements Command<Void> {
 
-	private String name;
+	private String name= "";
 	private ProfessionalGroupGateway pg = PersistenceFactory.forProfessionalGroup();
 	private ContractGateway cg = PersistenceFactory.forContract();
 	

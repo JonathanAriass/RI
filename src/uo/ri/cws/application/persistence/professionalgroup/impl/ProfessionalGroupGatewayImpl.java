@@ -9,15 +9,18 @@ import java.util.Optional;
 
 import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
-import uo.ri.cws.application.persistence.mechanic.assembler.MechanicAssembler;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
 import uo.ri.cws.application.persistence.professionalgroup.assembler.ProfessionalGroupAssembler;
 
 public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 
-	private static String TPROFESSIONALGROUPS_ADD = "insert into TPROFESSIONALGROUPS(id, name, productivitybonuspercentagem, trienniumpayment, version) values (?, ?, ?, ?, ?)";
+	private static String TPROFESSIONALGROUPS_ADD = "insert into TPROFESSIONALGROUPS(id, name, productivitybonuspercentage, trienniumpayment, version) values (?, ?, ?, ?, ?)";
 	private static String TPROFESSIONALGROUPS_DELETE = "delete from TPROFESSIONALGROUPS where id = ?";
-	private static String TPROFESSIONALGROUPS_FINDBYNAME = "SELECT * FROM TPROFRESSIONALGROUPS WHERE name = ?";
+	private static String TPROFESSIONALGROUPS_UPDATE = "update TPROFESSIONALGROUPS set name = name, productivitybonuspercentage = ?, trienniumpayment = ?, version = version + 1 where id = ?";
+	private static String TPROFESSIONALGROUPS_FINDBYID = "SELECT * FROM TPROFESSIONALGROUPS WHERE id = ?";
+	private static String TPROFESSIONALGROUPS_FINDALL = "SELECT * FROM TPROFESSIONALGROUPS";
+	private static String TPROFESSIONALGROUPS_FINDBYNAME = "SELECT * FROM TPROFESSIONALGROUPS WHERE name = ?";
+	
 	
 	@Override
 	public void add(ProfessionalGroupDALDto t) {
@@ -61,20 +64,66 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 
 	@Override
 	public void update(ProfessionalGroupDALDto t) {
-		// TODO Auto-generated method stub
+		Connection c = null;
+		PreparedStatement pst = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 
+			pst = c.prepareStatement(TPROFESSIONALGROUPS_UPDATE);
+			pst.setDouble(1, t.productivity_bonus_percentage);
+			pst.setDouble(2, t.triennium_payment);
+			pst.setString(3, t.id);
+			
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(pst);
+		}
 	}
 
 	@Override
 	public Optional<ProfessionalGroupDALDto> findById(String id) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		PreparedStatement pst = null;
+		Connection c = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
+			
+			pst = c.prepareStatement(TPROFESSIONALGROUPS_FINDBYID);
+			pst.setString(1, id);
+			
+			rs = pst.executeQuery();
+			
+			return ProfessionalGroupAssembler.toProfessionalGroupDALDto(rs);
+ 		} catch (SQLException e ) {
+ 			throw new PersistenceException(e);
+ 		} finally {
+ 			Jdbc.close(rs, pst);
+ 		}
 	}
 
 	@Override
 	public List<ProfessionalGroupDALDto> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement pst = null;
+		Connection c = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
+			
+			pst = c.prepareStatement(TPROFESSIONALGROUPS_FINDALL);
+			
+			rs = pst.executeQuery();
+			
+			return ProfessionalGroupAssembler.toProfessionalGroupDALDtoList(rs);
+ 		} catch (SQLException e ) {
+ 			throw new PersistenceException(e);
+ 		} finally {
+ 			Jdbc.close(rs, pst);
+ 		}
 	}
 
 	@Override
