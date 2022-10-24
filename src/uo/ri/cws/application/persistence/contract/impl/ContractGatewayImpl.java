@@ -12,11 +12,13 @@ import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.contract.assembler.ContractAssembler;
+import uo.ri.cws.application.persistence.professionalgroup.assembler.ProfessionalGroupAssembler;
 
 public class ContractGatewayImpl implements ContractGateway {
 
 	private String TCONTRACTS_FINDBYMECHANIC = "SELECT * FROM TCONTRACTS WHERE mechanic_id = ?";
 	private String TCONTRACTS_FINDMECHANICSIDWITHCONTRACT = "SELECT mechanic_id FROM TCONTRACTS WHERE state = 'IN_FORCE'";
+	private String TCONTRACTS_FINDPROFESSIONALGROUPBYID = "SELECT * FROM TCONTRACTS WHERE professionalgroup_id = ?";
 	
 	@Override
 	public void add(ContractDALDto t) {
@@ -90,6 +92,29 @@ public class ContractGatewayImpl implements ContractGateway {
 			}
 			
 			return aux;
+ 		} catch (SQLException e ) {
+ 			throw new PersistenceException(e);
+ 		} finally {
+ 			Jdbc.close(rs, pst);
+ 		}
+	}
+
+	@Override
+	public Optional<ContractDALDto> findByProfessionalGroupId(String groupid) {
+		PreparedStatement pst = null;
+		Connection c = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
+			
+			pst = c.prepareStatement(TCONTRACTS_FINDPROFESSIONALGROUPBYID);
+			
+			pst.setString(1, groupid);
+			
+			rs = pst.executeQuery();
+			
+			return ContractAssembler.toContractDALDto(rs);
  		} catch (SQLException e ) {
  			throw new PersistenceException(e);
  		} finally {

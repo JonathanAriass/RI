@@ -14,7 +14,7 @@ public class FindMechanicsWithContractAction implements Action {
 	public void execute() throws Exception {
 		Console.println("\nList of mechanics with contracts in force\n");  
 
-		List<MechanicBLDto> mechanics = BusinessFactory.forMechanicService().findMechanicsWithContract();
+		List<MechanicBLDto> mechanics = BusinessFactory.forMechanicService().findMechanicsInForce();
 		
 		Printer.printMechanics(mechanics);
 	}

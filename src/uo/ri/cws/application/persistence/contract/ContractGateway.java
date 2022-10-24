@@ -12,7 +12,7 @@ public interface ContractGateway extends Gateway<ContractDALDto> {
 
 	Optional<ContractDALDto> findByMechanic(String mechanicid);
 	List<String> findMechanicsIdWithContract();
-	
+	Optional<ContractDALDto> findByProfessionalGroupId(String groupid);
 	
 	public class ContractDALDto {
 		public String id;

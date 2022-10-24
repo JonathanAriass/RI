@@ -22,11 +22,9 @@ public class FindMechanicsWithContract implements Command<List<MechanicBLDto>> {
 		
 		// Recorrer la lista de contratos en busqueda de los ids de los mecanicos
 		List<String> mechanic_ids = getMechanicsId();
-		System.out.println(mechanic_ids.get(0));
+		
 		// Obtenemos los mechanicos a traves de los ids
 		result = getMechanics(mechanic_ids); 
-				
-//		MechanicAssembler.toDtoList(mg.findMechanicsWithContract());
 		
 		return result;
 	}
