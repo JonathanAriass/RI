@@ -8,6 +8,7 @@ import uo.ri.cws.application.business.invoice.InvoicingService.WorkOrderForInvoi
 //import uo.ri.cws.application.business.invoice.InvoicingService.InvoiceBLDto;
 //import uo.ri.cws.application.business.invoice.InvoicingService.WorkOrderForInvoicingBLDto;
 import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
+import uo.ri.cws.application.business.professionalgroup.ProfessionalGroupService.ProfessionalGroupBLDto;
 
 public class Printer {
 
@@ -52,6 +53,11 @@ public class Printer {
 				"Identifier", "description", "date", "state", "amount");
 		for (WorkOrderForInvoicingBLDto inv : arg)
 			printInvoicingWorkOrder(inv);
+	}
+	
+	public static void printProfessionalGroup(ProfessionalGroupBLDto pg) {
+
+		Console.printf("\t%-36.36s %-9s %-10.10d %-25.25d %-10.2s\n", pg.id, pg.name, pg.productivityRate, pg.trieniumSalary, pg.version);
 	}
 	
 }

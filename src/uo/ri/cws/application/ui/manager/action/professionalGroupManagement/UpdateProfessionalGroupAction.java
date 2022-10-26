@@ -20,8 +20,7 @@ public class UpdateProfessionalGroupAction implements Action {
 		dto.productivityRate = p;
 		dto.trieniumSalary = t;
 
-
-
+		BusinessFactory.forProfessionalGroupService().updateProfessionalGroup(dto);
 
 		Console.print("Professional group successfully updated");
 	}
