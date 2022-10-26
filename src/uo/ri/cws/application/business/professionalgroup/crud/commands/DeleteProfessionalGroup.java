@@ -28,7 +28,8 @@ public class DeleteProfessionalGroup implements Command<Void> {
 			throw new BusinessException("Professional group doesn't exist");
 		}
 		
-		ProfessionalGroupBLDto prgr = ProfessionalGroupAssembler.toBLDto(pg.findByName(this.name)).get();
+		ProfessionalGroupBLDto prgr = ProfessionalGroupAssembler.toBLDto(
+				pg.findByName(this.name)).get();
 
 		
 		if (hasContractAssigned(prgr.id)) {

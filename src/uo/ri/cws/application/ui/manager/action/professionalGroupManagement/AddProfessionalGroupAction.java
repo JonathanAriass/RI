@@ -25,7 +25,6 @@ public class AddProfessionalGroupAction implements Action {
 		
 
 		ProfessionalGroupBLDto result = BusinessFactory.forProfessionalGroupService().addProfessionalGroup(pg);
-		
 
 				
 		// Print result

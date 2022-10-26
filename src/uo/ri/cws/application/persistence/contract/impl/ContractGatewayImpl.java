@@ -12,13 +12,14 @@ import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.contract.assembler.ContractAssembler;
-import uo.ri.cws.application.persistence.professionalgroup.assembler.ProfessionalGroupAssembler;
 
 public class ContractGatewayImpl implements ContractGateway {
 
 	private String TCONTRACTS_FINDBYMECHANIC = "SELECT * FROM TCONTRACTS WHERE mechanic_id = ?";
 	private String TCONTRACTS_FINDMECHANICSIDWITHCONTRACT = "SELECT mechanic_id FROM TCONTRACTS WHERE state = 'IN_FORCE'";
 	private String TCONTRACTS_FINDPROFESSIONALGROUPBYID = "SELECT * FROM TCONTRACTS WHERE professionalgroup_id = ?";
+	private String TCONTRACTS_FINDMECHANICSIDFORPROFESSIONALGROUP = "SELECT mechanic_id FROM TCONTRACTS WHERE professionalgroup_id = ?";
+	private String TCONTRACTS_FINDMECHANICSIDWITHCONTRACTTYPE = "SELECT mechanic_id FROM TCONTRACTS WHERE state = 'IN_FORCE' and contracttype_id = ?";
 	
 	@Override
 	public void add(ContractDALDto t) {
@@ -57,7 +58,7 @@ public class ContractGatewayImpl implements ContractGateway {
 		ResultSet rs = null;
 		
 		try {
-			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
+			c = Jdbc.getCurrentConnection();
 			
 			pst = c.prepareStatement(TCONTRACTS_FINDBYMECHANIC);
 			pst.setString(1, mechanicid);
@@ -81,7 +82,7 @@ public class ContractGatewayImpl implements ContractGateway {
 		List<String> aux = new ArrayList<>();
 		
 		try {
-			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
+			c = Jdbc.getCurrentConnection();
 			
 			pst = c.prepareStatement(TCONTRACTS_FINDMECHANICSIDWITHCONTRACT);
 			
@@ -106,7 +107,7 @@ public class ContractGatewayImpl implements ContractGateway {
 		ResultSet rs = null;
 		
 		try {
-			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
+			c = Jdbc.getCurrentConnection();
 			
 			pst = c.prepareStatement(TCONTRACTS_FINDPROFESSIONALGROUPBYID);
 			
@@ -115,6 +116,64 @@ public class ContractGatewayImpl implements ContractGateway {
 			rs = pst.executeQuery();
 			
 			return ContractAssembler.toContractDALDto(rs);
+ 		} catch (SQLException e ) {
+ 			throw new PersistenceException(e);
+ 		} finally {
+ 			Jdbc.close(rs, pst);
+ 		}
+	}
+
+	@Override
+	public List<String> findMechanicsForProfessionalGroupsName(String groupId) {
+		PreparedStatement pst = null;
+		Connection c = null;
+		ResultSet rs = null;
+		
+		List<String> aux = new ArrayList<>();
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TCONTRACTS_FINDMECHANICSIDFORPROFESSIONALGROUP);
+			
+			pst.setString(1, groupId);
+			
+			rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				aux.add(rs.getString("mechanic_id"));
+			}
+			
+			return aux;
+ 		} catch (SQLException e ) {
+ 			throw new PersistenceException(e);
+ 		} finally {
+ 			Jdbc.close(rs, pst);
+ 		}
+	}
+
+	@Override
+	public List<String> findMechanicsIdWithContractType(String id) {
+		PreparedStatement pst = null;
+		Connection c = null;
+		ResultSet rs = null;
+		
+		List<String> aux = new ArrayList<>();
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TCONTRACTS_FINDMECHANICSIDWITHCONTRACTTYPE);
+			
+			pst.setString(1, id);
+			
+			rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				aux.add(rs.getString("mechanic_id"));
+			}
+			
+			return aux;
  		} catch (SQLException e ) {
  			throw new PersistenceException(e);
  		} finally {

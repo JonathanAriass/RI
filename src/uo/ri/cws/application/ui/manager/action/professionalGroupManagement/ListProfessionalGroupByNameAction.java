@@ -17,9 +17,13 @@ public class ListProfessionalGroupByNameAction implements Action {
 		
 		String name = Console.readString("Professional group name ");
 		
+		Optional<ProfessionalGroupBLDto> result;
+		result = BusinessFactory.forProfessionalGroupService().findProfessionalGroupByName(name);
 
-
-		Printer.printProfessionalGroup(result);
+		if (result.isEmpty())
+			Console.println("\nMechanic does not exist\n");  
+		else
+			Printer.printProfessionalGroup(result.get());		
 		
 	}
 

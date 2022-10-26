@@ -2,6 +2,11 @@ package uo.ri.cws.application.ui.manager;
 
 import menu.BaseMenu;
 import menu.NotYetImplementedAction;
+import uo.ri.cws.application.ui.manager.action.professionalGroupManagement.AddProfessionalGroupAction;
+import uo.ri.cws.application.ui.manager.action.professionalGroupManagement.DeleteProfessionalGroupAction;
+import uo.ri.cws.application.ui.manager.action.professionalGroupManagement.ListAllProfessionalGroupAction;
+import uo.ri.cws.application.ui.manager.action.professionalGroupManagement.ListProfessionalGroupByNameAction;
+import uo.ri.cws.application.ui.manager.action.professionalGroupManagement.UpdateProfessionalGroupAction;
 
 public class ProfessionalGroupMenu extends BaseMenu {
 
@@ -9,13 +14,13 @@ public class ProfessionalGroupMenu extends BaseMenu {
 	menuOptions = new Object[][] {
 		{ "Manager > Professional Group management", null },
 
-		{ "Add Professional Group ", NotYetImplementedAction.class },
-		{ "Update Professional Group ", NotYetImplementedAction.class },
-		{ "Delete Professional Group ", NotYetImplementedAction.class },
+		{ "Add Professional Group ", AddProfessionalGroupAction.class },
+		{ "Update Professional Group ", UpdateProfessionalGroupAction.class },
+		{ "Delete Professional Group ", DeleteProfessionalGroupAction.class },
 		{ "List all Professional Group ",
-			NotYetImplementedAction.class },
+			ListAllProfessionalGroupAction.class },
 		{ "List Professional Group By name ",
-			NotYetImplementedAction.class }, };
+			ListProfessionalGroupByNameAction.class }, };
     }
 
 }

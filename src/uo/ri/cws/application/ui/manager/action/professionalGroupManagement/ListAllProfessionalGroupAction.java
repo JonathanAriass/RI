@@ -11,8 +11,9 @@ public class ListAllProfessionalGroupAction implements Action {
 	@Override
 	public void execute() throws BusinessException {
 		Console.println("\nList of professional groups \n");  
-
-
+		
+		Printer.printProfessionalGroups(BusinessFactory.
+				forProfessionalGroupService().findAllProfessionalGroups());
 	}
 
 }
