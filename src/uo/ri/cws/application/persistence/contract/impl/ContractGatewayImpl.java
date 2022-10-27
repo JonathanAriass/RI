@@ -20,6 +20,7 @@ public class ContractGatewayImpl implements ContractGateway {
 	private String TCONTRACTS_FINDPROFESSIONALGROUPBYID = "SELECT * FROM TCONTRACTS WHERE professionalgroup_id = ?";
 	private String TCONTRACTS_FINDMECHANICSIDFORPROFESSIONALGROUP = "SELECT mechanic_id FROM TCONTRACTS WHERE professionalgroup_id = ?";
 	private String TCONTRACTS_FINDMECHANICSIDWITHCONTRACTTYPE = "SELECT mechanic_id FROM TCONTRACTS WHERE state = 'IN_FORCE' and contracttype_id = ?";
+	private String TCONTRACTS_FINDPROFESSIONALGROUPBYCONTRACTID = "SELECT professionalgroup_id FROM TCONTRACTS WHERE id = ?";
 	
 	@Override
 	public void add(ContractDALDto t) {
@@ -174,6 +175,29 @@ public class ContractGatewayImpl implements ContractGateway {
 			}
 			
 			return aux;
+ 		} catch (SQLException e ) {
+ 			throw new PersistenceException(e);
+ 		} finally {
+ 			Jdbc.close(rs, pst);
+ 		}
+	}
+
+	@Override
+	public String findProfessionaGroupByContractId(String id) {
+		PreparedStatement pst = null;
+		Connection c = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TCONTRACTS_FINDPROFESSIONALGROUPBYCONTRACTID);
+			
+			pst.setString(1, id);
+			
+			rs = pst.executeQuery();
+			
+			return rs.getString("professionalgroup_id");
  		} catch (SQLException e ) {
  			throw new PersistenceException(e);
  		} finally {

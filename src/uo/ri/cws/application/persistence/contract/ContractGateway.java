@@ -15,6 +15,7 @@ public interface ContractGateway extends Gateway<ContractDALDto> {
 	List<String> findMechanicsIdWithContractType(String name);
 	Optional<ContractDALDto> findByProfessionalGroupId(String groupid);
 	List<String> findMechanicsForProfessionalGroupsName(String id);
+	String findProfessionaGroupByContractId(String id);
 	
 	public class ContractDALDto {
 		public String id;

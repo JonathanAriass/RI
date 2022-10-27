@@ -1,6 +1,7 @@
 package uo.ri.cws.application.persistence.payroll;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import uo.ri.cws.application.persistence.Gateway;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway.PayrollDALDto;
@@ -8,6 +9,8 @@ import uo.ri.cws.application.persistence.payroll.PayrollGateway.PayrollDALDto;
 
 public interface PayrollGateway extends Gateway<PayrollDALDto> {
 
+	Optional<PayrollDALDto> findPayrollByContractId(String contractId);
+	
 	public class PayrollDALDto {
 		public String id;
 		public Long version;
