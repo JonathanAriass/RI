@@ -29,9 +29,13 @@ public class ContractAssembler {
 		result.id = arg.id;
 		result.version = arg.version;
 		result.annualbasewage = arg.annualBaseWage;
+		result.settlement = arg.settlement;
 		result.contracttype_id = arg.contractTypeName;
+		result.startdate = arg.startDate;
 		result.enddate = arg.endDate;
-		result.mechanic_id = arg.
+		result.state = arg.state;
+		result.professionalgroup_id = arg.professionalGroupName;
+		
 		return result;
 	}
 
@@ -40,9 +44,14 @@ public class ContractAssembler {
 		ContractBLDto result = new ContractBLDto();
 		result.id = arg.id;
 		result.version = arg.version;
-		result.name = arg.name;
-		result.surname = arg.surname;
-		result.dni = arg.dni;
+		result.annualBaseWage = arg.annualbasewage;
+		result.settlement = arg.settlement;
+		result.contractTypeName = arg.contracttype_id;
+		result.startDate = arg.startdate;
+		result.endDate = arg.enddate;
+		result.state = arg.state;
+		result.professionalGroupName = arg.professionalgroup_id;
+		
 		return result;
 	}
 	

@@ -14,6 +14,8 @@ import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
 import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
 import uo.ri.cws.application.business.payroll.PayrollService.PayrollBLDto;
 import uo.ri.cws.application.business.util.command.Command;
+import uo.ri.cws.application.business.workorder.WorkOrderService.WorkOrderBLDto;
+import uo.ri.cws.application.business.workorder.assembler.WorkOrderAssembler;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 
@@ -50,7 +52,7 @@ public class GeneratePayrolls implements Command<Void> {
 		// comprobar si el mecanico de cada contrato valido ya tiene generada una payroll
 		List<String> validContractsIds = validateContractsForMechanics(contractsIds);
 		
-		generateAllPayroll();
+		generateAllPayroll(validContractsIds);
 		
 		return null;
 	}
@@ -121,54 +123,93 @@ public class GeneratePayrolls implements Command<Void> {
 		for (ContractBLDto c : contracts) {
 			p = new PayrollBLDto();
 			p.id = UUID.randomUUID().toString();
+			p.version = 1L;
 			
 			p.date = LocalDate.now();
 			p.monthlyWage = c.annualBaseWage / 14;
-			p.bonus = p.monthlyWage;
 			p.contractId = c.id;
 			
-			double tax = getIncomeTax(c.id);
+			double bonus = getBonus(p.date, p.monthlyWage);
+			p.bonus = bonus;
+			
+			double tax = getIncomeTax(c.annualBaseWage);
 			p.incomeTax = tax;
 			
 			double productivityBonus = getProductivityBouns(c.id);
 			p.productivityBonus = productivityBonus;
 			
+			double triennium = getTrienniumPayment(c.id, c.startDate);
+			p.trienniumPayment = triennium;
+			
+			double nic = getNic(c.annualBaseWage);
+			p.nic = nic;
+			
+			// Calculate gross wage
+			
+			// Calculate deductions
+			
+			// Calculate net wage
 		}
 	}
+
+
+	private double getIncomeTax(double annualBaseWage) {
+		double tax = 0;
+		
+		if (annualBaseWage >= 0 && annualBaseWage <= 12450) {
+			tax = 0.19;
+		} 
+		else if (annualBaseWage >= 12450 && annualBaseWage <= 20200) {
+			tax = 0.24;
+		}
+		else if (annualBaseWage >= 20200 && annualBaseWage <= 35200) {
+			tax = 0.30;
+		}
+		else if (annualBaseWage >= 35200 && annualBaseWage <= 60000) {
+			tax = 0.37;
+		} 
+		else if (annualBaseWage >= 60000 && annualBaseWage <= 300000) {
+			tax = 0.45;
+		} 
+		else if (annualBaseWage >= 300000) {
+			tax = 0.47;
+		} 
+		
+		return tax;
+	}
+
 
 	private ProfessionalGroupGateway pgg = PersistenceFactory.forProfessionalGroup();
 	
-	private double getIncomeTax(String id) {
-		double tax = 0;
+	private double getProductivityBouns(String id, ContractBLDto c) {
+		double productivityBonus = 0;
 		
-		String professionalGroupId= cg.findProfessionaGroupByContractId(id);
-		String professionalGroupName = pgg.findById(professionalGroupId).get().name;
-		switch(professionalGroupName) {
-		case "I":
-			tax = 
-			break;
-		case "II":
-			
-			break;
-		case "III":
-			
-			break;
-		case "IV":
-			
-			break;
-		case "V":
-			
-			break;
-		case "VI":
-			
-			break;
-		case "VII":
-			
-			break;
-		}
+		List<WorkOrderBLDto> workOrders = WorkOrderAssembler.toDtoList(PersistenceFactory.forWorkOrder().findByMechanic(c.dni));
+		
+		
+		String professionalGroupId = cg.findProfessionaGroupByContractId(id);
+		productivityBonus = pgg.findById(professionalGroupId).get().productivity_bonus_percentage;
+		
+		return productivityBonus/100;
 	}
 	
-	
-	
+	private double getTrienniumPayment(String id, LocalDate startDate) {
+		int trienniumAcumulatted = LocalDate.now().getYear() - startDate.getYear();
+		String professionalGroupId = cg.findProfessionaGroupByContractId(id);
+		
+		return (trienniumAcumulatted /3 ) * 
+				pgg.findById(professionalGroupId).get().triennium_payment;
+	}
 
+	private double getNic(double annualBaseWage) {
+		return (annualBaseWage * 0.05) / 12;
+	}
+
+	private double getBonus(LocalDate now, double monthWage) {
+		if (now.getMonth().getValue() == 12 || now.getMonth().getValue() == 6) {
+			return monthWage;
+		}
+		return 0;
+	}
+	
 }

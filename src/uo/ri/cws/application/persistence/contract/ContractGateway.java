@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import uo.ri.cws.application.business.contract.ContractService.ContractState;
 import uo.ri.cws.application.persistence.Gateway;
 import uo.ri.cws.application.persistence.contract.ContractGateway.ContractDALDto;
 
@@ -26,7 +27,7 @@ public interface ContractGateway extends Gateway<ContractDALDto> {
 		public LocalDate startdate;
 		public LocalDate enddate;
 		public String contracttype_id;
-		public String state;
+		public ContractState state;
 		public String mechanic_id;
 		public String professionalgroup_id;
 	}
