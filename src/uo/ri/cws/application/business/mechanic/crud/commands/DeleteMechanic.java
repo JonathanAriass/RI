@@ -25,7 +25,7 @@ public class DeleteMechanic implements Command<Void> {
 	public Void execute() throws BusinessException {
 		// Check if mechanic exist with this id
 		if (!existMechanic(id)) {
-			throw new BusinessException("Repeated mechanic");
+			throw new BusinessException("Mechanic doesn't exist");
 		}
 		/*
 		 * Extension: Realizar verificaciones en la operacion de borrado de mecanicos.

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.payroll.PayrollService;
+import uo.ri.cws.application.business.payroll.create.commands.DeleteLastPayrollFor;
 import uo.ri.cws.application.business.payroll.create.commands.GeneratePayrolls;
 import uo.ri.cws.application.business.util.command.CommandExecutor;
 
@@ -20,14 +21,12 @@ public class PayrollServiceImpl implements PayrollService {
 
 	@Override
 	public void generatePayrolls(LocalDate present) throws BusinessException {
-		// TODO Auto-generated method stub
-
+		executor.execute(new GeneratePayrolls(present));
 	}
 
 	@Override
 	public void deleteLastPayrollFor(String mechanicId) throws BusinessException {
-		// TODO Auto-generated method stub
-
+		executor.execute(new DeleteLastPayrollFor(mechanicId));
 	}
 
 	@Override

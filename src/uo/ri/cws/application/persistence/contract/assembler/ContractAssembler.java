@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import uo.ri.cws.application.business.contract.ContractService.ContractState;
 import uo.ri.cws.application.persistence.contract.ContractGateway.ContractDALDto;
 
 public class ContractAssembler {
@@ -37,7 +38,11 @@ public class ContractAssembler {
 		value.startdate = rs.getDate("startdate").toLocalDate();
 		value.annualbasewage = rs.getDouble("annualbasewage");
 		value.settlement = rs.getDouble("settlement");
-		value.state = rs.getString("state");
+		if (rs.getString("state") == "IN_FORCE") {
+			value.state = ContractState.IN_FORCE;			
+		} else if (rs.getString("state") == "TERMINATED") {
+			value.state = ContractState.TERMINATED;		
+		}
 		value.contracttype_id = rs.getString("contracttype_id");
 		value.mechanic_id = rs.getString("mechanic_id");
 		value.professionalgroup_id = rs.getString("professionalgroup_id");

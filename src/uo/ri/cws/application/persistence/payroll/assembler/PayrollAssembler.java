@@ -33,13 +33,14 @@ public class PayrollAssembler {
 		value.id = rs.getString("id");
 		value.version = rs.getLong("version");
 		
-		value.bonus = value.bonus;
-		value.contractid = value.contractid;
-		value.date = value.date;
-		value.incometax = value.incometax;
-		value.nic = value.nic;
-		value.productivitybonus = value.productivitybonus;
-		value.trienniumpayment = value.trienniumpayment;
+		value.bonus = rs.getDouble("bonus");
+		value.date = rs.getDate("date").toLocalDate();
+		value.incometax = rs.getDouble("incometax");
+		value.monthlywage = rs.getDouble("monthlywage");
+		value.nic = rs.getDouble("nic");
+		value.productivitybonus = rs.getDouble("productivitybonus");
+		value.trienniumpayment = rs.getDouble("trienniumpayment");
+		value.contractid = rs.getString("contract_id");
 		return value;
 	}
 	

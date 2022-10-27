@@ -15,18 +15,56 @@ import uo.ri.cws.application.persistence.payroll.assembler.PayrollAssembler;
 
 public class PayrollGatewayImpl implements PayrollGateway {
 
-	private String TPAYROLL_FINDPAYROLLBYCONTRACTID = "SELECT * FROM TPAYROLL WHERE contract_id = ?";
+	private String TPAYROLL_ADDPAYROLL = 
+			"INSERT into TPAYROLLS(id, bonus, date, incometax, monthlywage, nic, productivitybonus, trienniumpayment, version, contract_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	private String TPAYROLL_DELETEPAYROLL = "delete from TPAYROLLS where id = ?";
+	
+	private String TPAYROLL_FINDPAYROLLBYCONTRACTID = "SELECT * FROM TPAYROLLS WHERE contract_id = ?";
 	
 	@Override
 	public void add(PayrollDALDto t) {
-		// TODO Auto-generated method stub
+		PreparedStatement pst = null;
+		Connection c = null;
 		
+		try {
+			c = Jdbc.getCurrentConnection();
+			pst = c.prepareStatement(TPAYROLL_ADDPAYROLL);
+			pst.setString(1, t.id);
+			pst.setDouble(2, t.bonus);
+			pst.setDate(3, java.sql.Date.valueOf(t.date));
+			pst.setDouble(4, t.incometax);
+			pst.setDouble(5, t.monthlywage);
+			pst.setDouble(6, t.nic);
+			pst.setDouble(7, t.productivitybonus);
+			pst.setDouble(8, t.trienniumpayment);
+			pst.setLong(9, t.version);
+			pst.setString(10, t.contractid);
+	
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(pst);
+		}
 	}
 
 	@Override
 	public void remove(String id) {
-		// TODO Auto-generated method stub
+		Connection c = null;
+		PreparedStatement pst = null;
 		
+		try {
+			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
+
+			pst = c.prepareStatement(TPAYROLL_DELETEPAYROLL);
+			pst.setString(1, id);
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(pst);
+		}
 	}
 
 	@Override
@@ -48,7 +86,7 @@ public class PayrollGatewayImpl implements PayrollGateway {
 	}
 
 	@Override
-	public Optional<PayrollDALDto> findPayrollByContractId(String contractId) {
+	public List<PayrollDALDto> findPayrollByContractId(String contractId) {
 		PreparedStatement pst = null;
 		Connection c = null;
 		ResultSet rs = null;
@@ -61,7 +99,7 @@ public class PayrollGatewayImpl implements PayrollGateway {
 			
 			rs = pst.executeQuery();
 			
-			return PayrollAssembler.toPayrollDALDto(rs);
+			return PayrollAssembler.toPayrollDALDtoList(rs);
  		} catch (SQLException e ) {
  			throw new PersistenceException(e);
  		} finally {

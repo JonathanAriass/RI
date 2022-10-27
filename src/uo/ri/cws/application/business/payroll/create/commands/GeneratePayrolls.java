@@ -13,6 +13,7 @@ import uo.ri.cws.application.business.contract.assembler.ContractAssembler;
 import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
 import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
 import uo.ri.cws.application.business.payroll.PayrollService.PayrollBLDto;
+import uo.ri.cws.application.business.payroll.assembler.PayrollAssembler;
 import uo.ri.cws.application.business.util.command.Command;
 import uo.ri.cws.application.business.workorder.WorkOrderService.WorkOrderBLDto;
 import uo.ri.cws.application.business.workorder.assembler.WorkOrderAssembler;
@@ -25,6 +26,16 @@ import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGate
 
 public class GeneratePayrolls implements Command<Void> {
 
+	private LocalDate fechaPresente;
+	
+	public GeneratePayrolls() {
+		fechaPresente = LocalDate.now();
+	}
+	
+	public GeneratePayrolls(LocalDate date) {
+		fechaPresente = date;
+	}
+	
 	@Override
 	public Void execute() throws BusinessException {
 		// Comprobar para que empleados se pueden generar las payroll
@@ -71,7 +82,8 @@ public class GeneratePayrolls implements Command<Void> {
 			endDate = m.endDate;
 			if (state == ContractState.IN_FORCE) {
 				result.add(m.id);
-			} else if (endDate.getMonthValue() >= LocalDate.now().getMonthValue()) {
+			} else if (endDate.getMonthValue() >= fechaPresente.getMonthValue() 
+					&& endDate.getYear() == fechaPresente.getYear()) {
 				result.add(m.id);
 			}
 		}
@@ -125,30 +137,38 @@ public class GeneratePayrolls implements Command<Void> {
 			p.id = UUID.randomUUID().toString();
 			p.version = 1L;
 			
-			p.date = LocalDate.now();
-			p.monthlyWage = c.annualBaseWage / 14;
+			p.date = fechaPresente;
 			p.contractId = c.id;
+			
+			// Earnings
+			p.monthlyWage = c.annualBaseWage / 14;
 			
 			double bonus = getBonus(p.date, p.monthlyWage);
 			p.bonus = bonus;
-			
-			double tax = getIncomeTax(c.annualBaseWage);
-			p.incomeTax = tax;
-			
-			double productivityBonus = getProductivityBouns(c.id);
+
+			double productivityBonus = getProductivityBouns(c.id, c);
 			p.productivityBonus = productivityBonus;
 			
 			double triennium = getTrienniumPayment(c.id, c.startDate);
 			p.trienniumPayment = triennium;
 			
+			// Deductions
+			double tax = getIncomeTax(c.annualBaseWage);
+			p.incomeTax = tax;
+			
 			double nic = getNic(c.annualBaseWage);
 			p.nic = nic;
 			
 			// Calculate gross wage
-			
+			double earnings = p.monthlyWage + bonus + productivityBonus + triennium;
 			// Calculate deductions
-			
+			double deductions = tax + nic;
 			// Calculate net wage
+			double netWage = earnings - deductions;
+			p.netWage = netWage;
+			
+			// We add the data
+			pg.add(PayrollAssembler.toDALDto(p));
 		}
 	}
 
@@ -184,17 +204,25 @@ public class GeneratePayrolls implements Command<Void> {
 	private double getProductivityBouns(String id, ContractBLDto c) {
 		double productivityBonus = 0;
 		
-		List<WorkOrderBLDto> workOrders = WorkOrderAssembler.toDtoList(PersistenceFactory.forWorkOrder().findByMechanic(c.dni));
 		
+		double auxWorkorders = 0;
+		List<WorkOrderBLDto> workOrders = WorkOrderAssembler.toDtoList(PersistenceFactory.forWorkOrder().findByMechanic(c.dni));
+		for (WorkOrderBLDto w : workOrders) {
+			if (w.date.getMonth().equals(fechaPresente.getMonth())
+					&& w.date.getYear() == fechaPresente.getYear() 
+					&& w.state.equals("INOICED")) {
+				auxWorkorders += w.total;
+			}
+		}
 		
 		String professionalGroupId = cg.findProfessionaGroupByContractId(id);
 		productivityBonus = pgg.findById(professionalGroupId).get().productivity_bonus_percentage;
 		
-		return productivityBonus/100;
+		return (productivityBonus/100) * auxWorkorders;
 	}
 	
 	private double getTrienniumPayment(String id, LocalDate startDate) {
-		int trienniumAcumulatted = LocalDate.now().getYear() - startDate.getYear();
+		int trienniumAcumulatted = fechaPresente.getYear() - startDate.getYear();
 		String professionalGroupId = cg.findProfessionaGroupByContractId(id);
 		
 		return (trienniumAcumulatted /3 ) * 
