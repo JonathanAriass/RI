@@ -22,7 +22,7 @@ public class PayrollGatewayImpl implements PayrollGateway {
 	private String TPAYROLL_DELETEPAYROLL = "delete from TPAYROLLS where id = ?";
 	
 	private String TPAYROLL_FINDPAYROLLBYCONTRACTID = "SELECT * FROM TPAYROLLS WHERE contract_id = ?";
-	
+	private String TPAYROLL_FINDBYID = "SELECT * FROM TPAYROLLS WHERE id = ?";
 	private String TPAYROLLS_FINDALL = "SELECT * FROM TPAYROLLS";
 	
 	@Override
@@ -78,8 +78,24 @@ public class PayrollGatewayImpl implements PayrollGateway {
 
 	@Override
 	public Optional<PayrollDALDto> findById(String id) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		PreparedStatement pst = null;
+		Connection c = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
+			
+			pst = c.prepareStatement(TPAYROLL_FINDBYID);
+			pst.setString(1, id);
+			
+			rs = pst.executeQuery();
+			
+			return PayrollAssembler.toPayrollDALDto(rs);
+ 		} catch (SQLException e ) {
+ 			throw new PersistenceException(e);
+ 		} finally {
+ 			Jdbc.close(rs, pst);
+ 		}
 	}
 
 	@Override

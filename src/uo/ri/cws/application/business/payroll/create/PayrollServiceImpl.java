@@ -6,7 +6,10 @@ import java.util.Optional;
 
 import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.payroll.PayrollService;
+import uo.ri.cws.application.business.payroll.create.commands.DeleteAllPayrolls;
 import uo.ri.cws.application.business.payroll.create.commands.DeleteLastPayrollFor;
+import uo.ri.cws.application.business.payroll.create.commands.FindAllPayrolls;
+import uo.ri.cws.application.business.payroll.create.commands.FindPayrollDetails;
 import uo.ri.cws.application.business.payroll.create.commands.GeneratePayrolls;
 import uo.ri.cws.application.business.util.command.CommandExecutor;
 
@@ -31,20 +34,17 @@ public class PayrollServiceImpl implements PayrollService {
 
 	@Override
 	public void deleteLastPayrolls() throws BusinessException {
-		// TODO Auto-generated method stub
-
+		executor.execute(new DeleteAllPayrolls());
 	}
 
 	@Override
 	public Optional<PayrollBLDto> getPayrollDetails(String id) throws BusinessException {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		return executor.execute(new FindPayrollDetails(id));
 	}
 
 	@Override
 	public List<PayrollSummaryBLDto> getAllPayrolls() throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		return executor.execute(new FindAllPayrolls());
 	}
 
 	@Override

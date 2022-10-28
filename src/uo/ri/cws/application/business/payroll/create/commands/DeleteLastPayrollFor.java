@@ -34,22 +34,14 @@ public class DeleteLastPayrollFor implements Command<Void> {
 	
 	@Override
 	public Void execute() throws BusinessException {
-		System.out.println(mechanicDni);
 		// Check if mechanic exist with this id
 		if (!existMechanic(mechanicDni)) {
 			throw new BusinessException("Mechanic doesn't exist");
 		}
 		
-		if (!hasPayroll(mechanicDni)) {
-			throw new BusinessException("Mechanic has no payrolls");
+		if (hasPayroll(mechanicDni)) {
+			pg.remove(payroll.id);			
 		}
-		
-		Optional<MechanicBLDto> mechanic = MechanicAssembler.toBLDto(mg.findByDni(mechanicDni));
-		Optional<ContractBLDto> contrato = ContractAssembler.toBLDto(cg.findByMechanic(mechanic.get().id));
-		
-//		Optional<PayrollBLDto> payroll = PayrollAssembler.toBLDto(pg.findPayrollByContractId(contrato.get().id));
-		
-		pg.remove(payroll.id);
 		
 		return null;
 	}
@@ -65,13 +57,10 @@ public class DeleteLastPayrollFor implements Command<Void> {
 	private boolean hasPayroll(String mechanicDni2) throws PersistenceException {
 		Optional<MechanicBLDto> mechanic = MechanicAssembler.toBLDto(mg.findByDni(mechanicDni2));
 		Optional<ContractBLDto> contrato = ContractAssembler.toBLDto(cg.findByMechanic(mechanic.get().id));
-
-//		System.out.println(contrato.get().id);
 		
 		List<PayrollBLDto> payrolls = PayrollAssembler.toDtoList(pg.findAll());
 		
 		for (PayrollBLDto p : payrolls) {
-			System.out.println("c month: " + p.date.getMonthValue());
 			if (p.contractId.equals(contrato.get().id)
 					&& p.date.getMonthValue() == LocalDate.now().getMonthValue()
 					&& p.date.getYear() == LocalDate.now().getYear()) {
