@@ -43,6 +43,7 @@ public class ContractAssembler {
 
 		ContractBLDto result = new ContractBLDto();
 		result.id = arg.id;
+		result.dni = arg.mechanic_id;
 		result.version = arg.version;
 		result.annualBaseWage = arg.annualbasewage;
 		result.settlement = arg.settlement;

@@ -12,6 +12,7 @@ import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.contract.assembler.ContractAssembler;
+import uo.ri.cws.application.persistence.mechanic.assembler.MechanicAssembler;
 
 public class ContractGatewayImpl implements ContractGateway {
 
@@ -21,6 +22,8 @@ public class ContractGatewayImpl implements ContractGateway {
 	private String TCONTRACTS_FINDMECHANICSIDFORPROFESSIONALGROUP = "SELECT mechanic_id FROM TCONTRACTS WHERE professionalgroup_id = ?";
 	private String TCONTRACTS_FINDMECHANICSIDWITHCONTRACTTYPE = "SELECT mechanic_id FROM TCONTRACTS WHERE state = 'IN_FORCE' and contracttype_id = ?";
 	private String TCONTRACTS_FINDPROFESSIONALGROUPBYCONTRACTID = "SELECT professionalgroup_id FROM TCONTRACTS WHERE id = ?";
+	private String TCONTRACTS_FINDALL = "SELECT * FROM TCONTRACTS";
+	private String TCONTRACTS_FINDBYID = "SELECT * FROM TCONTRACTS WHERE id = ?";
 	
 	@Override
 	public void add(ContractDALDto t) {
@@ -42,14 +45,44 @@ public class ContractGatewayImpl implements ContractGateway {
 
 	@Override
 	public Optional<ContractDALDto> findById(String id) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		PreparedStatement pst = null;
+		Connection c = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TCONTRACTS_FINDBYID);
+			pst.setString(1, id);
+			
+			rs = pst.executeQuery();
+			
+			return ContractAssembler.toContractDALDto(rs);
+ 		} catch (SQLException e ) {
+ 			throw new PersistenceException(e);
+ 		} finally {
+ 			Jdbc.close(rs, pst);
+ 		}
 	}
 
 	@Override
 	public List<ContractDALDto> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement pst = null;
+		Connection c = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TCONTRACTS_FINDALL);
+			rs = pst.executeQuery();
+			
+			return ContractAssembler.toContractDALDtoList(rs);
+ 		} catch (SQLException e ) {
+ 			throw new PersistenceException(e);
+ 		} finally {
+ 			Jdbc.close(rs, pst);
+ 		}
 	}
 
 	@Override
@@ -196,6 +229,8 @@ public class ContractGatewayImpl implements ContractGateway {
 			pst.setString(1, id);
 			
 			rs = pst.executeQuery();
+			
+			rs.next();
 			
 			return rs.getString("professionalgroup_id");
  		} catch (SQLException e ) {

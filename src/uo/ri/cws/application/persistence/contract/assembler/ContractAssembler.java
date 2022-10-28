@@ -34,15 +34,18 @@ public class ContractAssembler {
 		value.id = rs.getString("id");
 		value.version = rs.getLong("version");
 		
-//		value.enddate = rs.getDate("enddate").toLocalDate();
+		if (rs.getDate("enddate") != null) {
+			value.enddate = rs.getDate("enddate").toLocalDate();			
+		}
 		value.startdate = rs.getDate("startdate").toLocalDate();
 		value.annualbasewage = rs.getDouble("annualbasewage");
 		value.settlement = rs.getDouble("settlement");
-		if (rs.getString("state") == "IN_FORCE") {
-			value.state = ContractState.IN_FORCE;			
-		} else if (rs.getString("state") == "TERMINATED") {
-			value.state = ContractState.TERMINATED;		
-		}
+//		if (rs.getString("state") == "IN_FORCE") {
+//			value.state = ContractState.IN_FORCE;			
+//		} else if (rs.getString("state") == "TERMINATED") {
+//			value.state = ContractState.TERMINATED;		
+//		}
+		value.state = ContractState.valueOf(rs.getString("state"));
 		value.contracttype_id = rs.getString("contracttype_id");
 		value.mechanic_id = rs.getString("mechanic_id");
 		value.professionalgroup_id = rs.getString("professionalgroup_id");

@@ -23,6 +23,7 @@ import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
+import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
 
 public class GeneratePayrolls implements Command<Void> {
 
@@ -58,12 +59,14 @@ public class GeneratePayrolls implements Command<Void> {
 		 * */
 		// Todos estos datos tienen que estar detallados al generar una factura
 		
+		if (fechaPresente == null) {
+			fechaPresente = LocalDate.now();
+		}
+		
 		List<String> contractsIds = checkContractsState();
 		
 		// comprobar si el mecanico de cada contrato valido ya tiene generada una payroll
-		List<String> validContractsIds = validateContractsForMechanics(contractsIds);
-		
-		generateAllPayroll(validContractsIds);
+		generateAllPayroll(contractsIds);
 		
 		return null;
 	}
@@ -77,14 +80,17 @@ public class GeneratePayrolls implements Command<Void> {
 		List<ContractBLDto> contractsId = ContractAssembler.toDtoList(cg.findAll());
 		ContractState state;
 		LocalDate endDate;
-		for (ContractBLDto m : contractsId) {
-			state = m.state;
-			endDate = m.endDate;
-			if (state == ContractState.IN_FORCE) {
-				result.add(m.id);
-			} else if (endDate.getMonthValue() >= fechaPresente.getMonthValue() 
-					&& endDate.getYear() == fechaPresente.getYear()) {
-				result.add(m.id);
+		for (ContractBLDto c : contractsId) {
+			state = c.state;
+			endDate = c.endDate;
+			if (state.equals(ContractState.IN_FORCE) ||
+					( state.equals(ContractState.TERMINATED) && 
+					fechaPresente != null && c.endDate != null &&
+					endDate.getMonthValue() >= fechaPresente.getMonthValue() 
+					&& endDate.getYear() == fechaPresente.getYear())) {
+				if (!hasPayroll(c)) {
+					result.add(c.id);					
+				}
 			}
 		}
 		
@@ -94,33 +100,20 @@ public class GeneratePayrolls implements Command<Void> {
 	
 	private PayrollGateway pg = PersistenceFactory.forPayroll();
 	
-	private List<String> validateContractsForMechanics(List<String> contracts) {
-		List<String> result = new ArrayList<String>();
+	private boolean hasPayroll(ContractBLDto contract) {
+		List<PayrollBLDto> payrolls = PayrollAssembler.toDtoList(pg.findAll());
 		
-		for (String cId : contracts) {
-			if (pg.findPayrollByContractId(cId).isEmpty()) {
-				result.add(cId);
+		for (PayrollBLDto p : payrolls) {
+			if (p.contractId.equals(contract.id)
+					&& p.date.getMonthValue() == fechaPresente.getMonthValue()
+					&& p.date.getYear() == fechaPresente.getYear()) {
+				return true;
 			}
 		}
 		
-		return result;
+		return false;
 	}
 	
-	
-	/* Cosas a tener en cuenta en la nomina: 
-	 * 		- monthlyWage (base / 14) 
-	 * 		
-	 * 		- bonus (meses correspondientes con importe igual al salario base)
-	 * 		
-	 * 		- productivityBonus (porcentaje importe total workorders asignadas al mecanico
-	 * 							 de este mes y que hayan sido facturadas. El porcentaje depende
-	 * 							 del grupo profesional)
-	 * 		
-	 * 		- trienniumPayment (complemento por antiguedad. Cada 3 anios acumulados en el mismo contrato
-	 * 							se acumulara un trienio. Por cada trienio se recibe lo del grupo profesional)
-	 * 
-	 * 		- incomeTax (va por tramos - mirar en el pdf de la extension)
-	 */
 	private void generateAllPayroll(List<String> contractIds) {
 		// obtenemos toda la informacion del contrato con la gateway y la lista de ids de contrato
 		List<ContractBLDto> contracts = new ArrayList<ContractBLDto>();
@@ -146,26 +139,29 @@ public class GeneratePayrolls implements Command<Void> {
 			double bonus = getBonus(p.date, p.monthlyWage);
 			p.bonus = bonus;
 
-			double productivityBonus = getProductivityBouns(c.id, c);
-			p.productivityBonus = productivityBonus;
+			double productivityBonus = getProductivityBonus(c.id, c);
+			p.productivityBonus = Math.round(productivityBonus*100.0)/100.0;
 			
 			double triennium = getTrienniumPayment(c.id, c.startDate);
-			p.trienniumPayment = triennium;
-			
-			// Deductions
-			double tax = getIncomeTax(c.annualBaseWage);
-			p.incomeTax = tax;
-			
-			double nic = getNic(c.annualBaseWage);
-			p.nic = nic;
+			p.trienniumPayment = Math.round(triennium*100.0)/100.0;
 			
 			// Calculate gross wage
 			double earnings = p.monthlyWage + bonus + productivityBonus + triennium;
+			
+						
+			// Deductions
+			double tax = getIncomeTax(c.annualBaseWage);
+			p.incomeTax = Math.round(tax*earnings*100.0)/100.0;
+			
+			double nic = getNic(c.annualBaseWage);
+			p.nic = Math.round(nic*100.0)/100.0;
+			
+			
 			// Calculate deductions
-			double deductions = tax + nic;
+			double deductions = Math.round(tax*100.0)/100.0 + Math.round(nic*100.0)/100.0;
 			// Calculate net wage
-			double netWage = earnings - deductions;
-			p.netWage = netWage;
+			double netWage = Math.round(earnings*100.0)/100.0 - Math.round(deductions*100.0)/100.0;
+			p.netWage = Math.round(netWage*100.0)/100.0;
 			
 			// We add the data
 			pg.add(PayrollAssembler.toDALDto(p));
@@ -174,50 +170,53 @@ public class GeneratePayrolls implements Command<Void> {
 
 
 	private double getIncomeTax(double annualBaseWage) {
-		double tax = 0;
-		
-		if (annualBaseWage >= 0 && annualBaseWage <= 12450) {
-			tax = 0.19;
+
+		if (annualBaseWage > 0 && annualBaseWage <= 12450) {
+			return 0.19;
 		} 
 		else if (annualBaseWage >= 12450 && annualBaseWage <= 20200) {
-			tax = 0.24;
+			return 0.24;
 		}
 		else if (annualBaseWage >= 20200 && annualBaseWage <= 35200) {
-			tax = 0.30;
+			return 0.30;
 		}
 		else if (annualBaseWage >= 35200 && annualBaseWage <= 60000) {
-			tax = 0.37;
+			return 0.37;
 		} 
 		else if (annualBaseWage >= 60000 && annualBaseWage <= 300000) {
-			tax = 0.45;
+			return 0.45;
 		} 
-		else if (annualBaseWage >= 300000) {
-			tax = 0.47;
+		else {
+			return 0.47;
 		} 
-		
-		return tax;
+
 	}
 
 
 	private ProfessionalGroupGateway pgg = PersistenceFactory.forProfessionalGroup();
+	private WorkOrderGateway wg = PersistenceFactory.forWorkOrder();
 	
-	private double getProductivityBouns(String id, ContractBLDto c) {
+	private double getProductivityBonus(String id, ContractBLDto c) {
 		double productivityBonus = 0;
 		
-		
 		double auxWorkorders = 0;
-		List<WorkOrderBLDto> workOrders = WorkOrderAssembler.toDtoList(PersistenceFactory.forWorkOrder().findByMechanic(c.dni));
+		
+		List<WorkOrderBLDto> workOrders = WorkOrderAssembler.toDtoList(
+				wg.findByMechanic(c.dni));
+		
 		for (WorkOrderBLDto w : workOrders) {
 			if (w.date.getMonth().equals(fechaPresente.getMonth())
 					&& w.date.getYear() == fechaPresente.getYear() 
-					&& w.state.equals("INOICED")) {
+					&& w.state.equals("INVOICED")) {
 				auxWorkorders += w.total;
 			}
 		}
 		
+		
+		
 		String professionalGroupId = cg.findProfessionaGroupByContractId(id);
 		productivityBonus = pgg.findById(professionalGroupId).get().productivity_bonus_percentage;
-		
+
 		return (productivityBonus/100) * auxWorkorders;
 	}
 	

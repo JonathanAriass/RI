@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
+import uo.ri.cws.application.persistence.contract.assembler.ContractAssembler;
 import uo.ri.cws.application.persistence.mechanic.assembler.MechanicAssembler;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway;
 import uo.ri.cws.application.persistence.payroll.assembler.PayrollAssembler;
@@ -21,6 +22,8 @@ public class PayrollGatewayImpl implements PayrollGateway {
 	private String TPAYROLL_DELETEPAYROLL = "delete from TPAYROLLS where id = ?";
 	
 	private String TPAYROLL_FINDPAYROLLBYCONTRACTID = "SELECT * FROM TPAYROLLS WHERE contract_id = ?";
+	
+	private String TPAYROLLS_FINDALL = "SELECT * FROM TPAYROLLS";
 	
 	@Override
 	public void add(PayrollDALDto t) {
@@ -81,8 +84,22 @@ public class PayrollGatewayImpl implements PayrollGateway {
 
 	@Override
 	public List<PayrollDALDto> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement pst = null;
+		Connection c = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(TPAYROLLS_FINDALL);
+			rs = pst.executeQuery();
+			
+			return PayrollAssembler.toPayrollDALDtoList(rs);
+ 		} catch (SQLException e ) {
+ 			throw new PersistenceException(e);
+ 		} finally {
+ 			Jdbc.close(rs, pst);
+ 		}
 	}
 
 	@Override
