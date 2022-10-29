@@ -22,6 +22,10 @@ public class FindAllPayrolls implements Command<List<PayrollSummaryBLDto>> {
 		return result;
 	}
 
+	/**
+	 * Method that summary all payrolls
+	 * @return List of payrollSummaryBLDto
+	 */
 	private List<PayrollSummaryBLDto> summaryPayrolls() {
 		List<PayrollSummaryBLDto> aux = new ArrayList<PayrollSummaryBLDto>();
 		
@@ -35,6 +39,11 @@ public class FindAllPayrolls implements Command<List<PayrollSummaryBLDto>> {
 		return aux;
 	}
 
+	/**
+	 * Method that converts a payrollBLDto to a payrollSummaryBLDto
+	 * @param p
+	 * @return
+	 */
 	private PayrollSummaryBLDto buildSummaryPayroll(PayrollBLDto p) {
 		PayrollSummaryBLDto result = new PayrollSummaryBLDto();
 		

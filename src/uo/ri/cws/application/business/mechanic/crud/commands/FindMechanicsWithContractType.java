@@ -10,8 +10,6 @@ import uo.ri.cws.application.business.contracttype.ContractTypeService.ContractT
 import uo.ri.cws.application.business.contracttype.assembler.ContractTypeAssembler;
 import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
 import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
-import uo.ri.cws.application.business.professionalgroup.ProfessionalGroupService.ProfessionalGroupBLDto;
-import uo.ri.cws.application.business.professionalgroup.assembler.ProfessionalGroupAssembler;
 import uo.ri.cws.application.business.util.command.Command;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.contract.ContractGateway;

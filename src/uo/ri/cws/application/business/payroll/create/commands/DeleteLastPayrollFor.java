@@ -46,6 +46,13 @@ public class DeleteLastPayrollFor implements Command<Void> {
 		return null;
 	}
 
+	/**
+	 * Method that checks if mechanics exists on database
+	 * 
+	 * @param id Mechanic Id
+	 * @return true if existsm, false otherwise
+	 * @throws PersistenceException
+	 */
 	private boolean existMechanic(String id) throws PersistenceException {
 		if (mg.findByDni(id).isPresent()) {
 			return true;
@@ -54,6 +61,13 @@ public class DeleteLastPayrollFor implements Command<Void> {
 		}
 	}
 	
+	/**
+	 * Method that checks if mechanic has payrolls
+	 * 
+	 * @param mechanicDni2
+	 * @return true if has payrolls, false otherwise
+	 * @throws PersistenceException
+	 */
 	private boolean hasPayroll(String mechanicDni2) throws PersistenceException {
 		Optional<MechanicBLDto> mechanic = MechanicAssembler.toBLDto(mg.findByDni(mechanicDni2));
 		Optional<ContractBLDto> contrato = ContractAssembler.toBLDto(cg.findByMechanic(mechanic.get().id));

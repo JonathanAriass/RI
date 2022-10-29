@@ -13,7 +13,7 @@ public class DeletePayrollForMechanicAction implements Action {
 		// Get info
 		String id = Console.readString("Mechanic id "); 
 
-
+		BusinessFactory.forPayrollService().deleteLastPayrollFor(id);
 				
 		// Print result
 		Console.println(String.format("Last payroll for mechanic %s successfully deleted", id));

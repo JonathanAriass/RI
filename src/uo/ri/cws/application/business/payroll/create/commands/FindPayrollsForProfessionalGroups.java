@@ -57,6 +57,11 @@ public class FindPayrollsForProfessionalGroups implements Command<List<PayrollSu
 		return false;
 	}
 	
+	/**
+	 * Method that converts a payrollBLDto to a payrollSummaryBLDto
+	 * @param p
+	 * @return
+	 */
 	private List<PayrollSummaryBLDto> buildSummaryPayroll(List<PayrollBLDto> payrolls) {
 		List<PayrollSummaryBLDto> aux = new ArrayList<PayrollSummaryBLDto>();
 		

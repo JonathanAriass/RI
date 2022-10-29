@@ -10,8 +10,6 @@ import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.contract.ContractService.ContractBLDto;
 import uo.ri.cws.application.business.contract.ContractService.ContractState;
 import uo.ri.cws.application.business.contract.assembler.ContractAssembler;
-import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
-import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
 import uo.ri.cws.application.business.payroll.PayrollService.PayrollBLDto;
 import uo.ri.cws.application.business.payroll.assembler.PayrollAssembler;
 import uo.ri.cws.application.business.util.command.Command;
@@ -20,7 +18,6 @@ import uo.ri.cws.application.business.workorder.assembler.WorkOrderAssembler;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 
-import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;

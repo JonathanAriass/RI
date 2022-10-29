@@ -10,7 +10,7 @@ public class DeleteLastPayrollAction implements Action {
 	@Override
 	public void execute() throws BusinessException {
 		
-
+		BusinessFactory.forPayrollService().deleteLastPayrolls();
 		
 		// Print result
 		Console.println( "Last payroll successfully deleted" );		

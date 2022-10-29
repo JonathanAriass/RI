@@ -1,7 +1,6 @@
 package uo.ri.cws.application.ui.manager;
 
 import menu.BaseMenu;
-import menu.NotYetImplementedAction;
 import uo.ri.cws.application.ui.manager.action.professionalGroupManagement.AddProfessionalGroupAction;
 import uo.ri.cws.application.ui.manager.action.professionalGroupManagement.DeleteProfessionalGroupAction;
 import uo.ri.cws.application.ui.manager.action.professionalGroupManagement.ListAllProfessionalGroupAction;

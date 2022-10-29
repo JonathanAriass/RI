@@ -4,7 +4,6 @@ package uo.ri.cws.application.ui.cashier;
 import menu.BaseMenu;
 import menu.NotYetImplementedAction;
 import uo.ri.cws.application.ui.cashier.action.FindNotInvoicedWorkOrdersAction;
-import uo.ri.cws.application.ui.cashier.action.SettleInvoiceAction;
 import uo.ri.cws.application.ui.cashier.action.WorkOrdersBillingAction;
 
 public class MainMenu extends BaseMenu {
@@ -15,7 +14,7 @@ public class MainMenu extends BaseMenu {
 			{ "Search not invoiced workorders by client",	FindNotInvoicedWorkOrdersAction.class }, 
 			{ "Search not invoiced workorders by plate", 	NotYetImplementedAction.class }, 
 			{ "Workorder billing", 						WorkOrdersBillingAction.class },
-			{ "Pay off invoice", 						SettleInvoiceAction.class },
+			{ "Pay off invoice", 						NotYetImplementedAction.class },
 		};
 	}
 

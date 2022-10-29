@@ -1,7 +1,6 @@
 package uo.ri.cws.application.ui.manager;
 
 import menu.BaseMenu;
-import menu.NotYetImplementedAction;
 import uo.ri.cws.application.ui.manager.action.payrollManagement.DeleteLastPayrollAction;
 import uo.ri.cws.application.ui.manager.action.payrollManagement.DeletePayrollForMechanicAction;
 import uo.ri.cws.application.ui.manager.action.payrollManagement.GeneratePayrollsAction;

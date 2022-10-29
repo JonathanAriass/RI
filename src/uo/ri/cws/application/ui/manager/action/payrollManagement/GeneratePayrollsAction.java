@@ -16,6 +16,9 @@ public class GeneratePayrollsAction implements Action {
 	public void execute() throws BusinessException {
 		List<PayrollSummaryBLDto> all = null;
 
+		ps.generatePayrolls();
+		
+		all = ps.getAllPayrolls();
 
 		Console.printf("Generated %d new payrolls", all.size());
 	}

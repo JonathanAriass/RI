@@ -11,7 +11,6 @@ import uo.ri.cws.application.business.util.command.Command;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.client.ClientGateway;
-import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 import uo.ri.cws.application.persistence.vehicle.VehicleGateway;
 import uo.ri.cws.application.persistence.vehicle.VehicleGateway.VehicleDALDto;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;

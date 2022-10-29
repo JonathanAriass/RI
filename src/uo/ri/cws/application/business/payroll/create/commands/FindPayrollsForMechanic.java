@@ -34,7 +34,6 @@ public class FindPayrollsForMechanic implements Command<List<PayrollSummaryBLDto
 			throw new BusinessException("Mechanic doesn't exist");
 		}
 		
-		// sacar id del contrato para el mecanico y hacer busqueda de payrolls
 		String contractId = "";
 		if (cg.findByMechanic(mechanicId).isPresent()) {
 			contractId = cg.findByMechanic(mechanicId).get().id;			
@@ -44,7 +43,7 @@ public class FindPayrollsForMechanic implements Command<List<PayrollSummaryBLDto
 		
 		return buildSummaryPayroll(payrolls);
 	}
-	
+
 	private boolean existMechanic(String id) throws PersistenceException {
 		if (mg.findById(mechanicId).isPresent()) {
 			return true;
@@ -53,6 +52,11 @@ public class FindPayrollsForMechanic implements Command<List<PayrollSummaryBLDto
 		}
 	}
 	
+	/**
+	 * Method that converst a list of payroll into a list of summaryPayroll
+	 * @param payrolls
+	 * @return
+	 */
 	private List<PayrollSummaryBLDto> buildSummaryPayroll(List<PayrollBLDto> payrolls) {
 		List<PayrollSummaryBLDto> aux = new ArrayList<PayrollSummaryBLDto>();
 		
@@ -63,6 +67,11 @@ public class FindPayrollsForMechanic implements Command<List<PayrollSummaryBLDto
 		return aux;
 	}
 	
+	/**
+	 * Method that converts a payrollBLDto to a payrollSummaryBLDto
+	 * @param p
+	 * @return
+	 */
 	private PayrollSummaryBLDto buildSummaryPayroll(PayrollBLDto p) {
 		PayrollSummaryBLDto result = new PayrollSummaryBLDto();
 		
