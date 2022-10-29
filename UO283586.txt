@@ -1,0 +1,6 @@
+Informacion personal: Jonathan Arias Busto, UO283586, 71780982Y
+
+Casos de uso: Gestion de nominas, gestion de tipos profesionales, gestion de mecanicos ampliados.
+
+Comentarios: puede haber un problema con los decimales en los test, ya que hay pruebas que tienen mas decimales que otras
+	     y el resultado es el mismo pero con menor numero de decimales por redondeo.
