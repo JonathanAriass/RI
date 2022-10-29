@@ -10,6 +10,7 @@ import uo.ri.cws.application.business.payroll.create.commands.DeleteAllPayrolls;
 import uo.ri.cws.application.business.payroll.create.commands.DeleteLastPayrollFor;
 import uo.ri.cws.application.business.payroll.create.commands.FindAllPayrolls;
 import uo.ri.cws.application.business.payroll.create.commands.FindPayrollDetails;
+import uo.ri.cws.application.business.payroll.create.commands.FindPayrollsForMechanic;
 import uo.ri.cws.application.business.payroll.create.commands.GeneratePayrolls;
 import uo.ri.cws.application.business.util.command.CommandExecutor;
 
@@ -49,8 +50,7 @@ public class PayrollServiceImpl implements PayrollService {
 
 	@Override
 	public List<PayrollSummaryBLDto> getAllPayrollsForMechanic(String id) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		return executor.execute(new FindPayrollsForMechanic(id));
 	}
 
 	@Override
