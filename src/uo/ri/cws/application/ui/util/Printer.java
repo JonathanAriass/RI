@@ -8,6 +8,8 @@ import uo.ri.cws.application.business.invoice.InvoicingService.WorkOrderForInvoi
 //import uo.ri.cws.application.business.invoice.InvoicingService.InvoiceBLDto;
 //import uo.ri.cws.application.business.invoice.InvoicingService.WorkOrderForInvoicingBLDto;
 import uo.ri.cws.application.business.mechanic.MechanicService.MechanicBLDto;
+import uo.ri.cws.application.business.payroll.PayrollService.PayrollBLDto;
+import uo.ri.cws.application.business.payroll.PayrollService.PayrollSummaryBLDto;
 import uo.ri.cws.application.business.professionalgroup.ProfessionalGroupService.ProfessionalGroupBLDto;
 
 public class Printer {
@@ -70,4 +72,40 @@ public class Printer {
 			printProfessionalGroup(g);
 	}
 	
+	public static void printPayroll(PayrollBLDto p) {
+		double earnings = p.monthlyWage + p.bonus + p.productivityBonus + p.trienniumPayment;
+		double deductions = p.incomeTax + p.nic;
+		double netWage = Math.round(earnings*100.0)/100.0 - Math.round(deductions*100.0)/100.0;
+		
+		Console.printf("\t%-36s %-9s %-9s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n",
+				"PayrollId", "Bonus", "Date", "IncomeTax", "MonthlyWage", "NIC", 
+				"ProductivityBonus", "TrienniumPayment", "Version", "ContractId",
+				"Earnings", "Deductions", "NetWage");
+		Console.printf("\t%-36.36s %-9.2f %-9.9s %-10.2f %-10.2f %-10.2f %-10.2f %-10.2f"
+				+ " %-10.2s %-10.2s %-10.2f %-10.2f %-10.2f\n", p.id, 
+				p.bonus, p.date, p.incomeTax, p.monthlyWage, p.nic, p.productivityBonus,
+				p.trienniumPayment, p.version, p.contractId, earnings, deductions, netWage);
+	}
+	
+	public static void printPayrolls(List<PayrollBLDto> list) {
+		Console.printf("\t%-36s %-9s %-9s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n",
+				"PayrollId", "Bonus", "Date", "IncomeTax", "MonthlyWage", "NIC", 
+				"ProductivityBonus", "TrienniumPayment", "Version", "ContractId");
+		for (PayrollBLDto g : list)
+			printPayroll(g);
+	}
+	
+	public static void printPayrollSummary(PayrollSummaryBLDto p) {
+		Console.printf("\t%-36s %-9s %-10s %-10s\n",
+				"PayrollId", "Date", "NetWage", "Version");
+		Console.printf("\t%-36.36s %-9.9s %-10.2f %-10.2s\n", 
+				p.id, p.date, p.netWage, p.version);
+	}
+	
+	public static void printPayrollsSummary(List<PayrollSummaryBLDto> list) {
+		Console.printf("\t%-36s %-9s %-10s %-10s\n",
+				"PayrollId", "Date", "NetWage", "Version");
+		for (PayrollSummaryBLDto g : list)
+			printPayrollSummary(g);
+	}
 }

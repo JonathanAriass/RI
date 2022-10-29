@@ -2,7 +2,6 @@ package uo.ri.cws.application.persistence.payroll;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import uo.ri.cws.application.persistence.Gateway;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway.PayrollDALDto;

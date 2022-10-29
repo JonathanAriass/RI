@@ -14,28 +14,18 @@ import java.util.Optional;
 
 import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
+import uo.ri.cws.application.persistence.util.Conf;
 import uo.ri.cws.application.persistence.workorder.WorkOrderGateway;
 import uo.ri.cws.application.persistence.workorder.assembler.WorkOrderAssembler;
 
 public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
-	private String TWORKORDERS_UPDATE = "update TWORKORDERS set amount = ?, date = ?, description = ?, state = ?, version = ?, invoice_id = ?, mechanic_id = ?, vehicle_id = ? where id = ?";
-	private String TWORKORDERS_FINDBYMECHANIC = "select * from TWORKORDERS where mechanic_id = ?";
-	private String TWORKORDERS_FINDNOTINVOICED = "select * from TWorkOrders where vehicle_id = ? and state <> 'INVOICED'";
-	private String TWORKORDERS_FINDSTATE = "select state from TWorkOrders where id = ?";
-	private String TWORKORDERS_FINDBYID = "select * from TWorkOrders where id = ?";
-	private String TWORKORDERS_FINDAMOUNT = "select amount from TWorkOrders where id = ?";
-	
 	@Override
 	public void add(WorkOrderDALDto t) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void remove(String id) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -47,7 +37,8 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TWORKORDERS_UPDATE);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TWORKORDERS_UPDATE"));
 
 			pst.setDouble(1, t.amount);
 			
@@ -82,7 +73,8 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TWORKORDERS_FINDBYID);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TWORKORDERS_FINDBYID"));
 
 			pst.setString(1, id);
 
@@ -98,7 +90,6 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 	@Override
 	public List<WorkOrderDALDto> findAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -111,7 +102,8 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TWORKORDERS_FINDBYMECHANIC);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TWORKORDERS_FINDBYMECHANIC"));
 			pst.setString(1, id);
 			
 			rs = pst.executeQuery();
@@ -134,7 +126,8 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TWORKORDERS_FINDNOTINVOICED);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TWORKORDERS_FINDNOTINVOICEDFORVEHICLES"));
 			
 			for (String vehicleId : vehicleIds) {
 				pst.setString(1, vehicleId);
@@ -153,7 +146,6 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 	@Override
 	public List<WorkOrderDALDto> findByVehicleId(String vehicleId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -168,7 +160,8 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TWORKORDERS_FINDBYID);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TWORKORDERS_FINDBYIDS"));
 
 			for (String workOrderID : arg) {
 				pst.setString(1, workOrderID);
@@ -181,10 +174,6 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 					opt = WorkOrderAssembler.toWorkOrderDALDto(rs);
 					if (opt.isPresent()) result.add(opt.get());
 				} while (opt.isPresent());
-				
-//				if (WorkOrderAssembler.toWorkOrderDALDto(rs).isPresent()) {
-//					result.add(WorkOrderAssembler.toWorkOrderDALDto(rs).get());										
-//				}
 
 			}
 			
@@ -198,13 +187,11 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 
 	@Override
 	public List<WorkOrderDALDto> findByInvoice(String id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WorkOrderDALDto> findInvoiced() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -217,7 +204,8 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TWORKORDERS_FINDSTATE);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TWORKORDERS_FINDSTATE"));
 
 			pst.setString(1, id);
 				
@@ -244,7 +232,8 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TWORKORDERS_FINDAMOUNT);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TWORKORDERS_FINDAMOUNT"));
 
 			pst.setString(1, id);
 

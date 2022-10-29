@@ -18,12 +18,16 @@ public class ListPayrollDetailAction implements Action {
 
 		// Process
 
+		Optional<PayrollBLDto> result;
+		result = BusinessFactory.forPayrollService().getPayrollDetails(id);
 
-
-
-		// Print result
-		Console.println(String.format("Details Payroll %s", id));
-		Printer.printPayrolls(result);
+		if (!result.isPresent()) {
+			Console.print("No payroll found for mechanic");
+		} else {
+			// Print result
+			Console.println(String.format("Details Payroll %s", id));
+			Printer.printPayroll(result.get());
+		}
 	}
 
 }

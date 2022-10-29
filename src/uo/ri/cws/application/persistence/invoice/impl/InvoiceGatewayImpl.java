@@ -10,11 +10,9 @@ import java.util.Optional;
 import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway;
+import uo.ri.cws.application.persistence.util.Conf;
 
 public class InvoiceGatewayImpl implements InvoiceGateway {
-
-	private String TINVOICE_ADDINVOICE=  "insert into TInvoices(id, number, date, vat, amount, state, version)  values(?, ?, ?, ?, ?, ?, ?)";
-	private String TINVOICE_FINDLASTINVOICED = "select max(number) from TInvoices";
 	
 	@Override
 	public void add(InvoiceDALDto t) {
@@ -24,7 +22,7 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TINVOICE_ADDINVOICE);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TINVOICES_ADD"));
 			pst.setString(1, t.id);
 			pst.setLong(2, t.number);
 			pst.setDate(3, java.sql.Date.valueOf(t.date));
@@ -86,7 +84,8 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TINVOICE_FINDLASTINVOICED);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TINVOICES_FINDLASTINVOICED"));
 
 			rs = pst.executeQuery();
 

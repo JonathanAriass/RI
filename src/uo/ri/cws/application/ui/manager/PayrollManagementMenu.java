@@ -2,6 +2,13 @@ package uo.ri.cws.application.ui.manager;
 
 import menu.BaseMenu;
 import menu.NotYetImplementedAction;
+import uo.ri.cws.application.ui.manager.action.payrollManagement.DeleteLastPayrollAction;
+import uo.ri.cws.application.ui.manager.action.payrollManagement.DeletePayrollForMechanicAction;
+import uo.ri.cws.application.ui.manager.action.payrollManagement.GeneratePayrollsAction;
+import uo.ri.cws.application.ui.manager.action.payrollManagement.ListAllPayrolls;
+import uo.ri.cws.application.ui.manager.action.payrollManagement.ListPayrollByMechanicAction;
+import uo.ri.cws.application.ui.manager.action.payrollManagement.ListPayrollDetailAction;
+import uo.ri.cws.application.ui.manager.action.payrollManagement.ListPayrollsByProfessionalGroupAction;
 
 public class PayrollManagementMenu extends BaseMenu {
 
@@ -13,15 +20,15 @@ public class PayrollManagementMenu extends BaseMenu {
 	menuOptions = new Object[][] {
 		{ "Manager > Payrolls management", null },
 
-		{ "Generate payrolls", NotYetImplementedAction.class },
+		{ "Generate payrolls", GeneratePayrollsAction.class },
 		{ "Delete last payroll for mechanic",
-			NotYetImplementedAction.class },
-		{ "Delete last payrolls", NotYetImplementedAction.class },
-		{ "Display all payrolls", NotYetImplementedAction.class },
-		{ "Display payroll in detail", NotYetImplementedAction.class },
+			DeletePayrollForMechanicAction.class },
+		{ "Delete last payrolls", DeleteLastPayrollAction.class },
+		{ "Display all payrolls", ListAllPayrolls.class },
+		{ "Display payroll in detail", ListPayrollDetailAction.class },
 		{ "Display payroll of a mechanic",
-			NotYetImplementedAction.class },
+			ListPayrollByMechanicAction.class },
 		{ "Display payrolls of a professional group",
-			NotYetImplementedAction.class } };
+			ListPayrollsByProfessionalGroupAction.class } };
     }
 }

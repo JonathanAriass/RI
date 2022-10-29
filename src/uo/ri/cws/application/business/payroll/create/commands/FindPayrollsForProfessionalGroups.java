@@ -13,7 +13,6 @@ import uo.ri.cws.application.business.payroll.assembler.PayrollAssembler;
 import uo.ri.cws.application.business.util.command.Command;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
-import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
 
@@ -24,7 +23,6 @@ public class FindPayrollsForProfessionalGroups implements Command<List<PayrollSu
 	private PayrollGateway pg = PersistenceFactory.forPayroll();
 	private ProfessionalGroupGateway pgg = PersistenceFactory.forProfessionalGroup();
 	private ContractGateway cg = PersistenceFactory.forContract();
-	private MechanicGateway mg = PersistenceFactory.forMechanic();
 	
 	public FindPayrollsForProfessionalGroups(String arg) {
 		validate(arg);
@@ -70,7 +68,7 @@ public class FindPayrollsForProfessionalGroups implements Command<List<PayrollSu
 	}
 	
 	private PayrollSummaryBLDto buildSummaryPayroll(PayrollBLDto p) {
-PayrollSummaryBLDto result = new PayrollSummaryBLDto();
+		PayrollSummaryBLDto result = new PayrollSummaryBLDto();
 		
 		result.id = p.id;
 		result.version = p.version;
@@ -84,18 +82,6 @@ PayrollSummaryBLDto result = new PayrollSummaryBLDto();
 		
 		return result;
 	}
-	
-//	private PayrollSummaryBLDto buildSummaryPayroll(PayrollBLDto p) {
-//		PayrollSummaryBLDto result = new PayrollSummaryBLDto();
-//		
-//		result.id = p.id;
-//		result.version = p.version;
-//		
-//		result.date = p.date;
-//		result.netWage = p.netWage;
-//		
-//		return result;
-//	}
 	
 	private void validate(String arg) {
 		// usar clase del proyecto util Argumen

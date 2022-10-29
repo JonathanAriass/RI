@@ -4,19 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
 import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.contracttype.ContractTypeGateway;
-import uo.ri.cws.application.persistence.contracttype.ContractTypeGateway.ContractTypeDALDto;
 import uo.ri.cws.application.persistence.contracttype.assembler.ContractTypeAssembler;
+import uo.ri.cws.application.persistence.util.Conf;
 
 public class ContractTypeGatewayImpl implements ContractTypeGateway {
 
-	private String TCONTRACTTYPE_FINDCONTRACTTYPENAMEBYID = "SELECT * FROM TCONTRACTTYPES WHERE name = ?";
 	
 	@Override
 	public void add(ContractTypeDALDto t) {
@@ -57,7 +56,8 @@ public class ContractTypeGatewayImpl implements ContractTypeGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TCONTRACTTYPE_FINDCONTRACTTYPENAMEBYID);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TCONTRACTTYPES_FINDCONTRACTTYPEIDBYNAME"));
 			
 			pst.setString(1, name);
 			

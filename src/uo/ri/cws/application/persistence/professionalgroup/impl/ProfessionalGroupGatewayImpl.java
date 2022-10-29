@@ -11,16 +11,9 @@ import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
 import uo.ri.cws.application.persistence.professionalgroup.assembler.ProfessionalGroupAssembler;
+import uo.ri.cws.application.persistence.util.Conf;
 
 public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
-
-	private static String TPROFESSIONALGROUPS_ADD = "insert into TPROFESSIONALGROUPS(id, name, productivitybonuspercentage, trienniumpayment, version) values (?, ?, ?, ?, ?)";
-	private static String TPROFESSIONALGROUPS_DELETE = "delete from TPROFESSIONALGROUPS where id = ?";
-	private static String TPROFESSIONALGROUPS_UPDATE = "update TPROFESSIONALGROUPS set name = name, productivitybonuspercentage = ?, trienniumpayment = ?, version = version + 1 where id = ?";
-	private static String TPROFESSIONALGROUPS_FINDBYID = "SELECT * FROM TPROFESSIONALGROUPS WHERE id = ?";
-	private static String TPROFESSIONALGROUPS_FINDALL = "SELECT * FROM TPROFESSIONALGROUPS";
-	private static String TPROFESSIONALGROUPS_FINDBYNAME = "SELECT * FROM TPROFESSIONALGROUPS WHERE name = ?";
-	
 	
 	@Override
 	public void add(ProfessionalGroupDALDto t) {
@@ -29,7 +22,8 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 		
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
-			pst = c.prepareStatement(TPROFESSIONALGROUPS_ADD);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TPROFESSIONALGROUPS_ADD"));
 			pst.setString(1, t.id);
 			pst.setString(2, t.name);
 			pst.setDouble(3, t.productivity_bonus_percentage);
@@ -52,7 +46,8 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 
-			pst = c.prepareStatement(TPROFESSIONALGROUPS_DELETE);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TPROFESSIONALGROUPS_REMOVE"));
 			pst.setString(1, id);
 			pst.executeUpdate();
 		} catch (SQLException e) {
@@ -70,7 +65,8 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 
-			pst = c.prepareStatement(TPROFESSIONALGROUPS_UPDATE);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TPROFESSIONALGROUPS_UPDATE"));
 			pst.setDouble(1, t.productivity_bonus_percentage);
 			pst.setDouble(2, t.triennium_payment);
 			pst.setString(3, t.id);
@@ -92,7 +88,8 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 			
-			pst = c.prepareStatement(TPROFESSIONALGROUPS_FINDBYID);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TPROFESSIONALGROUPS_FINDBYID"));
 			pst.setString(1, id);
 			
 			rs = pst.executeQuery();
@@ -114,7 +111,8 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 			
-			pst = c.prepareStatement(TPROFESSIONALGROUPS_FINDALL);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TPROFESSIONALGROUPS_FINDALL"));
 			
 			rs = pst.executeQuery();
 			
@@ -135,7 +133,8 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 			
-			pst = c.prepareStatement(TPROFESSIONALGROUPS_FINDBYNAME);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TPROFESSIONALGROUPS_FINDBYNAME"));
 			pst.setString(1, name);
 			
 			rs = pst.executeQuery();

@@ -12,16 +12,10 @@ import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 import uo.ri.cws.application.persistence.mechanic.assembler.MechanicAssembler;
+import uo.ri.cws.application.persistence.util.Conf;
 
 public class MechanicGatewayImpl implements MechanicGateway {
 
-	private static String TMECHANICS_ADD = "insert into TMechanics(id, dni, name, surname, version) values (?, ?, ?, ?, ?)";
-	private static String TMECHANICS_DELETE = "delete from TMechanics where id = ?";
-	private static String TMECHANICS_UPDATE =  "update TMechanics set name = ?, surname = ?, version = version+1 where id = ?";
-	private static String TMECHANICS_FINDBYDNI = "select * from TMECHANICS where dni = ?";
-	private static String TMECHANICS_FINDBYID = "select id, dni, name, surname, version from TMechanics where id = ?";
-	private static String TMECHANICS_FINDALL = "select id, dni, name, surname, version from TMechanics";
-	
 	@Override
 	public void add(MechanicDALDto mechanic) {
 		PreparedStatement pst = null;
@@ -29,7 +23,7 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
-			pst = c.prepareStatement(TMECHANICS_ADD);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TMECHANICS_ADD"));
 			pst.setString(1, mechanic.id);
 			pst.setString(2, mechanic.dni);
 			pst.setString(3, mechanic.name);
@@ -52,7 +46,7 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 
-			pst = c.prepareStatement(TMECHANICS_DELETE);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TMECHANICS_REMOVE"));
 			pst.setString(1, id);
 			pst.executeUpdate();
 		} catch (SQLException e) {
@@ -70,7 +64,7 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 
-			pst = c.prepareStatement(TMECHANICS_UPDATE);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TMECHANICS_UPDATE"));
 			pst.setString(1, t.name);
 			pst.setString(2, t.surname);
 			pst.setString(3, t.id);
@@ -92,7 +86,7 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 			
-			pst = c.prepareStatement(TMECHANICS_FINDBYID);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TMECHANICS_FINDBYID"));
 			pst.setString(1, id);
 			
 			rs = pst.executeQuery();
@@ -114,7 +108,7 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 			
-			pst = c.prepareStatement(TMECHANICS_FINDALL);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TMECHANICS_FINDALL"));
 			rs = pst.executeQuery();
 			
 			return MechanicAssembler.toMechanicDALDtoList(rs);
@@ -134,7 +128,7 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 			
-			pst = c.prepareStatement(TMECHANICS_FINDBYDNI);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TMECHANICS_FINDBYDNI"));
 			pst.setString(1, dni);
 			
 			rs = pst.executeQuery();

@@ -9,13 +9,11 @@ import java.util.Optional;
 
 import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
-import uo.ri.cws.application.persistence.client.assembler.ClientAssembler;
+import uo.ri.cws.application.persistence.util.Conf;
 import uo.ri.cws.application.persistence.vehicle.VehicleGateway;
 import uo.ri.cws.application.persistence.vehicle.assembler.VehicleAssembler;
 
 public class VehicleGatewayImpl implements VehicleGateway {
-
-	private String TVEHICLES_FINDBYCLIENT = "SELECT * FROM TVEHICLES WHERE client_id = ?";
 	
 	@Override
 	public void add(VehicleDALDto t) {
@@ -56,7 +54,7 @@ public class VehicleGatewayImpl implements VehicleGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 			
-			pst = c.prepareStatement(TVEHICLES_FINDBYCLIENT);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TVEHICLES_FINDBYCLIENT"));
 			pst.setString(1, arg);
 			
 			rs = pst.executeQuery();

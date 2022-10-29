@@ -11,10 +11,9 @@ import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.client.ClientGateway;
 import uo.ri.cws.application.persistence.client.assembler.ClientAssembler;
+import uo.ri.cws.application.persistence.util.Conf;
 
 public class ClientGatewayImpl implements ClientGateway {
-
-	private String TCLIENTS_FINDBYDNI = "SELECT * FROM TCLIENTS WHERE dni = ?";
 	
 	@Override
 	public void add(ClientDALDto t) {
@@ -55,7 +54,7 @@ public class ClientGatewayImpl implements ClientGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 			
-			pst = c.prepareStatement(TCLIENTS_FINDBYDNI);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TCLIENTS_FINDBYDNI"));
 			pst.setString(1, clientdni);
 			
 			rs = pst.executeQuery();

@@ -20,7 +20,7 @@ public class ListPayrollsByProfessionalGroupAction implements Action {
 		// Process
 
 		List<PayrollSummaryBLDto> result = null;
-
+		result = BusinessFactory.forPayrollService().getAllPayrollsForProfessionalGroup(name);
 
 
 		// Print result

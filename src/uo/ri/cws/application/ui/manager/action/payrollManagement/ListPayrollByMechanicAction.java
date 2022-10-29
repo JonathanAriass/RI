@@ -18,7 +18,8 @@ public class ListPayrollByMechanicAction implements Action {
 
 		// Process
 
-
+		List<PayrollSummaryBLDto> result;
+		result = BusinessFactory.forPayrollService().getAllPayrollsForMechanic(id);
 
 		// Print result
 		Console.println(String.format("Payrolls for mechanic %s", id));

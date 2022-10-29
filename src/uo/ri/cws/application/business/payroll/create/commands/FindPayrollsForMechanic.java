@@ -5,7 +5,6 @@ import java.util.List;
 
 import assertion.Argument;
 import uo.ri.cws.application.business.BusinessException;
-import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
 import uo.ri.cws.application.business.payroll.PayrollService.PayrollBLDto;
 import uo.ri.cws.application.business.payroll.PayrollService.PayrollSummaryBLDto;
 import uo.ri.cws.application.business.payroll.assembler.PayrollAssembler;
@@ -19,23 +18,21 @@ import uo.ri.cws.application.persistence.payroll.PayrollGateway;
 public class FindPayrollsForMechanic implements Command<List<PayrollSummaryBLDto>> {
 
 	
-	private String mechanicDni = "";
+	private String mechanicId = "";
 	private PayrollGateway pg = PersistenceFactory.forPayroll();
 	private ContractGateway cg = PersistenceFactory.forContract();
 	private MechanicGateway mg = PersistenceFactory.forMechanic();
 	
 	public FindPayrollsForMechanic(String arg) {
 		validate(arg);
-		this.mechanicDni = arg;
+		this.mechanicId = arg;
 	}
 	
 	@Override
 	public List<PayrollSummaryBLDto> execute() throws BusinessException {
-		if (!existMechanic(mechanicDni)) {
+		if (!existMechanic(mechanicId)) {
 			throw new BusinessException("Mechanic doesn't exist");
 		}
-		
-		String mechanicId = MechanicAssembler.toBLDto(mg.findByDni(mechanicDni)).get().id;
 		
 		// sacar id del contrato para el mecanico y hacer busqueda de payrolls
 		String contractId = "";
@@ -49,7 +46,7 @@ public class FindPayrollsForMechanic implements Command<List<PayrollSummaryBLDto
 	}
 	
 	private boolean existMechanic(String id) throws PersistenceException {
-		if (mg.findByDni(mechanicDni).isPresent()) {
+		if (mg.findById(mechanicId).isPresent()) {
 			return true;
 		} else {
 			return false;
@@ -67,7 +64,7 @@ public class FindPayrollsForMechanic implements Command<List<PayrollSummaryBLDto
 	}
 	
 	private PayrollSummaryBLDto buildSummaryPayroll(PayrollBLDto p) {
-PayrollSummaryBLDto result = new PayrollSummaryBLDto();
+		PayrollSummaryBLDto result = new PayrollSummaryBLDto();
 		
 		result.id = p.id;
 		result.version = p.version;
@@ -81,18 +78,6 @@ PayrollSummaryBLDto result = new PayrollSummaryBLDto();
 		
 		return result;
 	}
-	
-//	private PayrollSummaryBLDto buildSummaryPayroll(PayrollBLDto p) {
-//		PayrollSummaryBLDto result = new PayrollSummaryBLDto();
-//		
-//		result.id = p.id;
-//		result.version = p.version;
-//		
-//		result.date = p.date;
-//		result.netWage = p.netWage;
-//		
-//		return result;
-//	}
 
 	private void validate(String arg) {
 		// usar clase del proyecto util Argumen

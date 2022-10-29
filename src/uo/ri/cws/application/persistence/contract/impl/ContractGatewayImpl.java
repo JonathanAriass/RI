@@ -12,19 +12,11 @@ import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.contract.assembler.ContractAssembler;
-import uo.ri.cws.application.persistence.mechanic.assembler.MechanicAssembler;
+
+import uo.ri.cws.application.persistence.util.Conf;
 
 public class ContractGatewayImpl implements ContractGateway {
 
-	private String TCONTRACTS_FINDBYMECHANIC = "SELECT * FROM TCONTRACTS WHERE mechanic_id = ?";
-	private String TCONTRACTS_FINDMECHANICSIDWITHCONTRACT = "SELECT mechanic_id FROM TCONTRACTS WHERE state = 'IN_FORCE'";
-	private String TCONTRACTS_FINDPROFESSIONALGROUPBYID = "SELECT * FROM TCONTRACTS WHERE professionalgroup_id = ?";
-	private String TCONTRACTS_FINDMECHANICSIDFORPROFESSIONALGROUP = "SELECT mechanic_id FROM TCONTRACTS WHERE professionalgroup_id = ?";
-	private String TCONTRACTS_FINDMECHANICSIDWITHCONTRACTTYPE = "SELECT mechanic_id FROM TCONTRACTS WHERE state = 'IN_FORCE' and contracttype_id = ?";
-	private String TCONTRACTS_FINDPROFESSIONALGROUPBYCONTRACTID = "SELECT professionalgroup_id FROM TCONTRACTS WHERE id = ?";
-	private String TCONTRACTS_FINDALL = "SELECT * FROM TCONTRACTS";
-	private String TCONTRACTS_FINDBYID = "SELECT * FROM TCONTRACTS WHERE id = ?";
-	
 	@Override
 	public void add(ContractDALDto t) {
 		// TODO Auto-generated method stub
@@ -52,7 +44,7 @@ public class ContractGatewayImpl implements ContractGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TCONTRACTS_FINDBYID);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TCONTRACTS_FINDBYID"));
 			pst.setString(1, id);
 			
 			rs = pst.executeQuery();
@@ -74,7 +66,7 @@ public class ContractGatewayImpl implements ContractGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TCONTRACTS_FINDALL);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TCONTRACTS_FINDALL"));
 			rs = pst.executeQuery();
 			
 			return ContractAssembler.toContractDALDtoList(rs);
@@ -94,7 +86,9 @@ public class ContractGatewayImpl implements ContractGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TCONTRACTS_FINDBYMECHANIC);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TCONTRACTS_FINDBYMECHANIC"));
+			
 			pst.setString(1, mechanicid);
 			
 			rs = pst.executeQuery();
@@ -118,7 +112,8 @@ public class ContractGatewayImpl implements ContractGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TCONTRACTS_FINDMECHANICSIDWITHCONTRACT);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TCONTRACTS_FINDMECHANICSIDWITHCONTRACT"));
 			
 			rs = pst.executeQuery();
 			
@@ -143,7 +138,8 @@ public class ContractGatewayImpl implements ContractGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TCONTRACTS_FINDPROFESSIONALGROUPBYID);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TCONTRACTS_FINDBYPROFESSIONALGROUPID"));
 			
 			pst.setString(1, groupid);
 			
@@ -168,7 +164,8 @@ public class ContractGatewayImpl implements ContractGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TCONTRACTS_FINDMECHANICSIDFORPROFESSIONALGROUP);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TCONTRACTS_FINDMECHANICSFORPROFESSIONALGROUPSNAME"));
 			
 			pst.setString(1, groupId);
 			
@@ -197,7 +194,8 @@ public class ContractGatewayImpl implements ContractGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TCONTRACTS_FINDMECHANICSIDWITHCONTRACTTYPE);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TCONTRACTS_FINDMECHANICSIDWITHCONTRACTTYPE"));
 			
 			pst.setString(1, id);
 			
@@ -224,7 +222,8 @@ public class ContractGatewayImpl implements ContractGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TCONTRACTS_FINDPROFESSIONALGROUPBYCONTRACTID);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TCONTRACTS_FINDPROFESSIONAGROUPBYCONTRACTID"));
 			
 			pst.setString(1, id);
 			

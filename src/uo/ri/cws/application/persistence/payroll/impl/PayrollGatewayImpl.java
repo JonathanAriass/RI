@@ -9,22 +9,12 @@ import java.util.Optional;
 
 import jdbc.Jdbc;
 import uo.ri.cws.application.persistence.PersistenceException;
-import uo.ri.cws.application.persistence.contract.assembler.ContractAssembler;
-import uo.ri.cws.application.persistence.mechanic.assembler.MechanicAssembler;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway;
 import uo.ri.cws.application.persistence.payroll.assembler.PayrollAssembler;
+import uo.ri.cws.application.persistence.util.Conf;
 
 public class PayrollGatewayImpl implements PayrollGateway {
 
-	private static String TPAYROLL_ADDPAYROLL = 
-			"INSERT into TPAYROLLS(id, bonus, date, incometax, monthlywage, nic, productivitybonus, trienniumpayment, version, contract_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	
-	private static String TPAYROLL_DELETEPAYROLL = "delete from TPAYROLLS where id = ?";
-	
-	private static String TPAYROLL_FINDPAYROLLBYCONTRACTID = "SELECT * FROM TPAYROLLS WHERE contract_id = ?";
-	private static String TPAYROLL_FINDBYID = "SELECT * FROM TPAYROLLS WHERE id = ?";
-	private static String TPAYROLLS_FINDALL = "SELECT * FROM TPAYROLLS";
-	
 	@Override
 	public void add(PayrollDALDto t) {
 		PreparedStatement pst = null;
@@ -32,7 +22,7 @@ public class PayrollGatewayImpl implements PayrollGateway {
 		
 		try {
 			c = Jdbc.getCurrentConnection();
-			pst = c.prepareStatement(TPAYROLL_ADDPAYROLL);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TPAYROLLS_ADD"));
 			pst.setString(1, t.id);
 			pst.setDouble(2, t.bonus);
 			pst.setDate(3, java.sql.Date.valueOf(t.date));
@@ -60,7 +50,7 @@ public class PayrollGatewayImpl implements PayrollGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 
-			pst = c.prepareStatement(TPAYROLL_DELETEPAYROLL);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TPAYROLLS_REMOVE"));
 			pst.setString(1, id);
 			pst.executeUpdate();
 		} catch (SQLException e) {
@@ -85,7 +75,7 @@ public class PayrollGatewayImpl implements PayrollGateway {
 		try {
 			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
 			
-			pst = c.prepareStatement(TPAYROLL_FINDBYID);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TPAYROLLS_FINDBYID"));
 			pst.setString(1, id);
 			
 			rs = pst.executeQuery();
@@ -107,7 +97,7 @@ public class PayrollGatewayImpl implements PayrollGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TPAYROLLS_FINDALL);
+			pst = c.prepareStatement(Conf.getInstance().getProperty("TPAYROLLS_FINDALL"));
 			rs = pst.executeQuery();
 			
 			return PayrollAssembler.toPayrollDALDtoList(rs);
@@ -127,7 +117,8 @@ public class PayrollGatewayImpl implements PayrollGateway {
 		try {
 			c = Jdbc.getCurrentConnection();
 			
-			pst = c.prepareStatement(TPAYROLL_FINDPAYROLLBYCONTRACTID);
+			pst = c.prepareStatement(Conf.getInstance().getProperty(
+					"TPAYROLLS_FINDPAYROLLBYCONTRACTID"));
 			pst.setString(1, contractId);
 			
 			rs = pst.executeQuery();
