@@ -11,14 +11,14 @@ public class PayrollAssembler {
 
 	public static Optional<PayrollBLDto> toBLDto(Optional<PayrollDALDto> arg) {
 		Optional<PayrollBLDto> result = arg.isEmpty() ? Optional.ofNullable(null)
-				: Optional.ofNullable(toPayrollcDto(arg.get()));
+				: Optional.ofNullable(toPayrollDto(arg.get()));
 		return result;
 	}
 
 	public static List<PayrollBLDto> toDtoList(List<PayrollDALDto> arg) {
 		List<PayrollBLDto> result = new ArrayList<PayrollBLDto>();
 		for (PayrollDALDto mr : arg)
-			result.add(toPayrollcDto(mr));
+			result.add(toPayrollDto(mr));
 		return result;
 	}
 
@@ -37,8 +37,7 @@ public class PayrollAssembler {
 		return result;
 	}
 
-	private static PayrollBLDto toPayrollcDto(PayrollDALDto arg) {
-
+	private static PayrollBLDto toPayrollDto(PayrollDALDto arg) {
 		PayrollBLDto result = new PayrollBLDto();
 		result.id = arg.id;
 		result.version = arg.version;
@@ -50,6 +49,12 @@ public class PayrollAssembler {
 		result.productivityBonus = arg.productivitybonus;
 		result.trienniumPayment = arg.trienniumpayment;
 		result.contractId = arg.contractid;
+		
+		double earnings = result.monthlyWage + result.bonus + result.productivityBonus + result.trienniumPayment;
+		double deductions = result.incomeTax + result.nic;
+		double netWage = Math.round(earnings*100.0)/100.0 - Math.round(deductions*100.0)/100.0;
+		result.netWage = netWage;
+		
 		return result;
 	}
 	

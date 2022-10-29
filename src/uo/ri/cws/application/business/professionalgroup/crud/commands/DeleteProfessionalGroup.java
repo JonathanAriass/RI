@@ -49,7 +49,7 @@ public class DeleteProfessionalGroup implements Command<Void> {
 	}
 	
 	private boolean hasContractAssigned(String arg) {
-		if (cg.findByProfessionalGroupId(arg).isPresent()) {
+		if (!cg.findByProfessionalGroupId(arg).isEmpty()) {
 			return true;
 		}
 		

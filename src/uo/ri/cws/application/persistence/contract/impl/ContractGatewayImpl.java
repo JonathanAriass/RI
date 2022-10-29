@@ -135,7 +135,7 @@ public class ContractGatewayImpl implements ContractGateway {
 	}
 
 	@Override
-	public Optional<ContractDALDto> findByProfessionalGroupId(String groupid) {
+	public List<ContractDALDto> findByProfessionalGroupId(String groupid) {
 		PreparedStatement pst = null;
 		Connection c = null;
 		ResultSet rs = null;
@@ -149,7 +149,7 @@ public class ContractGatewayImpl implements ContractGateway {
 			
 			rs = pst.executeQuery();
 			
-			return ContractAssembler.toContractDALDto(rs);
+			return ContractAssembler.toContractDALDtoList(rs);
  		} catch (SQLException e ) {
  			throw new PersistenceException(e);
  		} finally {

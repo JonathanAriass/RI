@@ -5,55 +5,58 @@ import java.util.List;
 
 import assertion.Argument;
 import uo.ri.cws.application.business.BusinessException;
-import uo.ri.cws.application.business.mechanic.assembler.MechanicAssembler;
+import uo.ri.cws.application.business.contract.ContractService.ContractBLDto;
+import uo.ri.cws.application.business.contract.assembler.ContractAssembler;
 import uo.ri.cws.application.business.payroll.PayrollService.PayrollBLDto;
 import uo.ri.cws.application.business.payroll.PayrollService.PayrollSummaryBLDto;
 import uo.ri.cws.application.business.payroll.assembler.PayrollAssembler;
 import uo.ri.cws.application.business.util.command.Command;
-import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.PersistenceFactory;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway;
+import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
 
-public class FindPayrollsForMechanic implements Command<List<PayrollSummaryBLDto>> {
+public class FindPayrollsForProfessionalGroups implements Command<List<PayrollSummaryBLDto>> {
 
 	
-	private String mechanicDni = "";
+	private String professionalGroupName = "";
 	private PayrollGateway pg = PersistenceFactory.forPayroll();
+	private ProfessionalGroupGateway pgg = PersistenceFactory.forProfessionalGroup();
 	private ContractGateway cg = PersistenceFactory.forContract();
 	private MechanicGateway mg = PersistenceFactory.forMechanic();
 	
-	public FindPayrollsForMechanic(String arg) {
+	public FindPayrollsForProfessionalGroups(String arg) {
 		validate(arg);
-		this.mechanicDni = arg;
+		this.professionalGroupName = arg;
 	}
 	
 	@Override
 	public List<PayrollSummaryBLDto> execute() throws BusinessException {
-		if (!existMechanic(mechanicDni)) {
-			throw new BusinessException("Mechanic doesn't exist");
+		if (!existProfessionalGroup(professionalGroupName)) {
+			throw new BusinessException("Professional group doesn't exist");
 		}
 		
-		String mechanicId = MechanicAssembler.toBLDto(mg.findByDni(mechanicDni)).get().id;
+		// get all contracts for professional group and then checks payroll exists add to list
+		String professionalGroupId = pgg.findByName(professionalGroupName).get().id;
+		List<ContractBLDto> contractsId = ContractAssembler.toDtoList(cg.findByProfessionalGroupId(professionalGroupId));
 		
-		// sacar id del contrato para el mecanico y hacer busqueda de payrolls
-		String contractId = "";
-		if (cg.findByMechanic(mechanicId).isPresent()) {
-			contractId = cg.findByMechanic(mechanicId).get().id;			
+		
+		List<PayrollBLDto> payrolls = new ArrayList<PayrollBLDto>();
+		for (ContractBLDto c : contractsId) {
+			 payrolls.addAll(PayrollAssembler.toDtoList(pg.findPayrollByContractId(c.id)));
 		}
 		
-		List<PayrollBLDto> payrolls = PayrollAssembler.toDtoList(pg.findPayrollByContractId(contractId));
+		
 		
 		return buildSummaryPayroll(payrolls);
 	}
-	
-	private boolean existMechanic(String id) throws PersistenceException {
-		if (mg.findByDni(mechanicDni).isPresent()) {
+
+	private boolean existProfessionalGroup(String name) {
+		if (pgg.findByName(name).isPresent()) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	private List<PayrollSummaryBLDto> buildSummaryPayroll(List<PayrollBLDto> payrolls) {
@@ -93,7 +96,7 @@ PayrollSummaryBLDto result = new PayrollSummaryBLDto();
 //		
 //		return result;
 //	}
-
+	
 	private void validate(String arg) {
 		// usar clase del proyecto util Argumen
 		Argument.isNotEmpty(arg, "Null or empty id");

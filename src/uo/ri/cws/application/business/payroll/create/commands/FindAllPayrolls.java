@@ -1,6 +1,5 @@
 package uo.ri.cws.application.business.payroll.create.commands;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,11 +27,12 @@ public class FindAllPayrolls implements Command<List<PayrollSummaryBLDto>> {
 		
 		List<PayrollBLDto> payrolls = PayrollAssembler.toDtoList(pg.findAll());
 		
+		System.out.println(payrolls.size());
 		for (PayrollBLDto p : payrolls) {
 			aux.add(buildSummaryPayroll(p));
 		}
 		
-		return null;
+		return aux;
 	}
 
 	private PayrollSummaryBLDto buildSummaryPayroll(PayrollBLDto p) {
@@ -42,7 +42,11 @@ public class FindAllPayrolls implements Command<List<PayrollSummaryBLDto>> {
 		result.version = p.version;
 		
 		result.date = p.date;
-		result.netWage = p.netWage;
+		
+		double earnings = p.monthlyWage + p.bonus + p.productivityBonus + p.trienniumPayment;
+		double deductions = p.incomeTax + p.nic;
+		double netWage = Math.round(earnings*100.0)/100.0 - Math.round(deductions*100.0)/100.0;
+		result.netWage = netWage;
 		
 		return result;
 	}

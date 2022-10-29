@@ -39,33 +39,12 @@ public class GeneratePayrolls implements Command<Void> {
 	
 	@Override
 	public Void execute() throws BusinessException {
-		// Comprobar para que empleados se pueden generar las payroll
-		// Son aquellos que tienen contrato en vigor (IN_FORCE) o se extingue este mes
-		// No puede tener 2 nominas generadas el mismo empleado para un mes
-		
-		/* Cosas a tener en cuenta en la nomina: 
-		 * 		- monthlyWage (base / 14) 
-		 * 		
-		 * 		- bonus (meses correspondientes con importe igual al salario base)
-		 * 		
-		 * 		- productivityBonus (porcentaje importe total workorders asignadas al mecanico
-		 * 							 de este mes y que hayan sido facturadas. El porcentaje depende
-		 * 							 del grupo profesional)
-		 * 		
-		 * 		- trienniumPayment (complemento por antiguedad. Cada 3 anios acumulados en el mismo contrato
-		 * 							se acumulara un trienio. Por cada trienio se recibe lo del grupo profesional)
-		 * 
-		 * 		- incomeTax (va por tramos - mirar en el pdf de la extension)
-		 * */
-		// Todos estos datos tienen que estar detallados al generar una factura
-		
 		if (fechaPresente == null) {
 			fechaPresente = LocalDate.now();
 		}
 		
 		List<String> contractsIds = checkContractsState();
 		
-		// comprobar si el mecanico de cada contrato valido ya tiene generada una payroll
 		generateAllPayroll(contractsIds);
 		
 		return null;
@@ -73,7 +52,6 @@ public class GeneratePayrolls implements Command<Void> {
 
 
 	private ContractGateway cg = PersistenceFactory.forContract();
-	// Se recorren todos los contratos y se comprueba el estado de este
 	private List<String> checkContractsState() {
 		List<String> result = new ArrayList<String>();
 		
@@ -115,7 +93,6 @@ public class GeneratePayrolls implements Command<Void> {
 	}
 	
 	private void generateAllPayroll(List<String> contractIds) {
-		// obtenemos toda la informacion del contrato con la gateway y la lista de ids de contrato
 		List<ContractBLDto> contracts = new ArrayList<ContractBLDto>();
 		for (String c : contractIds) {
 			Optional<ContractBLDto> aux = ContractAssembler.toBLDto(cg.findById(c));
@@ -134,10 +111,11 @@ public class GeneratePayrolls implements Command<Void> {
 			p.contractId = c.id;
 			
 			// Earnings
-			p.monthlyWage = c.annualBaseWage / 14;
+			double months = c.annualBaseWage / 14;
+			p.monthlyWage = Math.round(months*100.0)/100.0;
 			
 			double bonus = getBonus(p.date, p.monthlyWage);
-			p.bonus = bonus;
+			p.bonus = Math.round(bonus*100.0)/100.0;
 
 			double productivityBonus = getProductivityBonus(c.id, c);
 			p.productivityBonus = Math.round(productivityBonus*100.0)/100.0;
@@ -197,7 +175,6 @@ public class GeneratePayrolls implements Command<Void> {
 	private WorkOrderGateway wg = PersistenceFactory.forWorkOrder();
 	
 	private double getProductivityBonus(String id, ContractBLDto c) {
-		double productivityBonus = 0;
 		
 		double auxWorkorders = 0;
 		
@@ -211,11 +188,12 @@ public class GeneratePayrolls implements Command<Void> {
 				auxWorkorders += w.total;
 			}
 		}
-		
-		
+				
+		double productivityBonus = 0;
 		
 		String professionalGroupId = cg.findProfessionaGroupByContractId(id);
-		productivityBonus = pgg.findById(professionalGroupId).get().productivity_bonus_percentage;
+		productivityBonus = pgg.findById(professionalGroupId).get().
+				productivity_bonus_percentage;
 
 		return (productivityBonus/100) * auxWorkorders;
 	}

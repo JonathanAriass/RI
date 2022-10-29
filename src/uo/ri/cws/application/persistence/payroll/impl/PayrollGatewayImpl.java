@@ -16,14 +16,14 @@ import uo.ri.cws.application.persistence.payroll.assembler.PayrollAssembler;
 
 public class PayrollGatewayImpl implements PayrollGateway {
 
-	private String TPAYROLL_ADDPAYROLL = 
+	private static String TPAYROLL_ADDPAYROLL = 
 			"INSERT into TPAYROLLS(id, bonus, date, incometax, monthlywage, nic, productivitybonus, trienniumpayment, version, contract_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
-	private String TPAYROLL_DELETEPAYROLL = "delete from TPAYROLLS where id = ?";
+	private static String TPAYROLL_DELETEPAYROLL = "delete from TPAYROLLS where id = ?";
 	
-	private String TPAYROLL_FINDPAYROLLBYCONTRACTID = "SELECT * FROM TPAYROLLS WHERE contract_id = ?";
-	private String TPAYROLL_FINDBYID = "SELECT * FROM TPAYROLLS WHERE id = ?";
-	private String TPAYROLLS_FINDALL = "SELECT * FROM TPAYROLLS";
+	private static String TPAYROLL_FINDPAYROLLBYCONTRACTID = "SELECT * FROM TPAYROLLS WHERE contract_id = ?";
+	private static String TPAYROLL_FINDBYID = "SELECT * FROM TPAYROLLS WHERE id = ?";
+	private static String TPAYROLLS_FINDALL = "SELECT * FROM TPAYROLLS";
 	
 	@Override
 	public void add(PayrollDALDto t) {
@@ -125,7 +125,7 @@ public class PayrollGatewayImpl implements PayrollGateway {
 		ResultSet rs = null;
 		
 		try {
-			c = Jdbc.getCurrentConnection(); // Con esto obtenemos la conexion a la base de datos
+			c = Jdbc.getCurrentConnection();
 			
 			pst = c.prepareStatement(TPAYROLL_FINDPAYROLLBYCONTRACTID);
 			pst.setString(1, contractId);
