@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import math.Round;
 import uo.ri.cws.application.business.BusinessException;
 import uo.ri.cws.application.business.contract.ContractService.ContractBLDto;
 import uo.ri.cws.application.business.contract.ContractService.ContractState;
@@ -109,16 +110,16 @@ public class GeneratePayrolls implements Command<Void> {
 			
 			// Earnings
 			double months = c.annualBaseWage / 14;
-			p.monthlyWage = Math.round(months*100.0)/100.0;
+			p.monthlyWage = Round.twoCents(months);
 			
 			double bonus = getBonus(p.date, p.monthlyWage);
-			p.bonus = Math.round(bonus*100.0)/100.0;
+			p.bonus = Round.twoCents(bonus);
 
 			double productivityBonus = getProductivityBonus(c.id, c);
-			p.productivityBonus = Math.round(productivityBonus*100.0)/100.0;
+			p.productivityBonus = Round.twoCents(productivityBonus);
 			
 			double triennium = getTrienniumPayment(c.id, c.startDate);
-			p.trienniumPayment = Math.round(triennium*100.0)/100.0;
+			p.trienniumPayment = Round.twoCents(triennium);
 			
 			// Calculate gross wage
 			double earnings = p.monthlyWage + bonus + productivityBonus + triennium;
@@ -126,17 +127,17 @@ public class GeneratePayrolls implements Command<Void> {
 						
 			// Deductions
 			double tax = getIncomeTax(c.annualBaseWage);
-			p.incomeTax = Math.round(tax*earnings*100.0)/100.0;
+			p.incomeTax = Round.twoCents(tax*earnings);
 			
 			double nic = getNic(c.annualBaseWage);
-			p.nic = Math.round(nic*100.0)/100.0;
+			p.nic = Round.twoCents(nic);
 			
 			
 			// Calculate deductions
-			double deductions = Math.round(tax*100.0)/100.0 + Math.round(nic*100.0)/100.0;
+			double deductions = Round.twoCents(tax) + Round.twoCents(nic);
 			// Calculate net wage
-			double netWage = Math.round(earnings*100.0)/100.0 - Math.round(deductions*100.0)/100.0;
-			p.netWage = Math.round(netWage*100.0)/100.0;
+			double netWage = Round.twoCents(earnings) - Round.twoCents(deductions);
+			p.netWage = Round.twoCents(netWage);
 			
 			// We add the data
 			pg.add(PayrollAssembler.toDALDto(p));
@@ -192,19 +193,19 @@ public class GeneratePayrolls implements Command<Void> {
 		productivityBonus = pgg.findById(professionalGroupId).get().
 				productivity_bonus_percentage;
 
-		return (productivityBonus/100) * auxWorkorders;
+		return Round.twoCents((productivityBonus/100) * auxWorkorders);
 	}
 	
 	private double getTrienniumPayment(String id, LocalDate startDate) {
 		int trienniumAcumulatted = fechaPresente.getYear() - startDate.getYear();
 		String professionalGroupId = cg.findProfessionaGroupByContractId(id);
 		
-		return (trienniumAcumulatted /3 ) * 
-				pgg.findById(professionalGroupId).get().triennium_payment;
+		return Round.twoCents((trienniumAcumulatted /3 ) * 
+				pgg.findById(professionalGroupId).get().triennium_payment);
 	}
 
 	private double getNic(double annualBaseWage) {
-		return (annualBaseWage * 0.05) / 12;
+		return Round.twoCents((annualBaseWage * 0.05) / 12);
 	}
 
 	private double getBonus(LocalDate now, double monthWage) {

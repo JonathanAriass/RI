@@ -58,8 +58,6 @@ public class Printer {
 	}
 	
 	public static void printProfessionalGroup(ProfessionalGroupBLDto pg) {
-		Console.printf("\t%-36s %-9s %-10s %-10s %-10s\n", "Group identifier", 
-				"Name", "ProductivityBonus", "TrienniumPayment", "Version");
 		Console.printf("\t%-36.36s %-9s %-17.2f %-16.2f %-10.2s\n", pg.id, 
 				pg.name, pg.productivityRate, pg.trieniumSalary, pg.version);
 	}

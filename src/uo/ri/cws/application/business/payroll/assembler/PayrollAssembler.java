@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import math.Round;
 import uo.ri.cws.application.business.payroll.PayrollService.PayrollBLDto;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway.PayrollDALDto;
 
@@ -52,8 +53,8 @@ public class PayrollAssembler {
 		
 		double earnings = result.monthlyWage + result.bonus + result.productivityBonus + result.trienniumPayment;
 		double deductions = result.incomeTax + result.nic;
-		double netWage = Math.round(earnings*100.0)/100.0 - Math.round(deductions*100.0)/100.0;
-		result.netWage = netWage;
+		double netWage = Round.twoCents(earnings) - Round.twoCents(deductions);
+		result.netWage = Round.twoCents(netWage);
 		
 		return result;
 	}

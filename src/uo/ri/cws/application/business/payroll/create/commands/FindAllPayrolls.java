@@ -31,7 +31,6 @@ public class FindAllPayrolls implements Command<List<PayrollSummaryBLDto>> {
 		
 		List<PayrollBLDto> payrolls = PayrollAssembler.toDtoList(pg.findAll());
 		
-		System.out.println(payrolls.size());
 		for (PayrollBLDto p : payrolls) {
 			aux.add(buildSummaryPayroll(p));
 		}
