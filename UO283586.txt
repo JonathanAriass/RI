@@ -1,4 +1,4 @@
-Informacion personal: Jonathan Arias Busto, UO283586, 71780982Y
+Informacion personal: Jonathan Arias Busto, UO283586
 
 Casos de uso: Gestion de nominas, gestion de tipos profesionales y gestion de mecanicos ampliados.
 
