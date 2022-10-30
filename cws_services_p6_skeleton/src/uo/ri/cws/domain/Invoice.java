@@ -3,13 +3,17 @@ package uo.ri.cws.domain;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+
+import uo.ri.util.assertion.ArgumentChecks;
+import uo.ri.util.assertion.StateChecks;
 
 public class Invoice {
 	public enum InvoiceState { NOT_YET_PAID, PAID }
 
 	// natural attributes
-	private Long number;
+	private Long number; // Identidad
 	private LocalDate date;
 	private double amount;
 	private double vat;
@@ -21,10 +25,12 @@ public class Invoice {
 
 	public Invoice(Long number) {
 		// call full constructor with sensible defaults
+		this(number, LocalDate.now(), List.of());
 	}
 
 	public Invoice(Long number, LocalDate date) {
 		// call full constructor with sensible defaults
+		this(number, date, List.of());
 	}
 
 	public Invoice(Long number, List<WorkOrder> workOrders) {
@@ -34,9 +40,24 @@ public class Invoice {
 	// full constructor
 	public Invoice(Long number, LocalDate date, List<WorkOrder> workOrders) {
 		// check arguments (always), through IllegalArgumentException
+		ArgumentChecks.isTrue(number >= 0);
+		ArgumentChecks.isNotNull(date);
+		ArgumentChecks.isTrue(date.isAfter(LocalDate.now()));
+		ArgumentChecks.isNotNull(workOrders);
+	
 		// store the number
+		this.number = number;
+		
 		// store a copy of the date
+		this.date = date;
+		
 		// add every work order calling addWorkOrder( w )
+		addWorkOrders(workOrders);
+	}
+
+	private void addWorkOrders(List<WorkOrder> workOrders2) {
+		for (WorkOrder w : workOrders2)
+			workOrders.add(w);
 	}
 
 	/**
@@ -53,7 +74,9 @@ public class Invoice {
 	 * @throws IllegalStateException if the invoice status is not NOT_YET_PAID
 	 */
 	public void addWorkOrder(WorkOrder workOrder) {
-
+		StateChecks.isTrue(InvoiceState.NOT_YET_PAID.equals(this.state));
+		Associations.ToInvoice.link(this, workOrder);
+		computeAmount();
 	}
 
 	/**
@@ -63,7 +86,8 @@ public class Invoice {
 	 * @throws IllegalStateException if the invoice status is not NOT_YET_PAID
 	 */
 	public void removeWorkOrder(WorkOrder workOrder) {
-
+		Associations.ToInvoice.unlink(this, workOrder);
+		computeAmount();
 	}
 
 	/**
@@ -91,6 +115,49 @@ public class Invoice {
 
 	Set<Charge> _getCharges() {
 		return charges;
+	}
+
+	public Long getNumber() {
+		return number;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public double getVat() {
+		return vat;
+	}
+
+	public InvoiceState getState() {
+		return state;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(number);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Invoice other = (Invoice) obj;
+		return Objects.equals(number, other.number);
+	}
+
+	@Override
+	public String toString() {
+		return "Invoice [number=" + number + ", date=" + date + ", amount=" + amount + ", vat=" + vat + ", state="
+				+ state + "]";
 	}
 
 }

@@ -1,0 +1,18 @@
+package uo.ri.cws.domain;
+
+import java.time.LocalDate;
+
+public class CreditCard extends PaymentMean {
+	
+	private String number;
+	private String type;
+	private LocalDate validThru;
+
+	public CreditCard(String string) {
+		// TODO Auto-generated constructor stub
+	}
+	public CreditCard(String string, String string2, LocalDate minusDays) {
+		// TODO Auto-generated constructor stub
+	}
+	
+}

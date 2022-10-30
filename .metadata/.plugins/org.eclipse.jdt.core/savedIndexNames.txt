@@ -1,0 +1,6 @@
+INDEX VERSION 1.131+C:\Users\byjon\Desktop\UNI\3o\RI\JPA\WS\.metadata\.plugins\org.eclipse.jdt.core
+3171051442.index
+1319374035.index
+3303258216.index
+3011209426.index
+532453333.index

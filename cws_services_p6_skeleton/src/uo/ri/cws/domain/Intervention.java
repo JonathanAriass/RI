@@ -14,8 +14,28 @@ public class Intervention {
 	private Mechanic mechanic;
 	private Set<Substitution> substitutions = new HashSet<>();
 
+	public Intervention(Mechanic m, WorkOrder wo, int i) {
+		// TODO Auto-generated constructor stub
+	}
+
 	void _setWorkOrder(WorkOrder workOrder) {
 		this.workOrder = workOrder;
+	}
+
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	public int getMinutes() {
+		return minutes;
+	}
+
+	public WorkOrder getWorkOrder() {
+		return workOrder;
+	}
+
+	public Mechanic getMechanic() {
+		return mechanic;
 	}
 
 	void _setMechanic(Mechanic mechanic) {
