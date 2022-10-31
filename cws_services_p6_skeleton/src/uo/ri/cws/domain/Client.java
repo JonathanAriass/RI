@@ -83,8 +83,8 @@ public class Client {
 		return this.payments;
 	}
 
-	public Set<PaymentMean> getPayments() {
-		return payments;
+	public Set<PaymentMean> getPaymentMeans() {
+		return new HashSet<>(payments);
 	}
 	
 	

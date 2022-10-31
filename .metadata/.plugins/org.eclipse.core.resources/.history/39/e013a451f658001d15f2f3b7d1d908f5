@@ -1,0 +1,27 @@
+package uo.ri.cws.domain;
+
+import java.time.LocalDate;
+
+public class Contract {
+
+	// Atributos naturales
+	private double annualBaseWage;
+	private LocalDate endDate;
+	private double settlement;
+	private LocalDate startDate;
+	private ContractState state;
+	
+	// Atributos accidentales
+	private Mechanic mechanic;
+	private ProfessionalGroup professionalGroup;
+	
+	public enum ContractState {
+		TERMINATED,
+		IN_FORCE
+	}
+	
+	public Contract(Mechanic mechanic, ContractType type, ProfessionalGroup group, double wage) {
+		// TODO Auto-generated constructor stub
+	}
+
+}

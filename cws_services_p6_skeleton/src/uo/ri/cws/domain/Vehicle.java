@@ -84,5 +84,9 @@ public class Vehicle {
 	Set<WorkOrder> _getWorkOrders() {
 		return this.workorders;
 	}
+
+	public Set<WorkOrder> getWorkOrders() {
+		return new HashSet<>(workorders);
+	}
 	
 }

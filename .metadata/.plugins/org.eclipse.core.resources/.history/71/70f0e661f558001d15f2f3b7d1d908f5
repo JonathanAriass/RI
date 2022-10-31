@@ -1,0 +1,13 @@
+package uo.ri.cws.domain;
+
+public class ProfessionalGroup {
+
+	private String name;
+	private double productivityBonusPercentage;
+	private double trienniumPayment;
+	
+	public ProfessionalGroup(String string, double d, double e) {
+		// TODO Auto-generated constructor stub
+	}
+
+}

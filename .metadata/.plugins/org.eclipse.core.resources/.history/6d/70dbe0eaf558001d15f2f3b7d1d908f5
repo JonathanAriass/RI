@@ -1,0 +1,20 @@
+package uo.ri.cws.domain;
+
+public class Contract {
+
+	// Atributos naturales
+	private double annualBaseWage;
+	private Date endDate;
+	private double settlement;
+	private Date startDate;
+	private ContractState state;
+	
+	public enum ContractState {
+		TERMINATED,
+	}
+	
+	public Contract(Mechanic mechanic, ContractType type, ProfessionalGroup group, double wage) {
+		// TODO Auto-generated constructor stub
+	}
+
+}

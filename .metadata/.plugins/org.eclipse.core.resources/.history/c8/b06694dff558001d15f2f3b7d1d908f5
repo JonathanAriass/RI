@@ -1,0 +1,9 @@
+package uo.ri.cws.domain;
+
+public class Contract {
+
+	public Contract(Mechanic mechanic, ContractType type, ProfessionalGroup group, double wage) {
+		// TODO Auto-generated constructor stub
+	}
+
+}

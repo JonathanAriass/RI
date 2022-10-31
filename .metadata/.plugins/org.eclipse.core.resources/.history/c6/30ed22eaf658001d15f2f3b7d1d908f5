@@ -1,0 +1,25 @@
+package uo.ri.cws.domain;
+
+import java.util.Set;
+
+public class ProfessionalGroup {
+
+	// Atributos naturales
+	private String name; // Identidad natural
+	private double productivityBonusPercentage;
+	private double trienniumPayment;
+	
+	
+	
+	public ProfessionalGroup(String string, double d, double e) {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public Set<Contract> getContracts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

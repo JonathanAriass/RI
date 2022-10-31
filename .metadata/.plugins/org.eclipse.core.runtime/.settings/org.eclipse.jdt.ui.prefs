@@ -1,7 +1,8 @@
-content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="java.lang.Enum"><rhs name\="uo.ri.cws.domain.WorkOrder$WorkOrderState"/></lhs><lhs name\="java.lang.constant.Constable"><rhs name\="uo.ri.cws.domain.WorkOrder$WorkOrderState"/></lhs><lhs name\="uo.ri.cws.domain.WorkOrder$WorkOrderState"><rhs name\="uo.ri.cws.domain.WorkOrder$WorkOrderState"/></lhs></history>
+content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="java.lang.Enum"><rhs name\="uo.ri.cws.domain.WorkOrder$WorkOrderState"/><rhs name\="uo.ri.cws.domain.Invoice$InvoiceState"/><rhs name\="uo.ri.cws.domain.Contract$ContractState"/></lhs><lhs name\="java.lang.constant.Constable"><rhs name\="uo.ri.cws.domain.WorkOrder$WorkOrderState"/><rhs name\="uo.ri.cws.domain.Invoice$InvoiceState"/><rhs name\="uo.ri.cws.domain.Contract$ContractState"/></lhs><lhs name\="uo.ri.cws.domain.WorkOrder$WorkOrderState"><rhs name\="uo.ri.cws.domain.WorkOrder$WorkOrderState"/></lhs><lhs name\="uo.ri.cws.domain.Invoice$InvoiceState"><rhs name\="uo.ri.cws.domain.Invoice$InvoiceState"/></lhs><lhs name\="uo.ri.cws.domain.Contract$ContractState"><rhs name\="uo.ri.cws.domain.Contract$ContractState"/></lhs></history>
 content_assist_number_of_computers=13
 eclipse.preferences.version=1
-org.eclipse.jdt.ui.formatterprofiles.version=21
+org.eclipse.jdt.ui.formatterprofiles.version=22
 spelling_locale_initialized=true
+typefilter_migrated_2=true
 useAnnotationsPrefPage=true
 useQuickDiffPrefPage=true

@@ -1,0 +1,19 @@
+package uo.ri.cws.domain;
+
+import java.util.Set;
+
+public class ContractType {
+
+	private String name;
+	private double compensationDays;
+	
+	public ContractType(String string, double d) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Set<Contract> getContracts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import uo.ri.cws.domain.WorkOrder.WorkOrderState;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
@@ -42,7 +43,7 @@ public class Invoice {
 		// check arguments (always), through IllegalArgumentException
 		ArgumentChecks.isTrue(number >= 0);
 		ArgumentChecks.isNotNull(date);
-		ArgumentChecks.isTrue(date.isAfter(LocalDate.now()));
+//		ArgumentChecks.isTrue(date.isAfter(LocalDate.now()));
 		ArgumentChecks.isNotNull(workOrders);
 	
 		// store the number
@@ -57,16 +58,27 @@ public class Invoice {
 
 	private void addWorkOrders(List<WorkOrder> workOrders2) {
 		for (WorkOrder w : workOrders2)
-			workOrders.add(w);
+			addWorkOrder(w);
 	}
 
 	/**
 	 * Computes amount and vat (vat depends on the date)
 	 */
 	private void computeAmount() {
-
+		double total = 0;
+		
+		for (WorkOrder w : workOrders) {
+			total += (w.getAmount()) * (getVatType() + 1);
+		}
+		
+		this.amount = Math.rint(total * 100) / 100;
 	}
 
+	private double getVatType() {
+		LocalDate july2012 = LocalDate.of(2012, 7, 1);
+		return date.isAfter(july2012) ? 0.21 : 0.18;
+	}
+	
 	/**
 	 * Adds (double links) the workOrder to the invoice and updates the amount and vat
 	 * @param workOrder
@@ -75,7 +87,10 @@ public class Invoice {
 	 */
 	public void addWorkOrder(WorkOrder workOrder) {
 		StateChecks.isTrue(InvoiceState.NOT_YET_PAID.equals(this.state));
+		StateChecks.isTrue(workOrder.getState() == WorkOrderState.FINISHED);
 		Associations.ToInvoice.link(this, workOrder);
+		workOrder.markAsInvoiced();
+		workOrders.add(workOrder);
 		computeAmount();
 	}
 
@@ -87,6 +102,8 @@ public class Invoice {
 	 */
 	public void removeWorkOrder(WorkOrder workOrder) {
 		Associations.ToInvoice.unlink(this, workOrder);
+		workOrder.markBackToFinished();
+		workOrders.remove(workOrder);
 		computeAmount();
 	}
 
@@ -98,7 +115,8 @@ public class Invoice {
 	 *  	the total of the invoice
 	 */
 	public void settle() {
-
+		ArgumentChecks.isTrue(state.equals(InvoiceState.NOT_YET_PAID));
+		this.state = InvoiceState.PAID;
 	}
 
 	public Set<WorkOrder> getWorkOrders() {
@@ -158,6 +176,10 @@ public class Invoice {
 	public String toString() {
 		return "Invoice [number=" + number + ", date=" + date + ", amount=" + amount + ", vat=" + vat + ", state="
 				+ state + "]";
+	}
+
+	public boolean isNotSettled() {
+		return state.equals(InvoiceState.NOT_YET_PAID);
 	}
 
 }

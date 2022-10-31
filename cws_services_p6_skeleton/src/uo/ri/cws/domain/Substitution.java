@@ -1,5 +1,7 @@
 package uo.ri.cws.domain;
 
+import uo.ri.util.assertion.ArgumentChecks;
+
 public class Substitution {
 	// natural attributes
 	private int quantity;
@@ -12,6 +14,10 @@ public class Substitution {
 
 	public Substitution(SparePart r, Intervention interv, int i) {
 		// validar parametros
+		ArgumentChecks.isNotNull(r);
+		ArgumentChecks.isNotNull(interv);
+		ArgumentChecks.isTrue(i > 0);
+		
 		this.quantity = i;
 		Associations.Substitute.link(r, this, interv);
 	}
@@ -34,6 +40,10 @@ public class Substitution {
 
 	public Intervention getIntervention() {
 		return intervention;
+	}
+
+	public double getAmount() {
+		return quantity * sparePart.getPrice();
 	}
 
 }

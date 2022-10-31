@@ -31,6 +31,15 @@ public abstract class PaymentMean {
 	Set<Charge> _getCharges() {
 		return charges;
 	}
+	
+	public double getAccumulated() {
+		return accumulated;
+	}
+
+	public Client getClient() {
+		return client;
+	}
+	
 
 	@Override
 	public int hashCode() {

@@ -1,5 +1,7 @@
 package uo.ri.cws.domain;
 
+import uo.ri.cws.domain.Contract.ContractState;
+
 public class Associations {
 
 	public static class Own {
@@ -74,11 +76,19 @@ public class Associations {
 	public static class ToCharge {
 
 		public static void link(PaymentMean pm, Charge charge, Invoice inovice) {
-			// TODO Auto-generated method stub
+			charge._setInvoice(inovice);
+			charge._setPaymentMean(pm);
+			
+			pm._getCharges().add(charge);
+			inovice._getCharges().add(charge);
 		}
 
 		public static void unlink(Charge charge) {
-			// TODO Auto-generated method stub
+			charge.getPaymentMean()._getCharges().remove(charge);
+			charge.getInvoice()._getCharges().remove(charge);
+			
+			charge._setInvoice(null);
+			charge._setPaymentMean(null);
 		}
 
 	}
@@ -101,11 +111,19 @@ public class Associations {
 
 		public static void link(WorkOrder workOrder, Intervention intervention,
 				Mechanic mechanic) {
-			// TODO Auto-generated method stub
+			intervention._setWorkOrder(workOrder);
+			intervention._setMechanic(mechanic);
+			
+			workOrder._getInterventions().add(intervention);
+			mechanic._getInterventions().add(intervention);
 		}
 
 		public static void unlink(Intervention intervention) {
-			// TODO Auto-generated method stub
+			intervention.getWorkOrder()._getInterventions().remove(intervention);
+			intervention.getMechanic()._getInterventions().remove(intervention);
+
+			intervention._setWorkOrder(null);
+			intervention._setMechanic(null);
 		}
 
 	}
@@ -127,6 +145,61 @@ public class Associations {
 			sustitution._setSparePart(null);
 		}
 
+	}
+	
+	public static class Hire {
+
+		public static void link(Contract contract, Mechanic mechanic) {
+			contract._setMechanic(mechanic);
+			mechanic._getContracts().add(contract);
+		}
+		
+		public static void unlink(Contract contract) {
+			contract.getMechanic().get()._getContracts().remove(contract);
+			contract._setMechanic(null);
+		}
+		
+	}
+	
+	public static class Fire {
+
+		public static void link(Contract contract) {
+			contract.getMechanic().get().getTerminatedContracts().add(contract);
+			contract._setState(ContractState.TERMINATED);
+		}
+
+		public static void unlink(Contract contract) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	public static class Group {
+
+		public static void link(Contract contract, ProfessionalGroup group) {
+			contract._setProfessionalGroup(group);
+			group.getContracts().add(contract);
+		}
+		
+		public static void unlink(Contract contract) {
+			contract.getProfessionalGroup().getContracts().remove(contract);
+			contract._setProfessionalGroup(null);
+		}
+		
+	}
+	
+	public static class Type {
+
+		public static void link(ContractType type, Contract contract) {
+			
+		}
+		
+		public static void unlink(Contract contract) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 
 }

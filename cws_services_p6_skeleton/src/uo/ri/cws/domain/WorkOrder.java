@@ -1,13 +1,31 @@
 package uo.ri.cws.domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
+import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
 public class WorkOrder {
+	@Override
+	public int hashCode() {
+		return Objects.hash(date, vehicle);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WorkOrder other = (WorkOrder) obj;
+		return Objects.equals(date, other.date) && Objects.equals(vehicle, other.vehicle);
+	}
+
 	public enum WorkOrderState {
 		OPEN,
 		ASSIGNED,
@@ -18,6 +36,7 @@ public class WorkOrder {
 	// natural attributes
 	private LocalDateTime date;
 	private String description;
+
 	private double amount = 0.0;
 	private WorkOrderState state = WorkOrderState.OPEN;
 
@@ -29,6 +48,9 @@ public class WorkOrder {
 
 	public WorkOrder(Vehicle v, String descr) {
 		// validacion de parametros
+		ArgumentChecks.isNotNull(v);
+		ArgumentChecks.isNotNull(descr);
+		
 		this.description = descr;
 		this.date = LocalDateTime.now();
 		
@@ -45,7 +67,9 @@ public class WorkOrder {
 	 *  - The work order is not linked with the invoice
 	 */
 	public void markAsInvoiced() {
-
+		StateChecks.isTrue(state != WorkOrderState.ASSIGNED);
+		StateChecks.isNotNull(invoice);
+		this.state = WorkOrderState.INVOICED;
 	}
 
 	/**
@@ -58,7 +82,20 @@ public class WorkOrder {
 	 *  - The work order is not linked with a mechanic
 	 */
 	public void markAsFinished() {
+		StateChecks.isTrue(state == WorkOrderState.ASSIGNED);
+		StateChecks.isNotNull(mechanic);
+		computeAmount();
+		this.state = WorkOrderState.FINISHED;
+	}
 
+	private void computeAmount() {
+		double total = 0;
+		
+		for (Intervention i : interventions) {
+			total += i.getAmount();
+		}
+		
+		this.amount = total;
 	}
 
 	/**
@@ -70,7 +107,10 @@ public class WorkOrder {
 	 *  - The work order is still linked with the invoice
 	 */
 	public void markBackToFinished() {
-
+		StateChecks.isTrue(state == WorkOrderState.INVOICED);
+		StateChecks.isNull(invoice);
+		computeAmount();
+		this.state = WorkOrderState.FINISHED;
 	}
 
 	/**
@@ -82,10 +122,10 @@ public class WorkOrder {
 	 *  - The work order is already linked with another mechanic
 	 */
 	public void assignTo(Mechanic mechanic) {
-		StateChecks.isTrue(WorkOrderState.OPEN.equals(state));
+		StateChecks.isTrue(WorkOrderState.OPEN == state);
 		StateChecks.isFalse(this.mechanic != null);
-		Associations.Assign.link(mechanic, this);
 		this.state = WorkOrderState.ASSIGNED;
+		Associations.Assign.link(mechanic, this);
 	}
 
 	/**
@@ -97,7 +137,6 @@ public class WorkOrder {
 	 */
 	public void desassign() {
 		Associations.Assign.unlink(mechanic, this);
-		this.state = WorkOrderState.OPEN;
 	}
 
 	/**
@@ -108,7 +147,10 @@ public class WorkOrder {
 	 * 	- The work order is not in FINISHED state
 	 */
 	public void reopen() {
-
+		StateChecks.isTrue(state == WorkOrderState.FINISHED,
+				"The work order is not in FINISHED status");
+		this.state = WorkOrderState.OPEN;
+		Associations.Assign.unlink(mechanic, this);
 	}
 
 	public Set<Intervention> getInterventions() {
@@ -149,6 +191,22 @@ public class WorkOrder {
 
 	public double getAmount() {
 		return this.amount;
+	}
+
+	public Vehicle getVehicle() {
+		return vehicle;
+	}
+	
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public WorkOrderState getState() {
+		return state;
 	}
 
 }

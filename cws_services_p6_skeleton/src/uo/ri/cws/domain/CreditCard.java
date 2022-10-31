@@ -3,6 +3,9 @@ package uo.ri.cws.domain;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import uo.ri.util.assertion.ArgumentChecks;
+import uo.ri.util.assertion.StateChecks;
+
 public class CreditCard extends PaymentMean {
 	
 	private String number;
@@ -15,6 +18,14 @@ public class CreditCard extends PaymentMean {
 	}
 	public CreditCard(String numero, String tipo, LocalDate v) {
 		// validar
+		ArgumentChecks.isNotEmpty(numero, "CREDITCARD: invalid number");
+		ArgumentChecks.isNotBlank(numero, "CREDITCARD: invalid number");	
+		ArgumentChecks.isNotEmpty(tipo, "CREDITCARD: invalid type");
+		ArgumentChecks.isNotBlank(tipo, "CREDITCARD: invalid type");
+//		ArgumentChecks.isNotEmpty(v, "CREDITCARD: invalid date");
+//		ArgumentChecks.isNotBlank(v, "CREDITCARD: invalid date");	
+		
+		
 		this.number = numero;
 		this.type = tipo;
 		this.validThru = v;
@@ -49,6 +60,27 @@ public class CreditCard extends PaymentMean {
 			return false;
 		CreditCard other = (CreditCard) obj;
 		return Objects.equals(number, other.number);
+	}
+	
+	@Override
+	public void pay(double amount) {
+		StateChecks.isTrue(isValidNow());
+		super.pay(amount);
+	}
+	
+	public void setValidThru(LocalDate minusDays) {
+		StateChecks.isTrue(validThru.getDayOfMonth() < minusDays.getDayOfMonth()
+				&& validThru.getMonthValue() <= minusDays.getMonthValue()
+				&& validThru.getYear() <= minusDays.getYear());
+		this.validThru = minusDays;
+	}
+	
+	public boolean isValidNow() {
+		if (validThru.isAfter(LocalDate.now())) {
+			return true;
+		} else {
+			return false;			
+		}
 	}
 	
 }

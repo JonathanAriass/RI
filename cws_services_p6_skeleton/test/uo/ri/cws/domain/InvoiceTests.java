@@ -77,6 +77,7 @@ public class InvoiceTests {
 		Invoice invoice = new Invoice( 0L ); // 0L as dummy invoice number
 		invoice.addWorkOrder(workOrder);
 
+		System.out.println(invoice.getAmount());
 		assertTrue( invoice.getAmount() ==  302.5 );
 	}
 

@@ -2,7 +2,10 @@ package uo.ri.cws.domain;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+
+import uo.ri.util.assertion.ArgumentChecks;
 
 public class Intervention {
 	// natural attributes
@@ -15,11 +18,14 @@ public class Intervention {
 	private Set<Substitution> substitutions = new HashSet<>();
 
 	public Intervention(Mechanic m, WorkOrder wo, int i) {
-		// TODO Auto-generated constructor stub
-	}
-
-	void _setWorkOrder(WorkOrder workOrder) {
-		this.workOrder = workOrder;
+		ArgumentChecks.isTrue(i >= 0);
+		ArgumentChecks.isNotNull(m, "INTERVENTION: mechanic invalid");
+		ArgumentChecks.isNotNull(wo, "INTERVENTION: workorder invalid");
+		
+		this.mechanic = m;
+		this.workOrder = wo;
+		this.minutes = i;
+		Associations.Intervene.link(workOrder, this, mechanic);
 	}
 
 	public LocalDateTime getDate() {
@@ -30,12 +36,16 @@ public class Intervention {
 		return minutes;
 	}
 
+	void _setWorkOrder(WorkOrder workOrder) {
+		this.workOrder = workOrder;
+	}
+	
 	public WorkOrder getWorkOrder() {
-		return workOrder;
+		return this.workOrder;
 	}
 
 	public Mechanic getMechanic() {
-		return mechanic;
+		return this.mechanic;
 	}
 
 	void _setMechanic(Mechanic mechanic) {
@@ -48,6 +58,41 @@ public class Intervention {
 
 	Set<Substitution> _getSubstitutions() {
 		return substitutions;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(date, mechanic, workOrder);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Intervention other = (Intervention) obj;
+		return Objects.equals(date, other.date) && Objects.equals(mechanic, other.mechanic)
+				&& Objects.equals(workOrder, other.workOrder);
+	}
+	
+	@Override
+	public String toString() {
+		return "Intervention [date=" + date + ", minutes=" + minutes + ","
+				+ " substitutions=" + substitutions + "]";
+	}
+
+	public double getAmount() {
+		double a = 0;
+		for (Substitution s : substitutions) {
+			if (s.getIntervention() == this) {
+				a += s.getAmount();
+			}
+		}
+		return (workOrder.getVehicle().getVehicleType().getPricePerHour()
+				* ((double) minutes / 60)) + a;
 	}
 
 }
