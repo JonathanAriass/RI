@@ -58,6 +58,15 @@ public class WorkOrder extends BaseEntity {
 		this(v, LocalDateTime.now(), descr);
 	}
 	
+	public WorkOrder(Vehicle v, LocalDateTime atStartOfDay) {
+		ArgumentChecks.isNotNull(vehicle, "TWORKORDERS: invalid vehicle.");
+		ArgumentChecks.isNotNull(atStartOfDay, "TWORKORDERS: invalid date.");
+		
+		this.vehicle = v;
+		this.date = atStartOfDay.truncatedTo(ChronoUnit.MILLIS);
+		Associations.Fix.link(vehicle, this);
+	}
+	
 	public WorkOrder(Vehicle vehicle, LocalDateTime now, String descr) {
 		ArgumentChecks.isNotNull(vehicle, "TWORKORDERS: invalid vehicle.");
 		ArgumentChecks.isNotNull(now, "TWORKORDERS: invalid date.");
@@ -69,6 +78,7 @@ public class WorkOrder extends BaseEntity {
 		
 		Associations.Fix.link(vehicle, this);
 	}
+
 
 	/**
 	 * Changes it to INVOICED state given the right conditions
@@ -242,6 +252,14 @@ public class WorkOrder extends BaseEntity {
 	public String toString() {
 		return "WorkOrder [date=" + date + ", description=" + description + ", amount=" + amount + ", state=" + state
 				+ ", vehicle=" + vehicle + "]";
+	}
+
+	public void setStatusForTesting(WorkOrderState invoiced) {
+		this.state = invoiced;
+	}
+
+	public void setAmountForTesting(double money) {
+		this.amount = money;
 	}
 
 }

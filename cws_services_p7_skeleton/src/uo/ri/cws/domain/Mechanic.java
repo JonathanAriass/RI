@@ -27,7 +27,8 @@ public class Mechanic extends BaseEntity {
 	// accidental attributes
 	@OneToMany(mappedBy="mechanic") private Set<WorkOrder> assigned = new HashSet<>();
 	@OneToMany(mappedBy="mechanic") private Set<Intervention> interventions = new HashSet<>();
-	@Transient private Set<Contract> contracts = new HashSet<>();
+	@Transient private Contract contract;
+	@Transient private Set<Contract> terminatedContracts = new HashSet<>();
 	
 	Mechanic() {}
 	
@@ -98,39 +99,37 @@ public class Mechanic extends BaseEntity {
 		return interventions;
 	}
 
-	public Set<Contract> getTerminatedContracts() {
-		Set<Contract> result = new HashSet<>();
-		
-		for (Contract c : contracts) {
-			if (c.getState() == ContractState.TERMINATED) {
-				result.add(c);
-			}
-		}
-		
-		return result;
-	}
-
 	public Optional<Contract> getContractInForce() {
-		for (Contract c : contracts) {
-			if (c.getState() == ContractState.IN_FORCE) {
-				return Optional.of(c);
-			}
-		}
 		
+		if (contract != null && contract.getState() == ContractState.IN_FORCE) {
+			return Optional.of(contract);
+		}
+
 		return Optional.empty();
 	}
 
-	public Set<Contract> _getContracts() {
-		return this.contracts;
+	public Contract _getContract() {
+		return this.contract;
 	}
 
 	public boolean isInForce() {
-		for (Contract c : contracts) {
-			if (c.getState() == ContractState.IN_FORCE) {
-				return true;
-			}
+		if (contract.getState() == ContractState.IN_FORCE) {
+			return true;
 		}
+
 		return false;
 	}
 
+	public Set<Contract> _getTerminatedContracts() {
+		return terminatedContracts;
+	}
+
+	public Set<Contract> getTerminatedContracts() {
+		return new HashSet<>( terminatedContracts );
+	}
+
+	public void _setContract(Contract contract2) {
+		this.contract = contract2;
+	}
+	
 }

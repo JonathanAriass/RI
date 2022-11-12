@@ -60,4 +60,9 @@ public class ContractType {
 	public Set<Contract> getContracts() {
 		return new HashSet<>(contracts);
 	}
+
+
+	Set<Contract> _getContracts() {
+		return contracts;
+	}
 }
