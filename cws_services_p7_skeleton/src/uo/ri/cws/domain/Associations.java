@@ -119,11 +119,11 @@ public class Associations {
 		}
 
 		public static void unlink(Intervention intervention) {
-			intervention.getWorkOrder()._getInterventions().remove(intervention);
 			intervention.getMechanic()._getInterventions().remove(intervention);
+			intervention.getWorkOrder()._getInterventions().remove(intervention);
 
-			intervention._setWorkOrder(null);
 			intervention._setMechanic(null);
+			intervention._setWorkOrder(null);
 		}
 
 	}

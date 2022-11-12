@@ -58,6 +58,7 @@ public class SubstituteMappingTests {
 		unitOfWork.persist(workOrder, vehicle, invoice,
 				mechanic, intervention, vehicleType,
 				substitution, sparePart);
+		
 	}
 
 	@After
@@ -77,7 +78,7 @@ public class SubstituteMappingTests {
 	public void testSparePartRecoversSubstitutions() {
 
 		SparePart restored = unitOfWork.findById( SparePart.class, sparePart.getId() );
-
+			
 		assertTrue( restored.getSubstitutions().contains( substitution ) );
 		assertEquals( 1, restored.getSubstitutions().size() );
 	}
@@ -104,7 +105,7 @@ public class SubstituteMappingTests {
 
 		Substitution restored = unitOfWork.findById( Substitution.class,
 				substitution.getId() );
-
+		
 		assertEquals( intervention, restored.getIntervention() );
 	}
 

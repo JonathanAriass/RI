@@ -45,7 +45,7 @@ public class OrderMappingTests {
 	public void testVehicleRecoversWorkOrders() {
 
 		Vehicle restored = unitOfWork.findById( Vehicle.class, vehicle.getId() );
-
+		
 		assertTrue( restored.getWorkOrders().contains( workOrder ) );
 		assertEquals( 1, restored.getWorkOrders().size() );
 	}

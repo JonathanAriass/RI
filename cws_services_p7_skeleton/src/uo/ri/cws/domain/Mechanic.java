@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 
 import uo.ri.cws.domain.Contract.ContractState;
 import uo.ri.cws.domain.base.BaseEntity;
+import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
 @Table(name="tmechanics")
@@ -25,7 +26,7 @@ public class Mechanic extends BaseEntity {
 
 	// accidental attributes
 	@OneToMany(mappedBy="mechanic") private Set<WorkOrder> assigned = new HashSet<>();
-	@Transient private Set<Intervention> interventions = new HashSet<>();
+	@OneToMany(mappedBy="mechanic") private Set<Intervention> interventions = new HashSet<>();
 	@Transient private Set<Contract> contracts = new HashSet<>();
 	
 	Mechanic() {}
@@ -33,9 +34,17 @@ public class Mechanic extends BaseEntity {
 	public Mechanic(String dni, String nombre, String apellido) {
 		//validate
 		
-		this.dni = dni;
+		
+		this(dni);
 		this.name = nombre;
 		this.surname = apellido;
+	}
+
+	public Mechanic(String dni) {
+		ArgumentChecks.isNotBlank(dni, "TMECHANICS: empty mechanic dni.");
+		ArgumentChecks.isNotNull(dni, "TMECHANICS: invalid mechanic dni.");
+		
+		this.dni = dni;
 	}
 
 	public String getDni() {

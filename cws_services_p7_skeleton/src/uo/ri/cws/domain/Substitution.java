@@ -1,5 +1,7 @@
 package uo.ri.cws.domain;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -16,6 +18,8 @@ public class Substitution extends BaseEntity {
 	private int quantity;
 
 	// accidental attributes
+//	@ManyToOne(optional=false) private SparePart sparePart;
+//	@ManyToOne(optional=false) private Intervention intervention;
 	@ManyToOne private SparePart sparePart;
 	@ManyToOne private Intervention intervention;
 
@@ -28,6 +32,8 @@ public class Substitution extends BaseEntity {
 		ArgumentChecks.isTrue(i > 0);
 		
 		this.quantity = i;
+//		this.intervention = interv;
+//		this.sparePart = r;
 		Associations.Substitute.link(r, this, interv);
 	}
 
@@ -54,5 +60,26 @@ public class Substitution extends BaseEntity {
 	public double getAmount() {
 		return quantity * sparePart.getPrice();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(intervention, sparePart);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Substitution other = (Substitution) obj;
+		return Objects.equals(intervention, other.intervention) && Objects.equals(sparePart, other.sparePart);
+	}
+
 
 }

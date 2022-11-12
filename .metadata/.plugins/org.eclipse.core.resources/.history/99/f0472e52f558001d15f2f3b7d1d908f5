@@ -1,9 +1,0 @@
-package uo.ri.cws.domain;
-
-public class ProfessionalGroup {
-
-	public ProfessionalGroup(String string, double d, double e) {
-		// TODO Auto-generated constructor stub
-	}
-
-}

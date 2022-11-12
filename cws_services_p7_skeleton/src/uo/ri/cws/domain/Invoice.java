@@ -32,7 +32,7 @@ public class Invoice extends BaseEntity {
 
 	// accidental attributes
 	@OneToMany(mappedBy="invoice") private Set<WorkOrder> workOrders = new HashSet<>();
-	@Transient private Set<Charge> charges = new HashSet<>();
+	@OneToMany(mappedBy="invoice") private Set<Charge> charges = new HashSet<>();
 
 	Invoice() {}
 	

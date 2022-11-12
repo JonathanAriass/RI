@@ -55,7 +55,7 @@ public class InvoiceMappingTests {
 	public void testInvoiceRecoversWorkOrders() {
 
 		Invoice restored = unitOfWork.findById( Invoice.class, invoice.getId() );
-
+		
 		assertTrue( restored.getWorkOrders().contains( workOrder ) );
 		assertEquals( 1, restored.getWorkOrders().size() );
 	}

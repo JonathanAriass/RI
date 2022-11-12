@@ -51,7 +51,7 @@ public class AssignMappingTests {
 	public void testMechanicRecoversWorkOrders() {
 
 		Mechanic restored = unitOfWork.findById( Mechanic.class, mechanic.getId() );
-
+		
 		assertTrue( restored.getAssigned().contains( workOrder ) );
 		assertEquals( 1, restored.getAssigned().size() );
 	}

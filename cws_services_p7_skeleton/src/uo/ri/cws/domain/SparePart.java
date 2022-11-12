@@ -83,7 +83,7 @@ public class SparePart extends BaseEntity {
 	}
 
 	Set<Substitution> _getSubstitutions() {
-		return substitutions;
+		return this.substitutions;
 	}
 
 }

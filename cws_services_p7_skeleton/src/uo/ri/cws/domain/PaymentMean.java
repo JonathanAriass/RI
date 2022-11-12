@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -22,7 +23,7 @@ public abstract class PaymentMean extends BaseEntity {
 
 	// accidental attributes
 	@ManyToOne private Client client;
-	@Transient private Set<Charge> charges = new HashSet<>();
+	@OneToMany(mappedBy="paymentMean") private Set<Charge> charges = new HashSet<>();
 
 
 	PaymentMean() {}
@@ -69,5 +70,13 @@ public abstract class PaymentMean extends BaseEntity {
 		PaymentMean other = (PaymentMean) obj;
 		return Objects.equals(client, other.client);
 	}
+
+
+	@Override
+	public String toString() {
+		return "PaymentMean [accumulated=" + accumulated + ", client=" + client + "]";
+	}
+	
+	
 
 }

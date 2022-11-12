@@ -1,6 +1,11 @@
 package uo.ri.cws.domain;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -8,6 +13,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
@@ -20,22 +26,6 @@ import uo.ri.util.assertion.StateChecks;
 @Table(name="tworkorders", 
 uniqueConstraints=@UniqueConstraint(columnNames = {"date", "vehicle_id"}))
 public class WorkOrder extends BaseEntity {
-	@Override
-	public int hashCode() {
-		return Objects.hash(date, vehicle);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		WorkOrder other = (WorkOrder) obj;
-		return Objects.equals(date, other.date) && Objects.equals(vehicle, other.vehicle);
-	}
 
 	public enum WorkOrderState {
 		OPEN,
@@ -55,20 +45,29 @@ public class WorkOrder extends BaseEntity {
 	@ManyToOne private Vehicle vehicle;
 	@ManyToOne private Mechanic mechanic;
 	@ManyToOne private Invoice invoice;
-	@Transient private Set<Intervention> interventions = new HashSet<>();
+	@OneToMany(mappedBy="workOrder") private Set<Intervention> interventions = new HashSet<>();
 
 	WorkOrder() {}
 	
+	public WorkOrder(Vehicle vehicle) {
+		this(vehicle, LocalDateTime.now(), "");
+	}
+
 	public WorkOrder(Vehicle v, String descr) {
-		// validacion de parametros
-		ArgumentChecks.isNotNull(v);
-		ArgumentChecks.isNotNull(descr);
-		
+	
+		this(v, LocalDateTime.now(), descr);
+	}
+	
+	public WorkOrder(Vehicle vehicle, LocalDateTime now, String descr) {
+		ArgumentChecks.isNotNull(vehicle, "TWORKORDERS: invalid vehicle.");
+		ArgumentChecks.isNotNull(now, "TWORKORDERS: invalid date.");
+		ArgumentChecks.isNotNull(descr, "TWORKORDERS: invalid description.");		
+
+		this.vehicle = vehicle;
+		this.date = now.truncatedTo(ChronoUnit.MILLIS);
 		this.description = descr;
-		this.date = LocalDateTime.now();
 		
-		// se realiza el linkeo
-		Associations.Fix.link(v, this);
+		Associations.Fix.link(vehicle, this);
 	}
 
 	/**
@@ -220,6 +219,29 @@ public class WorkOrder extends BaseEntity {
 
 	public WorkOrderState getState() {
 		return state;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(date, vehicle);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WorkOrder other = (WorkOrder) obj;
+		return Objects.equals(date, other.date) && Objects.equals(vehicle, other.vehicle);
+	}
+
+	@Override
+	public String toString() {
+		return "WorkOrder [date=" + date + ", description=" + description + ", amount=" + amount + ", state=" + state
+				+ ", vehicle=" + vehicle + "]";
 	}
 
 }
