@@ -38,6 +38,10 @@ public class SparePart extends BaseEntity {
 	}
 
 
+	public SparePart(String code2) {
+		this(code2, "", 0.0);
+	}
+
 	public String getCode() {
 		return code;
 	}

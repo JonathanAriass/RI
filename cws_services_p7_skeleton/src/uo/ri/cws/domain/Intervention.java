@@ -11,12 +11,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
-@Table(name="tinterventions")
+@Table(name="tinterventions", 
+uniqueConstraints=@UniqueConstraint(columnNames = {"workOrder_id"}))
+
 public class Intervention extends BaseEntity {
 	// natural attributes
 	private LocalDateTime date;

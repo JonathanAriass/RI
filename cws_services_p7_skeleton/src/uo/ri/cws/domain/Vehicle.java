@@ -40,7 +40,14 @@ public class Vehicle extends BaseEntity {
 		this.make = marca;
 		this.model = modelo;
 	}
-	
+
+	public Vehicle(String plateNumber2) {
+		ArgumentChecks.isNotBlank(plateNumber2, "VEHICLE: platenumber invalid");
+		ArgumentChecks.isNotEmpty(plateNumber2, "VEHICLE: platenumber invalid");
+		
+		this.plateNumber = plateNumber2;
+	}
+
 	public String getPlateNumber() {
 		return plateNumber;
 	}
