@@ -1,10 +1,14 @@
 package uo.ri.cws.application.service.mechanic.crud.command;
 
+import java.util.Optional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import uo.ri.conf.Factory;
+import uo.ri.cws.application.repository.MechanicRepository;
 import uo.ri.cws.application.service.BusinessException;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
 import uo.ri.cws.application.util.BusinessChecks;
@@ -15,7 +19,8 @@ import uo.ri.util.assertion.ArgumentChecks;
 public class UpdateMechanic implements Command<Void> {
 
 	private MechanicDto dto;
-
+	private static MechanicRepository repo = Factory.repository.forMechanic();
+	
 	public UpdateMechanic(MechanicDto dto) {
 		ArgumentChecks.isNotNull(dto);
 		ArgumentChecks.isNotEmpty(dto.dni);
@@ -29,26 +34,20 @@ public class UpdateMechanic implements Command<Void> {
 	}
 
 	public Void execute() throws BusinessException {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("carworkshop");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		try {
-			Mechanic m = em.find(Mechanic.class, dto.id);
-			// check if mechanic exists
-			BusinessChecks.isNotNull(m, "Mechanic does not exist.");
-			
-			m.setName(dto.name);
-			m.setSurname(dto.surname);
-		} catch (Exception e) {
-			if (tx.isActive()) tx.rollback();
-			throw e;
-		} finally {
-			em.close();
-			emf.close();
-		}
-		tx.commit();
+		// Comprobar que el mecanico a updatear existe
+		BusinessChecks.isTrue(existMechanic(), "Mechanic does not exist.");
+		
+		Mechanic m = repo.findById(dto.id).get();
+		m.setName(dto.name);
+		m.setSurname(dto.surname);
+		
 		return null;
 	}
 
+	
+	private boolean existMechanic() {
+		Optional<Mechanic> m = repo.findByDni(dto.dni);
+		return !m.isEmpty();
+	}
+	
 }

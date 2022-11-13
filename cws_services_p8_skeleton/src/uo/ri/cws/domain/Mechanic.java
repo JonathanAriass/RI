@@ -136,5 +136,13 @@ public class Mechanic extends BaseEntity {
 	public void _setContract(Contract contract2) {
 		this.contract = contract2;
 	}
+
+	public void setName(String name2) {
+		this.name = name2;
+	}
+
+	public void setSurname(String surname2) {
+		this.surname = surname2;
+	}
 	
 }
