@@ -1,5 +1,7 @@
 package uo.ri.cws.domain;
 
+import java.util.Optional;
+
 import uo.ri.cws.domain.Contract.ContractState;
 
 public class Associations {
@@ -119,11 +121,11 @@ public class Associations {
 		}
 
 		public static void unlink(Intervention intervention) {
-			intervention.getWorkOrder()._getInterventions().remove(intervention);
 			intervention.getMechanic()._getInterventions().remove(intervention);
+			intervention.getWorkOrder()._getInterventions().remove(intervention);
 
-			intervention._setWorkOrder(null);
 			intervention._setMechanic(null);
+			intervention._setWorkOrder(null);
 		}
 
 	}
@@ -149,14 +151,19 @@ public class Associations {
 	
 	public static class Hire {
 
-		public static void link(Contract contract, Mechanic mechanic) {
+		public static void link(Contract contract, Mechanic mechanic, ContractType type, ProfessionalGroup pg) {
 			contract._setMechanic(mechanic);
-			mechanic._getContracts().add(contract);
+			contract._setProfessionalGroup(pg);
+			contract._setContractType(type);
+						
+			mechanic._setContract(contract);
+			type._getContracts().add(contract);
+			pg._getContracts().add(contract);
 		}
 		
-		public static void unlink(Contract contract) {
-			contract.getMechanic().get()._getContracts().remove(contract);
-			contract._setMechanic(null);
+		public static void unlink(Contract contract, Mechanic mechanic) {
+			mechanic._setContract(null);
+//			contract._setMechanic(Optional.empty()); // TODO: no me gusta mucho que no se tenga que eliminar el contrato
 		}
 		
 	}
@@ -164,13 +171,13 @@ public class Associations {
 	public static class Fire {
 
 		public static void link(Contract contract) {
-			contract.getMechanic().get().getTerminatedContracts().add(contract);
-			contract._setState(ContractState.TERMINATED);
+			contract.setFiredMechanic(contract.getMechanic().get());
+			contract.getMechanic().get()._getTerminatedContracts().add(contract);
 		}
 
 		public static void unlink(Contract contract) {
-			// TODO Auto-generated method stub
-			
+			contract.getMechanic().get()._getTerminatedContracts().remove(contract);
+			contract.setFiredMechanic(null);
 		}
 		
 	}
@@ -179,11 +186,12 @@ public class Associations {
 
 		public static void link(Contract contract, ProfessionalGroup group) {
 			contract._setProfessionalGroup(group);
-			group.getContracts().add(contract);
+			group._getContracts().add(contract);
+			System.out.println(group.getContracts().size());
 		}
 		
-		public static void unlink(Contract contract) {
-			contract.getProfessionalGroup().getContracts().remove(contract);
+		public static void unlink(Contract contract, ProfessionalGroup group) {
+			group._getContracts().remove(contract);
 			contract._setProfessionalGroup(null);
 		}
 		
@@ -192,12 +200,28 @@ public class Associations {
 	public static class Type {
 
 		public static void link(ContractType type, Contract contract) {
-			
+			type._getContracts().add(contract);
+			contract._setContractType(type);
 		}
 		
-		public static void unlink(Contract contract) {
-			// TODO Auto-generated method stub
-			
+
+		public static void unlink(Contract contract, ContractType type) {
+			contract._setContractType(null);
+			type._getContracts().remove(contract);
+		}
+		
+	}
+	
+	public static class Run {
+
+		public static void link(Payroll payroll, Contract contract2) {
+			payroll._setContract(contract2);
+			contract2._getPayrolls().add(payroll);
+		}
+
+		public static void unlink(Payroll payroll) {
+			payroll.getContract()._getPayrolls().remove(payroll);
+			payroll._setContract(null);
 		}
 		
 	}

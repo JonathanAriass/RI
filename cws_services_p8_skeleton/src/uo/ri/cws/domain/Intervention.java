@@ -1,6 +1,7 @@
 package uo.ri.cws.domain;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -10,12 +11,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
-@Table(name="tinterventions")
+@Table(name="tinterventions", 
+uniqueConstraints=@UniqueConstraint(columnNames = {"workOrder_id", "mechanic_id"}))
+
 public class Intervention extends BaseEntity {
 	// natural attributes
 	private LocalDateTime date;
@@ -29,14 +33,19 @@ public class Intervention extends BaseEntity {
 	Intervention() {}
 	
 	public Intervention(Mechanic m, WorkOrder wo, int i) {
-		ArgumentChecks.isTrue(i >= 0);
-		ArgumentChecks.isNotNull(m, "TINTERVENTIONS: mechanic invalid");
-		ArgumentChecks.isNotNull(wo, "TINTERVENTIONS: workorder invalid");
+		this (m, wo, LocalDateTime.now(), i);
+	}
+
+	public Intervention(Mechanic mechanic2, WorkOrder workOrder2, LocalDateTime date2, int i) {
+		ArgumentChecks.isTrue(i >= 0, "INTERVENTIONS: invalid minutes");
+		ArgumentChecks.isNotNull(mechanic2, "INTERVENTIONS: mechanic invalid");
+		ArgumentChecks.isNotNull(workOrder2, "INTERVENTIONS: workorder invalid");
+		ArgumentChecks.isNotNull(date2, "INTERVENTIONS: date invalid");
 		
-		this.mechanic = m;
-		this.workOrder = wo;
 		this.minutes = i;
-		Associations.Intervene.link(workOrder, this, mechanic);
+		this.date = date2.truncatedTo(ChronoUnit.MILLIS);
+		
+		Associations.Intervene.link(workOrder2, this, mechanic2);
 	}
 
 	public LocalDateTime getDate() {
@@ -89,12 +98,6 @@ public class Intervention extends BaseEntity {
 				&& Objects.equals(workOrder, other.workOrder);
 	}
 	
-	@Override
-	public String toString() {
-		return "Intervention [date=" + date + ", minutes=" + minutes + ","
-				+ " substitutions=" + substitutions + "]";
-	}
-
 	public double getAmount() {
 		double a = 0;
 		for (Substitution s : substitutions) {
@@ -104,6 +107,12 @@ public class Intervention extends BaseEntity {
 		}
 		return (workOrder.getVehicle().getVehicleType().getPricePerHour()
 				* ((double) minutes / 60)) + a;
+	}
+
+	@Override
+	public String toString() {
+		return "Intervention [date=" + date + ", minutes=" + minutes + ", workOrder=" + workOrder + ", mechanic="
+				+ mechanic + "]";
 	}
 
 }

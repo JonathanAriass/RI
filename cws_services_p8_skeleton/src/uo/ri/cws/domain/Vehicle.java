@@ -18,11 +18,11 @@ import uo.ri.util.assertion.ArgumentChecks;
 @Table(name="tvehicles")
 public class Vehicle extends BaseEntity {
 	@Column(unique=true, nullable=false) private String plateNumber;
-	private String make;
+	@Column(name="brand") private String make;
 	private String model;
 	
 	@ManyToOne(optional=false) private Client client;
-	@ManyToOne(optional=false) private VehicleType type;
+	@ManyToOne(optional=false) private VehicleType vehicletype;
 	@OneToMany(mappedBy="vehicle") private Set<WorkOrder> workorders = new HashSet<>();
 	
 	Vehicle() {}
@@ -40,7 +40,14 @@ public class Vehicle extends BaseEntity {
 		this.make = marca;
 		this.model = modelo;
 	}
-	
+
+	public Vehicle(String plateNumber2) {
+		ArgumentChecks.isNotBlank(plateNumber2, "VEHICLE: platenumber invalid");
+		ArgumentChecks.isNotEmpty(plateNumber2, "VEHICLE: platenumber invalid");
+		
+		this.plateNumber = plateNumber2;
+	}
+
 	public String getPlateNumber() {
 		return plateNumber;
 	}
@@ -77,7 +84,6 @@ public class Vehicle extends BaseEntity {
 	}
 
 	void _setClient(Client client) {
-		// TODO Auto-generated method stub
 		this.client = client;
 	}
 
@@ -86,11 +92,11 @@ public class Vehicle extends BaseEntity {
 	}
 
 	void _setVehicleType(VehicleType type) {
-		this.type = type;
+		this.vehicletype = type;
 	}
 
 	public VehicleType getVehicleType() {
-		return this.type;
+		return this.vehicletype;
 	}
 
 	Set<WorkOrder> _getWorkOrders() {

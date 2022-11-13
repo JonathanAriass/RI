@@ -18,7 +18,7 @@ import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
 @Table(name="tinterventions", 
-uniqueConstraints=@UniqueConstraint(columnNames = {"workOrder_id"}))
+uniqueConstraints=@UniqueConstraint(columnNames = {"workOrder_id", "mechanic_id"}))
 
 public class Intervention extends BaseEntity {
 	// natural attributes
@@ -37,9 +37,10 @@ public class Intervention extends BaseEntity {
 	}
 
 	public Intervention(Mechanic mechanic2, WorkOrder workOrder2, LocalDateTime date2, int i) {
-		ArgumentChecks.isTrue(i >= 0);
-		ArgumentChecks.isNotNull(mechanic2, "TINTERVENTIONS: mechanic invalid");
-		ArgumentChecks.isNotNull(workOrder2, "TINTERVENTIONS: workorder invalid");
+		ArgumentChecks.isTrue(i >= 0, "INTERVENTIONS: invalid minutes");
+		ArgumentChecks.isNotNull(mechanic2, "INTERVENTIONS: mechanic invalid");
+		ArgumentChecks.isNotNull(workOrder2, "INTERVENTIONS: workorder invalid");
+		ArgumentChecks.isNotNull(date2, "INTERVENTIONS: date invalid");
 		
 		this.minutes = i;
 		this.date = date2.truncatedTo(ChronoUnit.MILLIS);
@@ -97,15 +98,6 @@ public class Intervention extends BaseEntity {
 				&& Objects.equals(workOrder, other.workOrder);
 	}
 	
-	
-	
-
-//	@Override
-//	public String toString() {
-//		return "Intervention [date=" + date + ", minutes=" + minutes + ","
-//				+ " substitutions=" + substitutions + "]";
-//	}
-
 	public double getAmount() {
 		double a = 0;
 		for (Substitution s : substitutions) {
@@ -122,10 +114,5 @@ public class Intervention extends BaseEntity {
 		return "Intervention [date=" + date + ", minutes=" + minutes + ", workOrder=" + workOrder + ", mechanic="
 				+ mechanic + "]";
 	}
-
-//	@Override
-//	public String toString() {
-//		return "Intervention [date=" + date + ", minutes=" + minutes + "]";
-//	}
 
 }

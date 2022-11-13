@@ -21,7 +21,7 @@
 			from Invoice f 
 				join f.workOrders w 
 				join w.vehicle.client c 
-				join c.paymentMeans m 
+				join c.payments m 
 			where f.id = ?1
 		</query>
 	</named-query>

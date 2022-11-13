@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -17,9 +18,9 @@ import uo.ri.util.assertion.ArgumentChecks;
 @Table(name="tclients")
 public class Client extends BaseEntity {
 	// Atributos naturales
-	@Column(unique=true, nullable=false) private String dni; // Identidad natural
-	private String name;
-	private String surname;
+	@Column(unique=true) private String dni; // Identidad natural
+	@Basic(optional=false) private String name;
+	@Basic(optional=false) private String surname;
 	private String email;
 	private String phone;
 	private Address address;
@@ -30,23 +31,21 @@ public class Client extends BaseEntity {
 	Client() {}
 	
 	public Client(String dni, String nombre, String apellidos) {
-		this(dni);
 		// validacion de parametros
 		ArgumentChecks.isNotEmpty(nombre, "CLIENT: invalid name");
 		ArgumentChecks.isNotBlank(nombre, "CLIENT: invalid name");
+		ArgumentChecks.isNotNull(nombre, "CLIENT: invalid name");
 		ArgumentChecks.isNotEmpty(apellidos, "CLIENT: invalid surname");
 		ArgumentChecks.isNotBlank(apellidos, "CLIENT: invalid surname");	
+		ArgumentChecks.isNotNull(apellidos, "CLIENT: invalid surname");
 		
+		this.dni = dni;
 		this.name = nombre;
 		this.surname = apellidos;
 	}
 	
 	public Client(String dni) {
-		// validacion de parametros
-		ArgumentChecks.isNotEmpty(dni, "CLIENT: invalid dni");
-		ArgumentChecks.isNotBlank(dni, "CLIENT: invalid dni");	
-		
-		this.dni = dni;
+		this(dni, "noname", "nosurname");
 	}
 
 	public String getDni() {

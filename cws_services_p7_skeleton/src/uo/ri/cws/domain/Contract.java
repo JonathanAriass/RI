@@ -31,7 +31,6 @@ public class Contract extends BaseEntity {
 	private ContractState state;
 	
 	// Atributos accidentales
-//	@ManyToOne private Optional<Mechanic> mechanic; // TODO: cambiar el optional por un mecanico normal
 	@ManyToOne private Mechanic mechanic;
 	@ManyToOne private ContractType type;
 	@ManyToOne private ProfessionalGroup professionalGroup;
@@ -61,9 +60,6 @@ public class Contract extends BaseEntity {
 		ArgumentChecks.isNotNull(endDate, "CONTRACT: invalid date");
 		
 		this.endDate = endDate;
-//		this.mechanic = Optional.of(mechanic);
-//		this.type = type;
-//		this.professionalGroup = group;
 		this.startDate = LocalDate.now();
 		this.annualBaseWage = wage;
 		this.state = ContractState.IN_FORCE;
@@ -101,41 +97,24 @@ public class Contract extends BaseEntity {
 
 	public void terminate() {
 		this.state = ContractState.TERMINATED;
-//		if (startDate.isBefore(endDate.minusYears(1))) {
-//			settlement = annualBaseWage / 12;
-//		}
-		int years = endDate.getYear() - startDate.getYear();
+		int workedYears = endDate.getYear() - startDate.getYear();
 
-		if (years > 0) {
-			double salary = payrolls.stream().sorted((p1, p2) -> -p1.getDate().compareTo(p2.getDate())).limit(12)
+		if (workedYears > 0) {
+			double total = payrolls.stream().sorted((date1, date2) -> 
+			date1.getDate().compareTo(date2.getDate())).limit(12)
 					.mapToDouble(
-//							p -> p.getMonthlyWage())
-							p -> p.getMonthlyWage() + p.getBonus() + p.getProductivityBonus() + p.getTrienniumPayment())
+							payroll -> payroll.getMonthlyWage() + 
+							payroll.getBonus() + payroll.getProductivityBonus() 
+							+ payroll.getTrienniumPayment())
 					.sum();
-//			double salary = 0.0;
-//			int i = 0;
-//			for (Payroll p : payrolls) {
-//				if (i==12) {
-//					break;
-//				} else {
-//					salary += 
-//				}
-//				i++;
-//			}
 			
-			double media = salary / 365;
-			this.settlement = media * years * type.getCompensationDays();
+			double daySalary = total / 365;
+			this.settlement = daySalary * workedYears * type.getCompensationDays();
 		}
 		Associations.Fire.link(this);
 	}
 
 	public Optional<Mechanic> getFiredMechanic() {
-//		if (mechanic.get().getTerminatedContracts().contains(this)) {
-//			return mechanic;			
-//		} else {
-//			System.out.println("ENTRA AQUI");
-//			return Optional.empty();
-//		}
 		if (firedMechanic != null) {
 			return Optional.of(firedMechanic);
 		} else {

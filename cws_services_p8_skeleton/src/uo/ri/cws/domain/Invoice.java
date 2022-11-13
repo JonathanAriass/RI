@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -24,25 +26,25 @@ public class Invoice extends BaseEntity {
 	public enum InvoiceState { NOT_YET_PAID, PAID }
 
 	// natural attributes
-	@Column(unique=true) @Basic(optional=false) private Long number; // Identidad
+	@Column(unique=true) private Long number;
 	private LocalDate date;
 	private double amount;
 	private double vat;
+	
+	@Column(name="status") @Enumerated(EnumType.STRING)
 	private InvoiceState state = InvoiceState.NOT_YET_PAID;
 
 	// accidental attributes
 	@OneToMany(mappedBy="invoice") private Set<WorkOrder> workOrders = new HashSet<>();
-	@Transient private Set<Charge> charges = new HashSet<>();
+	@OneToMany(mappedBy="invoice") private Set<Charge> charges = new HashSet<>();
 
 	Invoice() {}
 	
 	public Invoice(Long number) {
-		// call full constructor with sensible defaults
 		this(number, LocalDate.now(), List.of());
 	}
 
 	public Invoice(Long number, LocalDate date) {
-		// call full constructor with sensible defaults
 		this(number, date, List.of());
 	}
 
@@ -50,13 +52,10 @@ public class Invoice extends BaseEntity {
 		this(number, LocalDate.now(), workOrders);
 	}
 
-	// full constructor
 	public Invoice(Long number, LocalDate date, List<WorkOrder> workOrders) {
-		// check arguments (always), through IllegalArgumentException
-		ArgumentChecks.isTrue(number >= 0);
-		ArgumentChecks.isNotNull(date);
-//		ArgumentChecks.isTrue(date.isAfter(LocalDate.now()));
-		ArgumentChecks.isNotNull(workOrders);
+		ArgumentChecks.isTrue(number >= 0, "INVOICE: invalid number");
+		ArgumentChecks.isNotNull(date, "INVOICE: invalid date");
+		ArgumentChecks.isNotNull(workOrders, "INVOICE: invalid workorders");
 	
 		// store the number
 		this.number = number;
@@ -102,7 +101,7 @@ public class Invoice extends BaseEntity {
 		StateChecks.isTrue(workOrder.getState() == WorkOrderState.FINISHED);
 		Associations.ToInvoice.link(this, workOrder);
 		workOrder.markAsInvoiced();
-		workOrders.add(workOrder);
+//		workOrders.add(workOrder);
 		computeAmount();
 	}
 

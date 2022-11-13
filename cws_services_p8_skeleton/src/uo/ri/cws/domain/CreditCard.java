@@ -22,18 +22,14 @@ public class CreditCard extends PaymentMean {
 	CreditCard() {}
 	
 	public CreditCard(String numero) {
-		// validar
 		this(numero, "UNKNOWN", LocalDate.now().plusDays(1));
 	}
 	public CreditCard(String numero, String tipo, LocalDate v) {
-		// validar
 		ArgumentChecks.isNotEmpty(numero, "CREDITCARD: invalid number");
 		ArgumentChecks.isNotBlank(numero, "CREDITCARD: invalid number");	
 		ArgumentChecks.isNotEmpty(tipo, "CREDITCARD: invalid type");
 		ArgumentChecks.isNotBlank(tipo, "CREDITCARD: invalid type");
-//		ArgumentChecks.isNotEmpty(v, "CREDITCARD: invalid date");
-//		ArgumentChecks.isNotBlank(v, "CREDITCARD: invalid date");	
-		
+		ArgumentChecks.isNotNull(v, "CREDITCARD: invalid date");		
 		
 		this.number = numero;
 		this.type = tipo;

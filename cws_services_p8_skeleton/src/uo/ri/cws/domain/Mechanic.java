@@ -8,7 +8,9 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -27,22 +29,26 @@ public class Mechanic extends BaseEntity {
 	// accidental attributes
 	@OneToMany(mappedBy="mechanic") private Set<WorkOrder> assigned = new HashSet<>();
 	@OneToMany(mappedBy="mechanic") private Set<Intervention> interventions = new HashSet<>();
-	@Transient private Set<Contract> contracts = new HashSet<>();
+	@OneToOne(mappedBy="mechanic") private Contract contract;
+	@OneToMany(mappedBy="firedMechanic") private Set<Contract> terminatedContracts = new HashSet<>();
 	
 	Mechanic() {}
 	
 	public Mechanic(String dni, String nombre, String apellido) {
-		//validate
-		
-		
 		this(dni);
+		
+		ArgumentChecks.isNotBlank(nombre, "MECHANICS: empty mechanic name.");
+		ArgumentChecks.isNotNull(nombre, "MECHANICS: invalid mechanic name.");
+		ArgumentChecks.isNotBlank(apellido, "MECHANICS: empty mechanic surname.");
+		ArgumentChecks.isNotNull(apellido, "MECHANICS: invalid mechanic surname.");
+		
 		this.name = nombre;
 		this.surname = apellido;
 	}
 
 	public Mechanic(String dni) {
-		ArgumentChecks.isNotBlank(dni, "TMECHANICS: empty mechanic dni.");
-		ArgumentChecks.isNotNull(dni, "TMECHANICS: invalid mechanic dni.");
+		ArgumentChecks.isNotBlank(dni, "MECHANICS: empty mechanic dni.");
+		ArgumentChecks.isNotNull(dni, "MECHANICS: invalid mechanic dni.");
 		
 		this.dni = dni;
 	}
@@ -98,52 +104,37 @@ public class Mechanic extends BaseEntity {
 		return interventions;
 	}
 
-	public Set<Contract> getTerminatedContracts() {
-		Set<Contract> result = new HashSet<>();
-		
-		for (Contract c : contracts) {
-			if (c.getState() == ContractState.TERMINATED) {
-				result.add(c);
-			}
-		}
-		
-		return result;
-	}
-
 	public Optional<Contract> getContractInForce() {
-		for (Contract c : contracts) {
-			if (c.getState() == ContractState.IN_FORCE) {
-				return Optional.of(c);
-			}
-		}
 		
+		if (contract != null && contract.getState() == ContractState.IN_FORCE) {
+			return Optional.of(contract);
+		}
+
 		return Optional.empty();
 	}
 
-	public Set<Contract> _getContracts() {
-		return this.contracts;
+	public Contract _getContract() {
+		return this.contract;
 	}
 
 	public boolean isInForce() {
-		for (Contract c : contracts) {
-			if (c.getState() == ContractState.IN_FORCE) {
-				return true;
-			}
+		if (contract.getState() == ContractState.IN_FORCE) {
+			return true;
 		}
+
 		return false;
 	}
 
-	public void setName(String name2) {
-		// Validar
-		ArgumentChecks.isNotBlank(name2);
-		ArgumentChecks.isNotEmpty(name2);
-		this.name = name2;
+	public Set<Contract> _getTerminatedContracts() {
+		return terminatedContracts;
 	}
 
-	public void setSurname(String surname2) {
-		ArgumentChecks.isNotBlank(surname2);
-		ArgumentChecks.isNotEmpty(surname2);
-		this.surname = surname2;
+	public Set<Contract> getTerminatedContracts() {
+		return new HashSet<>( terminatedContracts );
 	}
 
+	public void _setContract(Contract contract2) {
+		this.contract = contract2;
+	}
+	
 }

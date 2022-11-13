@@ -1,6 +1,7 @@
 package uo.ri.cws.application.service.mechanic.crud.command;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -8,6 +9,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
+import uo.ri.conf.Factory;
+import uo.ri.cws.application.repository.MechanicRepository;
 import uo.ri.cws.application.service.BusinessException;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
 import uo.ri.cws.application.util.BusinessChecks;
@@ -18,6 +21,7 @@ import uo.ri.util.assertion.ArgumentChecks;
 public class DeleteMechanic implements Command<Void> {
 
 	private String mechanicId;
+	private static MechanicRepository repo = Factory.repository.forMechanic();
 
 	public DeleteMechanic(String mechanicId) {
 		ArgumentChecks.isNotEmpty(mechanicId);
@@ -32,11 +36,14 @@ public class DeleteMechanic implements Command<Void> {
 //		EntityTransaction tx = em.getTransaction();
 //		tx.begin();
 //		try {
-		Mechanic m = em.find(Mechanic.class, "mechanicId");
-		// check if mechanic exists
-		BusinessChecks.isNotNull(m, "Mechanic does not exist.");
+//		Mechanic m = em.find(Mechanic.class, "mechanicId");
 		
-		em.remove(m);
+		// Checkear que el mecanico existe
+		BusinessChecks.isTrue(existMechanic(), "Repeated mechanic");
+		
+		Mechanic m = repo.findById(mechanicId).get();
+		
+		repo.remove(m);
 //		} catch (Exception e) {
 //			if (tx.isActive()) tx.rollback();
 //			throw e;
@@ -48,4 +55,9 @@ public class DeleteMechanic implements Command<Void> {
 		return null;
 	}
 
+	private boolean existMechanic() {
+//		TypedQuery<Mechanic> query = Jpa.getManager().createNamedQuery("Mechanic.findByDni", Mechanic.class).setParameter(1, dto.dni);
+		Optional<Mechanic> m = repo.findById(mechanicId);
+		return !m.isEmpty();
+	}
 }

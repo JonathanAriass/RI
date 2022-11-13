@@ -1,13 +1,20 @@
 package uo.ri.cws.domain;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -35,6 +42,8 @@ public class WorkOrder extends BaseEntity {
 	private String description;
 
 	private double amount = 0.0;
+	
+	@Column(name="status") @Enumerated(EnumType.STRING)
 	private WorkOrderState state = WorkOrderState.OPEN;
 
 	// accidental attributes
@@ -50,7 +59,17 @@ public class WorkOrder extends BaseEntity {
 	}
 
 	public WorkOrder(Vehicle v, String descr) {
+	
 		this(v, LocalDateTime.now(), descr);
+	}
+	
+	public WorkOrder(Vehicle v, LocalDateTime atStartOfDay) {
+		ArgumentChecks.isNotNull(v, "TWORKORDERS: invalid vehicle.");
+		ArgumentChecks.isNotNull(atStartOfDay, "TWORKORDERS: invalid date.");
+		
+		this.vehicle = v;
+		this.date = atStartOfDay.truncatedTo(ChronoUnit.MILLIS);
+		Associations.Fix.link(vehicle, this);
 	}
 	
 	public WorkOrder(Vehicle vehicle, LocalDateTime now, String descr) {
@@ -59,11 +78,12 @@ public class WorkOrder extends BaseEntity {
 		ArgumentChecks.isNotNull(descr, "TWORKORDERS: invalid description.");		
 
 		this.vehicle = vehicle;
-		this.date = now;
+		this.date = now.truncatedTo(ChronoUnit.MILLIS);
 		this.description = descr;
 		
 		Associations.Fix.link(vehicle, this);
 	}
+
 
 	/**
 	 * Changes it to INVOICED state given the right conditions
@@ -237,6 +257,14 @@ public class WorkOrder extends BaseEntity {
 	public String toString() {
 		return "WorkOrder [date=" + date + ", description=" + description + ", amount=" + amount + ", state=" + state
 				+ ", vehicle=" + vehicle + "]";
+	}
+
+	public void setStatusForTesting(WorkOrderState invoiced) {
+		this.state = invoiced;
+	}
+
+	public void setAmountForTesting(double money) {
+		this.amount = money;
 	}
 
 }

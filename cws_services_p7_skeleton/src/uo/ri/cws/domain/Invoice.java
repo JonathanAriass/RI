@@ -37,12 +37,10 @@ public class Invoice extends BaseEntity {
 	Invoice() {}
 	
 	public Invoice(Long number) {
-		// call full constructor with sensible defaults
 		this(number, LocalDate.now(), List.of());
 	}
 
 	public Invoice(Long number, LocalDate date) {
-		// call full constructor with sensible defaults
 		this(number, date, List.of());
 	}
 
@@ -50,13 +48,10 @@ public class Invoice extends BaseEntity {
 		this(number, LocalDate.now(), workOrders);
 	}
 
-	// full constructor
 	public Invoice(Long number, LocalDate date, List<WorkOrder> workOrders) {
-		// check arguments (always), through IllegalArgumentException
-		ArgumentChecks.isTrue(number >= 0);
-		ArgumentChecks.isNotNull(date);
-//		ArgumentChecks.isTrue(date.isAfter(LocalDate.now()));
-		ArgumentChecks.isNotNull(workOrders);
+		ArgumentChecks.isTrue(number >= 0, "INVOICE: invalid number");
+		ArgumentChecks.isNotNull(date, "INVOICE: invalid date");
+		ArgumentChecks.isNotNull(workOrders, "INVOICE: invalid workorders");
 	
 		// store the number
 		this.number = number;

@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -17,10 +18,11 @@ import uo.ri.util.assertion.ArgumentChecks;
 public class ProfessionalGroup extends BaseEntity {
 
 	// Atributos naturales
-	@Basic(optional=false) private String name; // Identidad natural
+	@Column(unique=true)@Basic(optional=false) private String name;
 	private double productivityBonusPercentage;
 	private double trienniumPayment;
 	
+	// Atributos accidentales
 	@OneToMany(mappedBy="professionalGroup") private Set<Contract> contracts = new HashSet<>();
 	
 	ProfessionalGroup() {}

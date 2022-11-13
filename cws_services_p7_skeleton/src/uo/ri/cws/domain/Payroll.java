@@ -76,21 +76,16 @@ public class Payroll extends BaseEntity {
 		// PARA EL PRODUCTIVITYWAGE
 		double auxWorkorders = 0;
 
-		System.out.println("------------------------");
 		for (WorkOrder w : contract.getMechanic().get().getAssigned()) {
 			if (w.getDate().getMonth().equals(date.getMonth())
 					&& w.getDate().getYear() == date.getYear() 
 					&& w.getState() == WorkOrderState.INVOICED) {
-				System.out.println("ENTRA DE NUEVO");
-				System.out.println(w.getAmount());
 				auxWorkorders += w.getAmount();
 			}
 		}
 		
 		double productivityBonus2 = contract.getProfessionalGroup().getProductivityBonusPercentage();
 		double res = (productivityBonus2/100) * auxWorkorders;
-		System.out.println(res);
-		System.out.println("------------------------");
 		this.productivityBonus = res;
 		
 		// PARA EL TRIENNIUM

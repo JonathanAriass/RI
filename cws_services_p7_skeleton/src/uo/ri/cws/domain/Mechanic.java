@@ -34,17 +34,20 @@ public class Mechanic extends BaseEntity {
 	Mechanic() {}
 	
 	public Mechanic(String dni, String nombre, String apellido) {
-		//validate
-		
-		
 		this(dni);
+		
+		ArgumentChecks.isNotBlank(nombre, "MECHANICS: empty mechanic name.");
+		ArgumentChecks.isNotNull(nombre, "MECHANICS: invalid mechanic name.");
+		ArgumentChecks.isNotBlank(apellido, "MECHANICS: empty mechanic surname.");
+		ArgumentChecks.isNotNull(apellido, "MECHANICS: invalid mechanic surname.");
+		
 		this.name = nombre;
 		this.surname = apellido;
 	}
 
 	public Mechanic(String dni) {
-		ArgumentChecks.isNotBlank(dni, "TMECHANICS: empty mechanic dni.");
-		ArgumentChecks.isNotNull(dni, "TMECHANICS: invalid mechanic dni.");
+		ArgumentChecks.isNotBlank(dni, "MECHANICS: empty mechanic dni.");
+		ArgumentChecks.isNotNull(dni, "MECHANICS: invalid mechanic dni.");
 		
 		this.dni = dni;
 	}

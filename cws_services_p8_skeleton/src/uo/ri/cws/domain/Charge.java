@@ -1,16 +1,29 @@
 package uo.ri.cws.domain;
 
+import java.util.Objects;
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import uo.ri.cws.domain.Invoice.InvoiceState;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Charge {
+@Entity
+@Table(name="tcharges",
+uniqueConstraints=@UniqueConstraint(columnNames = {"paymentMean_id", "invoice_id"}))
+public class Charge extends BaseEntity {
 	// natural attributes
 	private double amount = 0.0;
 
 	// accidental attributes
-	private Invoice invoice;
-	private PaymentMean paymentMean;
+	@ManyToOne private Invoice invoice;
+	@ManyToOne private PaymentMean paymentMean;
 
+	Charge() {}
+	
 	public Charge(Invoice invoice, PaymentMean paymentMean, double amount) {
 		// Validate
 		ArgumentChecks.isNotNull(invoice);
@@ -54,9 +67,34 @@ public class Charge {
 		this.paymentMean = pm;
 	}
 
-	public String getId() {
-		// TODO Auto-generated method stub
-		return null;
+	public double getAmount() {
+		return this.amount;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(invoice, paymentMean);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Charge other = (Charge) obj;
+		return Objects.equals(invoice, other.invoice) && Objects.equals(paymentMean, other.paymentMean);
+	}
+
+	@Override
+	public String toString() {
+		return "Charge [amount=" + amount + ", invoice=" + invoice + ", paymentMean=" + paymentMean + "]";
+	}
+
+	
 }
