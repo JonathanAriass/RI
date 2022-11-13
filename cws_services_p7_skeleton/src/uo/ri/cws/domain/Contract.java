@@ -19,7 +19,8 @@ import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
 @Table(name="tcontracts",
-uniqueConstraints=@UniqueConstraint(columnNames = {"mechanic_id"}))
+uniqueConstraints=@UniqueConstraint(columnNames = {"mechanic_id", 
+		"professionalgroup_id", "contracttype_id"}))
 public class Contract extends BaseEntity {
 
 	// Atributos naturales
@@ -191,15 +192,14 @@ public class Contract extends BaseEntity {
 		return Objects.equals(mechanic, other.mechanic) && Objects.equals(startDate, other.startDate);
 	}
 
+	public void _setContractType(ContractType type2) {
+		this.type = type2;
+	}
+
 	@Override
 	public String toString() {
 		return "Contract [annualBaseWage=" + annualBaseWage + ", endDate=" + endDate + ", settlement=" + settlement
-				+ ", startDate=" + startDate + ", state=" + state + ", mechanic=" + mechanic + ", type=" + type
-				+ ", professionalGroup=" + professionalGroup + ", payrolls=" + payrolls + "]";
-	}
-
-	public void _setContractType(ContractType type2) {
-		this.type = type2;
+				+ ", startDate=" + startDate + ", state=" + state + ", type=" + type + "]";
 	}
 
 	

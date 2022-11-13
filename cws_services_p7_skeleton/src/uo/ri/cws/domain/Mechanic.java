@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -27,8 +28,8 @@ public class Mechanic extends BaseEntity {
 	// accidental attributes
 	@OneToMany(mappedBy="mechanic") private Set<WorkOrder> assigned = new HashSet<>();
 	@OneToMany(mappedBy="mechanic") private Set<Intervention> interventions = new HashSet<>();
-	@Transient private Contract contract;
-	@Transient private Set<Contract> terminatedContracts = new HashSet<>();
+	@ManyToOne private Contract contract;
+	@OneToMany(mappedBy="firedMechanic") private Set<Contract> terminatedContracts = new HashSet<>();
 	
 	Mechanic() {}
 	
