@@ -9,23 +9,16 @@
     <fullyQualifiedTypeName name="uo.ri.util.assertion.StateChecks"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Invoice.InvoiceState"/>
     <fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
-    <fullyQualifiedTypeName name="uo.ri.cws.domain.WorkOrder.WorkOrderState"/>
     <fullyQualifiedTypeName name="java.util.Set"/>
     <fullyQualifiedTypeName name="java.util.HashSet"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Contract"/>
     <fullyQualifiedTypeName name="javax.persistence.Embeddable"/>
     <fullyQualifiedTypeName name="javax.persistence.UniqueConstraint"/>
-    <fullyQualifiedTypeName name="javax.persistence.OneToMany"/>
     <fullyQualifiedTypeName name="javax.persistence.Column"/>
-    <fullyQualifiedTypeName name="javax.persistence.Basic"/>
     <fullyQualifiedTypeName name="javax.persistence.Transient"/>
-    <fullyQualifiedTypeName name="javax.persistence.Table"/>
     <fullyQualifiedTypeName name="javax.persistence.InheritanceType"/>
     <fullyQualifiedTypeName name="javax.persistence.Inheritance"/>
-    <fullyQualifiedTypeName name="uo.ri.cws.domain.base.BaseEntity"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.WorkOrder"/>
-    <fullyQualifiedTypeName name="javax.persistence.Entity"/>
-    <fullyQualifiedTypeName name="javax.persistence.ManyToOne"/>
     <fullyQualifiedTypeName name="javax.persistence.Persistence"/>
     <fullyQualifiedTypeName name="javax.persistence.EntityManagerFactory"/>
     <fullyQualifiedTypeName name="javax.persistence.EntityTransaction"/>
@@ -33,7 +26,6 @@
     <fullyQualifiedTypeName name="javax.persistence.TypedQuery"/>
     <fullyQualifiedTypeName name="java.lang.LinkageError"/>
     <fullyQualifiedTypeName name="java.util.List"/>
-    <fullyQualifiedTypeName name="uo.ri.util.assertion.ArgumentChecks"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Mechanic"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.service.mechanic.assembler.MechanicAssembler"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto"/>
@@ -52,7 +44,6 @@
     <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.ContractType"/>
     <fullyQualifiedTypeName name="java.util.Optional"/>
-    <fullyQualifiedTypeName name="uo.ri.cws.domain.Contract.ContractState"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Associations"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Associations.Fire"/>
     <fullyQualifiedTypeName name="org.eclipse.persistence.jpa.jpql.parser.DateTime"/>
@@ -60,4 +51,13 @@
     <fullyQualifiedTypeName name="java.time.temporal.ChronoField"/>
     <fullyQualifiedTypeName name="java.time.temporal.ChronoUnit"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Associations.Run"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.domain.WorkOrder.WorkOrderState"/>
+    <fullyQualifiedTypeName name="uo.ri.util.assertion.ArgumentChecks"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.domain.Contract.ContractState"/>
+    <fullyQualifiedTypeName name="javax.persistence.ManyToOne"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.domain.base.BaseEntity"/>
+    <fullyQualifiedTypeName name="javax.persistence.Entity"/>
+    <fullyQualifiedTypeName name="javax.persistence.Table"/>
+    <fullyQualifiedTypeName name="javax.persistence.Basic"/>
+    <fullyQualifiedTypeName name="javax.persistence.OneToMany"/>
 </qualifiedTypeNameHistroy>

@@ -86,6 +86,8 @@ public class FireMappingTests {
 		.findById(Mechanic.class, mechanic
 			.getId());
 
+	System.out.println(restored.getContractInForce());
+	
 	assertTrue(restored
 		.getTerminatedContracts()
 		.size() == 1);

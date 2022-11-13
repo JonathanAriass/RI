@@ -4,15 +4,16 @@
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="link"/>
+		<item key="selection" value="createWorkOrders"/>
 		<list key="findhistory">
+			<item value="createWorkOrders"/>
 			<item value="print"/>
+			<item value="june"/>
+			<item value="work"/>
 			<item value="hire"/>
 			<item value="fire"/>
 			<item value="getPa"/>
 			<item value="link"/>
-			<item value="18"/>
-			<item value="finish"/>
 		</list>
 		<list key="replacehistory">
 		</list>

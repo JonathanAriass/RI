@@ -173,7 +173,6 @@ public class Associations {
 		public static void link(Contract contract) {
 			contract.setFiredMechanic(contract.getMechanic().get());
 			contract.getMechanic().get()._getTerminatedContracts().add(contract);
-//			contract._setState(ContractState.TERMINATED);
 		}
 
 		public static void unlink(Contract contract) {
