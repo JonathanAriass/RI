@@ -1,42 +1,48 @@
 package uo.ri.cws.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
-
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-//@Entity
-//@Table(name="tcontracts")
-public class Contract {
+@Entity
+@Table(name="tcontracts",
+uniqueConstraints=@UniqueConstraint(columnNames = {"mechanic_id"}))
+public class Contract extends BaseEntity {
 
 	// Atributos naturales
 	private double annualBaseWage;
 	private LocalDate endDate;
 	private double settlement;
-	private LocalDate startDate;
+	@Basic(optional=false) private LocalDate startDate;
 	private ContractState state;
 	
 	// Atributos accidentales
-	private Optional<Mechanic> mechanic;
-	private ContractType type;
-	private ProfessionalGroup professionalGroup;
-	private Set<Payroll> payrolls = new HashSet<>();
-	private Mechanic firedMechanic;
+//	@ManyToOne private Optional<Mechanic> mechanic; // TODO: cambiar el optional por un mecanico normal
+	@ManyToOne private Mechanic mechanic;
+	@ManyToOne private ContractType type;
+	@ManyToOne private ProfessionalGroup professionalGroup;
+	@OneToMany(mappedBy="") private Set<Payroll> payrolls = new HashSet<>();
+	@ManyToOne private Mechanic firedMechanic;
 	
 	public enum ContractState {
 		TERMINATED,
 		IN_FORCE
 	}
+	
+	Contract() {}
 	
 	public Contract(Mechanic mechanic, ContractType type, ProfessionalGroup group, double wage) {
 		// Validar
@@ -55,8 +61,9 @@ public class Contract {
 		
 		this.endDate = endDate;
 //		this.mechanic = Optional.of(mechanic);
-		this.type = type;
-		this.professionalGroup = group;
+//		this.type = type;
+//		this.professionalGroup = group;
+		this.startDate = LocalDate.now();
 		this.annualBaseWage = wage;
 		this.state = ContractState.IN_FORCE;
 		Associations.Hire.link(this, mechanic, type, group);
@@ -84,7 +91,7 @@ public class Contract {
 	}
 
 	public Optional<Mechanic> getMechanic() {
-		return mechanic;
+		return Optional.of(mechanic);
 	}
 
 	public ProfessionalGroup getProfessionalGroup() {
@@ -93,6 +100,31 @@ public class Contract {
 
 	public void terminate() {
 		this.state = ContractState.TERMINATED;
+//		if (startDate.isBefore(endDate.minusYears(1))) {
+//			settlement = annualBaseWage / 12;
+//		}
+		int years = endDate.getYear() - startDate.getYear();
+
+		if (years > 0) {
+			double salary = payrolls.stream().sorted((p1, p2) -> -p1.getDate().compareTo(p2.getDate())).limit(12)
+					.mapToDouble(
+//							p -> p.getMonthlyWage())
+							p -> p.getMonthlyWage() + p.getBonus() + p.getProductivityBonus() + p.getTrienniumPayment())
+					.sum();
+//			double salary = 0.0;
+//			int i = 0;
+//			for (Payroll p : payrolls) {
+//				if (i==12) {
+//					break;
+//				} else {
+//					salary += 
+//				}
+//				i++;
+//			}
+			
+			double media = salary / 365;
+			this.settlement = media * years * type.getCompensationDays();
+		}
 		Associations.Fire.link(this);
 	}
 
@@ -114,7 +146,7 @@ public class Contract {
 		return type;
 	}
 
-	public void _setMechanic(Optional<Mechanic> m) {
+	public void _setMechanic(Mechanic m) {
 		this.mechanic = m;
 	}
 
@@ -126,6 +158,10 @@ public class Contract {
 		return new HashSet<>(payrolls);
 	}
 
+	Set<Payroll> _getPayrolls() {
+		return this.payrolls;
+	}
+	
 	public void setStartDate(LocalDate date) {
 		this.startDate = date;
 	}
@@ -164,10 +200,6 @@ public class Contract {
 
 	public void _setContractType(ContractType type2) {
 		this.type = type2;
-	}
-
-	public Set<Payroll> _getPayrolls() {
-		return this.payrolls;
 	}
 
 	

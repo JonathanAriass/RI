@@ -59,7 +59,7 @@ public class WorkOrder extends BaseEntity {
 	}
 	
 	public WorkOrder(Vehicle v, LocalDateTime atStartOfDay) {
-		ArgumentChecks.isNotNull(vehicle, "TWORKORDERS: invalid vehicle.");
+		ArgumentChecks.isNotNull(v, "TWORKORDERS: invalid vehicle.");
 		ArgumentChecks.isNotNull(atStartOfDay, "TWORKORDERS: invalid date.");
 		
 		this.vehicle = v;

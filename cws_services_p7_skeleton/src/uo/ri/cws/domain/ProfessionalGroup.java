@@ -4,16 +4,26 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class ProfessionalGroup {
+@Entity
+@Table(name="tprofessionalgroups")
+public class ProfessionalGroup extends BaseEntity {
 
 	// Atributos naturales
-	private String name; // Identidad natural
+	@Basic(optional=false) private String name; // Identidad natural
 	private double productivityBonusPercentage;
 	private double trienniumPayment;
 	
-	private Set<Contract> contracts = new HashSet<>();
+	@OneToMany(mappedBy="professionalGroup") private Set<Contract> contracts = new HashSet<>();
+	
+	ProfessionalGroup() {}
 	
 	public ProfessionalGroup(String string, double d, double e) {
 		ArgumentChecks.isNotBlank(string, "PROFESSIONALGROUP: invalid name");
@@ -22,8 +32,8 @@ public class ProfessionalGroup {
 		ArgumentChecks.isTrue(e > 0, "PROFESSIONALGROUP: invalid triennium payment");
 		
 		this.name = string;
-		this.productivityBonusPercentage = d;
-		this.trienniumPayment = e;
+		this.trienniumPayment = d;
+		this.productivityBonusPercentage = e;
 	}
 
 	

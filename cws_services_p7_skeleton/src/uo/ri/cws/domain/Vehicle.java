@@ -84,7 +84,6 @@ public class Vehicle extends BaseEntity {
 	}
 
 	void _setClient(Client client) {
-		// TODO Auto-generated method stub
 		this.client = client;
 	}
 

@@ -4,14 +4,24 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class ContractType {
+@Entity
+@Table(name="tcontracttypes")
+public class ContractType extends BaseEntity {
 
-	private String name;
+	@Basic(optional=false) private String name;
 	private double compensationDays;
 	
-	private Set<Contract> contracts = new HashSet<>();
+	@OneToMany(mappedBy="type") private Set<Contract> contracts = new HashSet<>();
+	
+	ContractType() {}
 	
 	public ContractType(String string, double d) {
 		ArgumentChecks.isNotBlank(string, "CONTRACTTYPE: invalid name");

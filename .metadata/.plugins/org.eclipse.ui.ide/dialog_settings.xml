@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="ExternalProjectImportWizard">
-		<item key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED" value="true"/>
+		<item key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED" value="false"/>
 		<item key="WizardProjectsImportPage.STORE_CLOSE_CREATED_PROJECTS_ID" value="false"/>
 		<item key="WizardProjectsImportPage.STORE_HIDE_CONFLICTING_PROJECTS_ID" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_NESTED_PROJECTS" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID" value="false"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="C:\Users\byjon\OneDrive\Escritorio\uni\3o\1 cuatri\RI\JPA\WS\util"/>
+			<item value="C:\Users\byjon\OneDrive\Escritorio\uni\3o\1 cuatri\RI\JPA\WS\cws_services_p7_skeleton"/>
 			<item value=""/>
 		</list>
 		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
+			<item value=""/>
 			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\ri.jpa.cws.2022.p8.skeleton.zip"/>
 			<item value="C:\Users\byjon\Downloads\ri.jpa.cws.2022.p7.skeleton.zip"/>
 			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\JPA\ri.jpa.cws.2022.p6.skeleton.zip"/>

@@ -6,6 +6,8 @@
 		<item key="isRegEx" value="false"/>
 		<item key="selection" value="link"/>
 		<list key="findhistory">
+			<item value="print"/>
+			<item value="hire"/>
 			<item value="fire"/>
 			<item value="getPa"/>
 			<item value="link"/>
@@ -14,5 +16,9 @@
 		</list>
 		<list key="replacehistory">
 		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="724"/>
+		<item key="DIALOG_Y_ORIGIN" value="396"/>
 	</section>
 </section>

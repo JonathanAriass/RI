@@ -4,9 +4,21 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-public class Payroll {
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-	private LocalDate date;
+import uo.ri.cws.domain.Contract.ContractState;
+import uo.ri.cws.domain.WorkOrder.WorkOrderState;
+import uo.ri.cws.domain.base.BaseEntity;
+import uo.ri.util.assertion.ArgumentChecks;
+
+@Entity
+@Table(name="tpayrolls")
+public class Payroll extends BaseEntity {
+
+	@Basic(optional=false) private LocalDate date;
 	
 	private double bonus;
 	private double incomeTax;
@@ -15,7 +27,7 @@ public class Payroll {
 	private double productivityBonus;
 	private double trienniumPayment;
 	
-	private Contract contract;
+	@ManyToOne private Contract contract;
 	
 	Payroll() {}
 
@@ -24,14 +36,21 @@ public class Payroll {
 	}
 	
 	public Payroll(Contract c, LocalDate d) {
+		ArgumentChecks.isNotNull(d, "PAYROLL: invalid date.");
+		ArgumentChecks.isNotNull(c, "PAYROLL: invalid contract.");
 		date = d;
 		contract = c;
+		
+		generatePayroll();		
+		Associations.Run.link(this, c);
 	}
 
 	public Payroll(Contract contract2, LocalDate d, double monthlyWage2, double extra, double productivity,
 			double trienniums, double tax, double nic2) {
 		// TODO validaciones
-		
+		ArgumentChecks.isNotNull(d, "PAYROLL: invalid date.");
+		ArgumentChecks.isNotNull(contract2, "PAYROLL: invalid contract.");
+
 		
 		this.bonus = extra;
 		this.incomeTax = tax;
@@ -40,11 +59,80 @@ public class Payroll {
 		this.productivityBonus = productivity;
 		this.trienniumPayment = trienniums;
 		this.date = d;
-		this.contract = contract2;
+//		this.contract = contract2;
 		
 		Associations.Run.link(this, contract2);
 	}
 
+	private void generatePayroll() {
+		// PARA EL MONTHLYWAGE
+		this.monthlyWage = contract.getAnnualBaseWage() / 14;
+				
+		// PARA EL BONUS
+		if (date.getMonth().getValue() == 12 || date.getMonth().getValue() == 6) {
+			this.bonus = monthlyWage;
+		}
+
+		// PARA EL PRODUCTIVITYWAGE
+		double auxWorkorders = 0;
+
+		System.out.println("------------------------");
+		for (WorkOrder w : contract.getMechanic().get().getAssigned()) {
+			if (w.getDate().getMonth().equals(date.getMonth())
+					&& w.getDate().getYear() == date.getYear() 
+					&& w.getState() == WorkOrderState.INVOICED) {
+				System.out.println("ENTRA DE NUEVO");
+				System.out.println(w.getAmount());
+				auxWorkorders += w.getAmount();
+			}
+		}
+		
+		double productivityBonus2 = contract.getProfessionalGroup().getProductivityBonusPercentage();
+		double res = (productivityBonus2/100) * auxWorkorders;
+		System.out.println(res);
+		System.out.println("------------------------");
+		this.productivityBonus = res;
+		
+		// PARA EL TRIENNIUM
+		int trienniumAcumulatted = 0;
+		if (contract.getState() == ContractState.IN_FORCE) {
+			trienniumAcumulatted = date.getYear() - contract.getStartDate().getYear();
+			
+		}
+		double triennium_payment = contract.getProfessionalGroup().getTrienniumPayment();
+		
+		
+		this.trienniumPayment = (trienniumAcumulatted /3 ) * triennium_payment;
+		
+		// PARA EL NIC
+		this.nic = (monthlyWage * 14 * 0.05) / 12;
+		
+		// PARA EL INCOMETAX
+		double annualBaseWage = monthlyWage * 14;
+		double aux = 0.0;
+		if (annualBaseWage > 0 && annualBaseWage <= 12450) {
+			aux = 0.19;
+		} 
+		else if (annualBaseWage >= 12450 && annualBaseWage <= 20200) {
+			aux = 0.24;
+		}
+		else if (annualBaseWage >= 20200 && annualBaseWage <= 35200) {
+			aux = 0.30;
+		}
+		else if (annualBaseWage >= 35200 && annualBaseWage <= 60000) {
+			aux = 0.37;
+		} 
+		else if (annualBaseWage >= 60000 && annualBaseWage <= 300000) {
+			aux = 0.45;
+		} 
+		else {
+			aux = 0.47;
+		}
+		double earnings = monthlyWage + bonus + productivityBonus + trienniumPayment;
+		
+		this.incomeTax = aux * earnings;
+	}
+	
 	public Contract getContract() {
 		return this.contract;
 	}
@@ -54,6 +142,10 @@ public class Payroll {
 	}
 
 	public double getBonus() {
+//		if (date.getMonth().getValue() == 12 || date.getMonth().getValue() == 6) {
+//			return monthlyWage;
+//		}
+//		return 0;
 		return bonus;
 	}
 
@@ -70,7 +162,7 @@ public class Payroll {
 	}
 
 	public double getProductivityBonus() {
-		return productivityBonus;
+		return this.productivityBonus;		
 	}
 
 	public double getTrienniumPayment() {

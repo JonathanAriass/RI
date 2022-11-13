@@ -152,11 +152,11 @@ public class Associations {
 	public static class Hire {
 
 		public static void link(Contract contract, Mechanic mechanic, ContractType type, ProfessionalGroup pg) {
-			contract._setMechanic(Optional.of(mechanic));
+			contract._setMechanic(mechanic);
 			contract._setProfessionalGroup(pg);
 			contract._setContractType(type);
+						
 			mechanic._setContract(contract);
-			
 			type._getContracts().add(contract);
 			pg._getContracts().add(contract);
 		}
@@ -201,12 +201,14 @@ public class Associations {
 	public static class Type {
 
 		public static void link(ContractType type, Contract contract) {
-			
+			type._getContracts().add(contract);
+			contract._setContractType(type);
 		}
 		
-		public static void unlink(Contract contract) {
-			// TODO Auto-generated method stub
-			
+
+		public static void unlink(Contract contract, ContractType type) {
+			contract._setContractType(null);
+			type._getContracts().remove(contract);
 		}
 		
 	}
