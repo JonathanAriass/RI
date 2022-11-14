@@ -1,6 +1,7 @@
 package uo.ri.cws.application.service.mechanic.crud.command;
 
 import java.util.Optional;
+
 import uo.ri.conf.Factory;
 import uo.ri.cws.application.repository.MechanicRepository;
 import uo.ri.cws.application.service.BusinessException;
@@ -15,25 +16,43 @@ public class DeleteMechanic implements Command<Void> {
 	private static MechanicRepository repo = Factory.repository.forMechanic();
 
 	public DeleteMechanic(String mechanicId) {
+		ArgumentChecks.isNotNull(mechanicId);
 		ArgumentChecks.isNotEmpty(mechanicId);
 		ArgumentChecks.isNotBlank(mechanicId);
-		
+
 		this.mechanicId = mechanicId;
 	}
 
 	public Void execute() throws BusinessException {
 		// Checkear que el mecanico existe
-		BusinessChecks.isTrue(existMechanic(), "Repeated mechanic");
-		
-		Mechanic m = repo.findById(mechanicId).get();
-		
-		repo.remove(m);
+//		BusinessChecks.isTrue(existMechanic(), "Repeated mechanic");
+
+		System.out.println(mechanicId);
+		Optional<Mechanic> m = repo.findById(mechanicId);
+		System.out.println(m);
+
+		check(m);
+
+		repo.remove(m.get());
 
 		return null;
 	}
 
-	private boolean existMechanic() {
-		Optional<Mechanic> m = repo.findById(mechanicId);
-		return !m.isEmpty();
+	private void check(Optional<Mechanic> m) throws BusinessException {
+		BusinessChecks.isNotNull(m, "Mechanic does not exist");
+		BusinessChecks.isTrue(m.isPresent(), "Mechanic is not present");
+		BusinessChecks.isTrue(m.get().getInterventions().isEmpty(),
+				"Mechanic has interventions assigned");
+		BusinessChecks.isTrue(m.get().getTerminatedContracts().isEmpty(),
+				"Mechanic has terminated contracts");
+		BusinessChecks.isTrue(m.get().getContractInForce().isEmpty(),
+				"Mechanic has contract in force");
+		BusinessChecks.isTrue(m.get().getAssigned().isEmpty(),
+				"Mechanic has workorders assigned");
 	}
+
+//	private boolean existMechanic() {
+//		Optional<Mechanic> m = repo.findById(mechanicId);
+//		return m.isPresent();
+//	}
 }

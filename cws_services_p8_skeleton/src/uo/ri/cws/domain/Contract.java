@@ -8,6 +8,8 @@ import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -30,6 +32,7 @@ public class Contract extends BaseEntity {
 	@Basic(optional = false)
 	private LocalDate startDate;
 
+	@Enumerated(EnumType.STRING)
 	private ContractState state;
 
 	// Atributos accidentales

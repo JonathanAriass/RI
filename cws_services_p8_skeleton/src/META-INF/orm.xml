@@ -26,6 +26,15 @@
 		</query>
 	</named-query>
 	
+	<!-- ContractType queries -->
+	<named-query name="ContractType.findByName">
+		<query>
+			select c 
+			from ContractType c
+			where c.name = ?1
+		</query>
+	</named-query>
+	
 	<!-- Mechanic queries -->
 	<named-query name="Mechanic.findByDni">
 		<query>
@@ -38,6 +47,28 @@
 		<query>
 			select m 
 			from Mechanic m
+		</query>
+	</named-query>
+	<!--<named-query name="Mechanic.findMechanicWithContractInforce">
+		<query>
+			select c.mechanic
+			from Contract c
+			where c.state = "IN_FORCE"
+		</query>
+	</named-query> -->
+	<named-query name="Mechanic.findMechanicWithContractInforce">
+		<query>
+			select m
+			from Contract c
+				join c.mechanic m
+			where c.state = "IN_FORCE"
+		</query>
+	</named-query>
+	<named-query name="Mechanic.findMechanicWithContracTypetInforce">
+		<query>
+			select c.mechanic
+			from Contract c
+			where c.state = "IN_FORCE" and c.contracttype = ?1
 		</query>
 	</named-query>
 

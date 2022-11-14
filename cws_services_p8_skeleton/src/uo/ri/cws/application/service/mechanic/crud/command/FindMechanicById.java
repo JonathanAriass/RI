@@ -19,15 +19,18 @@ public class FindMechanicById implements Command<Optional<MechanicDto>> {
 	public FindMechanicById(String id) {
 		ArgumentChecks.isNotEmpty(id);
 		ArgumentChecks.isNotBlank(id);
-		
+
 		this.id = id;
 	}
 
 	public Optional<MechanicDto> execute() throws BusinessException {
 		MechanicDto dto = null;
-		Mechanic m = repo.findById(id).get();
-		dto = MechanicAssembler.toOptionalDto(m);
-		return Optional.of(dto);
+		Optional<Mechanic> m = repo.findById(id);
+		if (m.isPresent()) {
+			dto = MechanicAssembler.toOptionalDto(m.get());
+			return Optional.of(dto);
+		}
+		return Optional.empty();
 	}
 
 }
