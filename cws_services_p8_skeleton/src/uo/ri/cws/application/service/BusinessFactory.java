@@ -3,14 +3,20 @@ package uo.ri.cws.application.service;
 import uo.ri.cws.application.ServiceFactory;
 import uo.ri.cws.application.service.client.ClientCrudService;
 import uo.ri.cws.application.service.client.ClientHistoryService;
+import uo.ri.cws.application.service.contract.ContractService;
+import uo.ri.cws.application.service.contracttype.ContractTypeService;
 import uo.ri.cws.application.service.invoice.InvoicingService;
 import uo.ri.cws.application.service.invoice.create.InvoicingServiceImpl;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService;
 import uo.ri.cws.application.service.mechanic.crud.MechanicCrudServiceImpl;
+import uo.ri.cws.application.service.payroll.PayrollService;
+import uo.ri.cws.application.service.professionalgroup.ProfessionalGroupService;
+import uo.ri.cws.application.service.professionalgroup.crud.ProfessionalGroupServiceImpl;
 import uo.ri.cws.application.service.sparepart.SparePartCrudService;
 import uo.ri.cws.application.service.vehicle.VehicleCrudService;
 import uo.ri.cws.application.service.vehicle.crud.VehicleCrudServiceImpl;
 import uo.ri.cws.application.service.vehicletype.VehicleTypeCrudService;
+import uo.ri.cws.application.service.vehicletype.crud.VehicleTypeCrudServiceImpl;
 import uo.ri.cws.application.service.workorder.CloseWorkOrderService;
 import uo.ri.cws.application.service.workorder.ViewAssignedWorkOrdersService;
 import uo.ri.cws.application.service.workorder.WorkOrderCrudService;
@@ -39,7 +45,8 @@ public class BusinessFactory implements ServiceFactory {
 
 	@Override
 	public VehicleTypeCrudService forVehicleTypeCrudService() {
-		throw new RuntimeException("Not yet implemented");
+//		throw new RuntimeException("Not yet implemented");
+		return new VehicleTypeCrudServiceImpl();
 	}
 
 	@Override
@@ -65,6 +72,29 @@ public class BusinessFactory implements ServiceFactory {
 	@Override
 	public ViewAssignedWorkOrdersService forViewAssignedWorkOrdersService() {
 		throw new RuntimeException("Not yet implemented");
+	}
+
+	@Override
+	public ContractService forContractService() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ContractTypeService forContractTypeService() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PayrollService forPayrollService() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ProfessionalGroupService forProfessionalGroupService() {
+		return new ProfessionalGroupServiceImpl();
 	}
 
 }

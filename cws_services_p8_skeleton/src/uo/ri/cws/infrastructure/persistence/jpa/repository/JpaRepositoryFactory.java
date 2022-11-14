@@ -77,8 +77,7 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 
 	@Override
 	public ProfessionalGroupRepository forProfessionalGroup() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ProfessionalGroupJpaRepository();
 	}
 
 	@Override

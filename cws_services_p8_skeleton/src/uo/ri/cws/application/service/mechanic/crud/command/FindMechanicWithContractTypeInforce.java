@@ -31,10 +31,6 @@ public class FindMechanicWithContractTypeInforce
 
 	@Override
 	public List<MechanicDto> execute() throws BusinessException {
-		// Comprobar que el tipo de contrato existe
-//		BusinessChecks.isTrue(existsContractType(),
-//				"ContractType does not exist");
-
 		List<MechanicDto> result = new ArrayList<>();
 
 		Optional<ContractType> ct = repoContract.findByName(name);
@@ -47,13 +43,6 @@ public class FindMechanicWithContractTypeInforce
 				repoMechanic.findInForceInContractType(ct.get()));
 
 		return result;
-	}
-
-	private boolean existsContractType() {
-		if (repoContract.findByName(name).isPresent()) {
-			return true;
-		}
-		return false;
 	}
 
 }

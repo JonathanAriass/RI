@@ -33,6 +33,7 @@ public class Contract extends BaseEntity {
 	private LocalDate startDate;
 
 	@Enumerated(EnumType.STRING)
+//	@Enumerated
 	private ContractState state;
 
 	// Atributos accidentales

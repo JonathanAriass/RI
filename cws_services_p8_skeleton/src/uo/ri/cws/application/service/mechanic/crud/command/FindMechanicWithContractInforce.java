@@ -16,16 +16,6 @@ public class FindMechanicWithContractInforce
 
 	@Override
 	public List<MechanicDto> execute() throws BusinessException {
-//		List<Mechanic> mechanics = new ArrayList<>();
-//		mechanics = repo.findAll();
-//
-//		List<MechanicDto> result = new ArrayList<>();
-//		for (Mechanic m : mechanics) {
-//			if (m.getContractInForce().isPresent()) {
-//				result.add(MechanicAssembler.toOptionalDto(m));
-//			}
-//		}
-
 		List<MechanicDto> result = MechanicAssembler.toListDto(
 				repo.findAllInForce());
 

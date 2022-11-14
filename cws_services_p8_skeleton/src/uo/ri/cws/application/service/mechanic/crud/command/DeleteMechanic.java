@@ -24,12 +24,8 @@ public class DeleteMechanic implements Command<Void> {
 	}
 
 	public Void execute() throws BusinessException {
-		// Checkear que el mecanico existe
-//		BusinessChecks.isTrue(existMechanic(), "Repeated mechanic");
 
-		System.out.println(mechanicId);
 		Optional<Mechanic> m = repo.findById(mechanicId);
-		System.out.println(m);
 
 		check(m);
 
@@ -51,8 +47,4 @@ public class DeleteMechanic implements Command<Void> {
 				"Mechanic has workorders assigned");
 	}
 
-//	private boolean existMechanic() {
-//		Optional<Mechanic> m = repo.findById(mechanicId);
-//		return m.isPresent();
-//	}
 }

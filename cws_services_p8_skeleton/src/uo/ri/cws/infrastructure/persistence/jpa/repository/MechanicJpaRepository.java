@@ -56,8 +56,14 @@ public class MechanicJpaRepository extends BaseJpaRepository<Mechanic>
 
 	@Override
 	public List<Mechanic> findAllInProfessionalGroup(ProfessionalGroup group) {
-		// TODO Auto-generated method stub
-		return null;
+		EntityManager em = Jpa.getManager();
+		List<Mechanic> mechanics = em	.createNamedQuery(
+												"Mechanic.findMechanicInProfessionalGroup",
+												Mechanic.class)
+										.setParameter(1, group)
+										.getResultList();
+
+		return mechanics;
 	}
 
 }
