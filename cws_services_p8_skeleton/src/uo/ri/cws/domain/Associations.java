@@ -1,9 +1,5 @@
 package uo.ri.cws.domain;
 
-import java.util.Optional;
-
-import uo.ri.cws.domain.Contract.ContractState;
-
 public class Associations {
 
 	public static class Own {
@@ -77,10 +73,11 @@ public class Associations {
 
 	public static class ToCharge {
 
-		public static void link(PaymentMean pm, Charge charge, Invoice inovice) {
+		public static void link(PaymentMean pm, Charge charge,
+				Invoice inovice) {
 			charge._setInvoice(inovice);
 			charge._setPaymentMean(pm);
-			
+
 			pm._getCharges().add(charge);
 			inovice._getCharges().add(charge);
 		}
@@ -88,7 +85,7 @@ public class Associations {
 		public static void unlink(Charge charge) {
 			charge.getPaymentMean()._getCharges().remove(charge);
 			charge.getInvoice()._getCharges().remove(charge);
-			
+
 			charge._setInvoice(null);
 			charge._setPaymentMean(null);
 		}
@@ -115,14 +112,16 @@ public class Associations {
 				Mechanic mechanic) {
 			intervention._setWorkOrder(workOrder);
 			intervention._setMechanic(mechanic);
-			
+
 			workOrder._getInterventions().add(intervention);
 			mechanic._getInterventions().add(intervention);
 		}
 
 		public static void unlink(Intervention intervention) {
 			intervention.getMechanic()._getInterventions().remove(intervention);
-			intervention.getWorkOrder()._getInterventions().remove(intervention);
+			intervention.getWorkOrder()
+						._getInterventions()
+						.remove(intervention);
 
 			intervention._setMechanic(null);
 			intervention._setWorkOrder(null);
@@ -141,47 +140,55 @@ public class Associations {
 		}
 
 		public static void unlink(Substitution sustitution) {
-			sustitution.getIntervention()._getSubstitutions().remove(sustitution);
+			sustitution	.getIntervention()
+						._getSubstitutions()
+						.remove(sustitution);
 			sustitution.getSparePart()._getSubstitutions().remove(sustitution);
 			sustitution._setIntervention(null);
 			sustitution._setSparePart(null);
 		}
 
 	}
-	
+
 	public static class Hire {
 
-		public static void link(Contract contract, Mechanic mechanic, ContractType type, ProfessionalGroup pg) {
+		public static void link(Contract contract, Mechanic mechanic,
+				ContractType type, ProfessionalGroup pg) {
 			contract._setMechanic(mechanic);
 			contract._setProfessionalGroup(pg);
 			contract._setContractType(type);
-						
+
 			mechanic._setContract(contract);
 			type._getContracts().add(contract);
 			pg._getContracts().add(contract);
 		}
-		
+
 		public static void unlink(Contract contract, Mechanic mechanic) {
 			mechanic._setContract(null);
-//			contract._setMechanic(Optional.empty()); // TODO: no me gusta mucho que no se tenga que eliminar el contrato
+			contract._setMechanic(null); // TODO: no me gusta mucho
+											// que no se tenga que
+											// eliminar el contrato
 		}
-		
+
 	}
-	
+
 	public static class Fire {
 
 		public static void link(Contract contract) {
 			contract.setFiredMechanic(contract.getMechanic().get());
-			contract.getMechanic().get()._getTerminatedContracts().add(contract);
+			contract.getMechanic()
+					.get()
+					._getTerminatedContracts()
+					.add(contract);
 		}
 
 		public static void unlink(Contract contract) {
-			contract.getMechanic().get()._getTerminatedContracts().remove(contract);
-			contract.setFiredMechanic(null);
+//			contract.getMechanic().get()._getTerminatedContracts().remove(contract);
+//			contract.setFiredMechanic(null);
 		}
-		
+
 	}
-	
+
 	public static class Group {
 
 		public static void link(Contract contract, ProfessionalGroup group) {
@@ -189,29 +196,28 @@ public class Associations {
 			group._getContracts().add(contract);
 			System.out.println(group.getContracts().size());
 		}
-		
+
 		public static void unlink(Contract contract, ProfessionalGroup group) {
 			group._getContracts().remove(contract);
 			contract._setProfessionalGroup(null);
 		}
-		
+
 	}
-	
+
 	public static class Type {
 
 		public static void link(ContractType type, Contract contract) {
 			type._getContracts().add(contract);
 			contract._setContractType(type);
 		}
-		
 
 		public static void unlink(Contract contract, ContractType type) {
 			contract._setContractType(null);
 			type._getContracts().remove(contract);
 		}
-		
+
 	}
-	
+
 	public static class Run {
 
 		public static void link(Payroll payroll, Contract contract2) {
@@ -223,7 +229,7 @@ public class Associations {
 			payroll.getContract()._getPayrolls().remove(payroll);
 			payroll._setContract(null);
 		}
-		
+
 	}
 
 }

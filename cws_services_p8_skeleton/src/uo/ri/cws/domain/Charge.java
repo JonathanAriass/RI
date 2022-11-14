@@ -12,24 +12,27 @@ import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
-@Table(name="tcharges",
-uniqueConstraints=@UniqueConstraint(columnNames = {"paymentMean_id", "invoice_id"}))
+@Table(name = "tcharges", uniqueConstraints = @UniqueConstraint(columnNames = {
+		"invoice_id", "paymentMean_id" }))
 public class Charge extends BaseEntity {
 	// natural attributes
 	private double amount = 0.0;
 
 	// accidental attributes
-	@ManyToOne private Invoice invoice;
-	@ManyToOne private PaymentMean paymentMean;
+	@ManyToOne
+	private Invoice invoice;
+	@ManyToOne
+	private PaymentMean paymentMean;
 
-	Charge() {}
-	
+	Charge() {
+	}
+
 	public Charge(Invoice invoice, PaymentMean paymentMean, double amount) {
 		// Validate
 		ArgumentChecks.isNotNull(invoice);
 		ArgumentChecks.isNotNull(paymentMean);
 		ArgumentChecks.isTrue(amount >= 0);
-		
+
 		this.amount = amount;
 		// store the amount
 		// increment the paymentMean accumulated -> paymentMean.pay( amount )
@@ -40,6 +43,7 @@ public class Charge extends BaseEntity {
 
 	/**
 	 * Unlinks this charge and restores the accumulated to the payment mean
+	 * 
 	 * @throws IllegalStateException if the invoice is already settled
 	 */
 	public void rewind() {
@@ -88,13 +92,14 @@ public class Charge extends BaseEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		Charge other = (Charge) obj;
-		return Objects.equals(invoice, other.invoice) && Objects.equals(paymentMean, other.paymentMean);
+		return Objects.equals(invoice, other.invoice)
+				&& Objects.equals(paymentMean, other.paymentMean);
 	}
 
 	@Override
 	public String toString() {
-		return "Charge [amount=" + amount + ", invoice=" + invoice + ", paymentMean=" + paymentMean + "]";
+		return "Charge [amount=" + amount + ", invoice=" + invoice
+				+ ", paymentMean=" + paymentMean + "]";
 	}
 
-	
 }
