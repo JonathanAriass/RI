@@ -33,7 +33,7 @@ public class UpdateProfessionalGroup implements Command<Void> {
 
 		ProfessionalGroup group = repo.findById(dto.id).get();
 
-//		BusinessChecks.hasVersion(group, dto.version);
+		BusinessChecks.hasVersion(group, dto.version);
 
 		group.setName(dto.name);
 		group.setTrienniumSalary(dto.trieniumSalary);

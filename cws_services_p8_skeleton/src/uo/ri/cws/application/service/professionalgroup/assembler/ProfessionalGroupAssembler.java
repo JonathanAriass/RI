@@ -18,6 +18,7 @@ public class ProfessionalGroupAssembler {
 			result.name = group.getName();
 			result.trieniumSalary = group.getTrienniumPayment();
 			result.productivityRate = group.getProductivityBonusPercentage();
+			result.version = group.getVersion();
 		}
 
 		return result;

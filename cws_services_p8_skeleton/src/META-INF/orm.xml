@@ -35,6 +35,26 @@
 		</query>
 	</named-query>
 	
+	<!-- Contract queries -->
+	<!--<named-query name="Contract.findContractsForPayrolls">
+		<query>
+			select c 
+			from Contract c
+			where c.state = uo.ri.cws.domain.Contract.ContractState.IN_FORCE
+			or (c.state = uo.ri.cws.domain.Contract.ContractState.TERMINATED and 
+			YEAR(c.endDate) = YEAR(?1) and 
+			MONTH(c.endDate) >= MONTH(?1))
+		</query>
+	</named-query>-->
+	<named-query name="Contract.findContractsForPayrolls">
+		<query>
+			select c 
+			from Contract c
+			where c.state = uo.ri.cws.domain.Contract.ContractState.IN_FORCE
+			or (c.state = uo.ri.cws.domain.Contract.ContractState.TERMINATED)
+		</query>
+	</named-query>
+	
 	<!-- ContractType queries -->
 	<named-query name="ContractType.findByName">
 		<query>

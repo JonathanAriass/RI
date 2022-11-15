@@ -71,8 +71,7 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 
 	@Override
 	public ContractRepository forContract() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ContractJpaRepository();
 	}
 
 	@Override

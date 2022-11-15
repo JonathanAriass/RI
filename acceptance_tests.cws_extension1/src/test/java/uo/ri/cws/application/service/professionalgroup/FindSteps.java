@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import uo.ri.cws.application.service.BusinessException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import uo.ri.conf.Factory;
+import uo.ri.cws.application.service.BusinessException;
 import uo.ri.cws.application.service.common.TestContext;
 import uo.ri.cws.application.service.professionalgroup.ProfessionalGroupService.ProfessionalGroupBLDto;
 import uo.ri.cws.application.service.util.ProfessionalGroupUtil;
@@ -29,7 +29,6 @@ public class FindSteps {
 		this.ctx = ctx;
 	}
 
-	
 	@When("I try to find a professional group with null id")
 	public void i_try_to_find_group_with_null_argument() {
 		tryFindByIdAndKeepException(null);
@@ -44,9 +43,10 @@ public class FindSteps {
 
 	@When("I search a non existing professional group")
 	public void i_search_a_non_existent_id() throws BusinessException {
-		optionalGroup = service.findProfessionalGroupByName(UUID.randomUUID().toString());
+		optionalGroup = service.findProfessionalGroupByName(
+				UUID.randomUUID().toString());
 	}
-	
+
 	@Then("professional group is not found")
 	public void returns_empty() {
 		assertTrue(optionalGroup.isEmpty());
@@ -68,7 +68,7 @@ public class FindSteps {
 	public void i_search_all() throws BusinessException {
 		list = service.findAllProfessionalGroups();
 		ProfessionalGroupUtil.sortBLDtoByName(list);
-		
+
 	}
 
 	@Then("Default ones are found")
@@ -86,20 +86,23 @@ public class FindSteps {
 
 	@Given("A new registered professional group")
 	public void a_new_registered_group() {
-		ProfessionalGroupUtil util = new ProfessionalGroupUtil()
-				.withId("VIII")
-				.withName("VIII")
-				.withProductivity(5.50)
-				.withTriennium(12.0)
-				.register();
+		ProfessionalGroupUtil util = new ProfessionalGroupUtil().withId("VIII")
+																.withName(
+																		"VIII")
+																.withProductivity(
+																		5.50)
+																.withTriennium(
+																		12.0)
+																.register();
 		newOne = util.get();
 
 	}
 
 	@Then("New one is found")
 	public void new_one_is_found() {
-		ProfessionalGroupBLDto eight = list.get(list.size()-1);
-		
+		ProfessionalGroupBLDto eight = list.get(list.size() - 1);
+		System.out.println(eight.toString());
+		System.out.println(newOne.toString());
 		assertTrue(ProfessionalGroupUtil.match(eight, newOne));
 	}
 
