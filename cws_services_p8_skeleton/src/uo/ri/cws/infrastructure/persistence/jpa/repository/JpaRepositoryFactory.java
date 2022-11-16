@@ -86,8 +86,8 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 
 	@Override
 	public PayrollRepository forPayroll() {
-		// TODO Auto-generated method stub
-		return null;
+		return new PayrollJpaRepository();
+
 	}
 
 }

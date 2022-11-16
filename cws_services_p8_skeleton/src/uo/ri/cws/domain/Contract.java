@@ -20,8 +20,11 @@ import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
+//@Table(name = "tcontracts", uniqueConstraints = @UniqueConstraint(columnNames = {
+//		"mechanic_id", "professionalgroup_id", "contracttype_id" }))
+
 @Table(name = "tcontracts", uniqueConstraints = @UniqueConstraint(columnNames = {
-		"mechanic_id", "professionalgroup_id", "contracttype_id" }))
+		"mechanic_id", "firedmechanic_id", "startdate" }))
 public class Contract extends BaseEntity {
 
 	// Atributos naturales
@@ -43,7 +46,7 @@ public class Contract extends BaseEntity {
 	private ContractType contracttype;
 	@ManyToOne
 	private ProfessionalGroup professionalGroup;
-	@OneToMany(mappedBy = "")
+	@OneToMany(mappedBy = "contract")
 	private Set<Payroll> payrolls = new HashSet<>();
 	@ManyToOne
 	private Mechanic firedMechanic;
@@ -82,6 +85,9 @@ public class Contract extends BaseEntity {
 	}
 
 	public Optional<LocalDate> getEndDate() {
+		if (endDate == null) {
+			return Optional.empty();
+		}
 		return Optional.of(endDate);
 	}
 
@@ -98,6 +104,9 @@ public class Contract extends BaseEntity {
 	}
 
 	public Optional<Mechanic> getMechanic() {
+		if (mechanic == null) {
+			return Optional.empty();
+		}
 		return Optional.of(mechanic);
 	}
 

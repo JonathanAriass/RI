@@ -35,9 +35,30 @@ public class GeneratePayrolls implements Command<Void> {
 		}
 
 		System.out.println(repoContracts.findAll());
-		repoContracts.findAll().stream().forEach(contract -> {
+//		repoContracts.findAll().stream().forEach(contract -> {
+//			if (contract.getState() == ContractState.IN_FORCE
+//					|| (contract.getState() == ContractState.TERMINATED
+//							&& contract.getEndDate().isPresent()
+//							&& fechaPresente != null
+//							&& contract	.getEndDate()
+//										.get()
+//										.getMonthValue() >= fechaPresente.getMonthValue()
+//							&& contract	.getEndDate()
+//										.get()
+//										.getYear() == fechaPresente.getYear())) {
+//				// Comprobar que tiene payroll
+//				if (!hasPayroll(contract)) {
+//					Payroll p = new Payroll(contract);
+//					repoPayrolls.add(p);
+//				}
+//			}
+//		});
+
+		for (Contract contract : repoContracts.findAll()) {
 			if (contract.getState() == ContractState.IN_FORCE
 					|| (contract.getState() == ContractState.TERMINATED
+							&& contract.getEndDate().isPresent()
+							&& fechaPresente != null
 							&& contract	.getEndDate()
 										.get()
 										.getMonthValue() >= fechaPresente.getMonthValue()
@@ -46,11 +67,13 @@ public class GeneratePayrolls implements Command<Void> {
 										.getYear() == fechaPresente.getYear())) {
 				// Comprobar que tiene payroll
 				if (!hasPayroll(contract)) {
-					Payroll p = new Payroll(contract);
+					Payroll p = new Payroll(contract, fechaPresente);
+					System.out.println("ENTRA");
 					repoPayrolls.add(p);
+					System.out.println(contract.getPayrolls());
 				}
 			}
-		});
+		}
 
 		// TODO comprobar que funciona con los test
 //		repoContracts	.findAllForPayrolls(fechaPresente)
@@ -74,14 +97,19 @@ public class GeneratePayrolls implements Command<Void> {
 	private boolean hasPayroll(Contract contract) {
 		boolean aux = false;
 
-		for (Payroll payroll : repoPayrolls.findAll()) {
+//		for (Payroll payroll : repoPayrolls.findAll()) {
+//
+//			if (payroll.getContract().equals(contract)
+//					&& payroll	.getDate()
+//								.getMonthValue() == fechaPresente.getMonthValue()
+//					&& payroll.getDate().getYear() == fechaPresente.getYear()) {
+//				aux = true;
+//			}
+//		}
 
-			if (payroll.getContract().equals(contract)
-					&& payroll	.getDate()
-								.getMonthValue() == fechaPresente.getMonthValue()
-					&& payroll.getDate().getYear() == fechaPresente.getYear()) {
-				aux = true;
-			}
+		System.out.println(contract.getPayrolls().toString());
+		if (!contract.getPayrolls().isEmpty()) {
+			aux = true;
 		}
 
 		return aux;
