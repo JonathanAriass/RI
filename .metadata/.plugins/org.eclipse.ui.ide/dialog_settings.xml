@@ -7,11 +7,12 @@
 		<item key="WizardProjectsImportPage.STORE_NESTED_PROJECTS" value="false"/>
 		<item key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID" value="false"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\acceptance_tests.cws_extension1"/>
+			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\util"/>
+			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\cws_services_p8_skeleton"/>
 			<item value="C:\Users\byjon\OneDrive\Escritorio\uni\3o\1 cuatri\RI\JPA\WS\acceptance_tests.cws_extension1"/>
 			<item value="C:\Users\byjon\OneDrive\Escritorio\uni\3o\1 cuatri\RI\JPA\WS\cws_services_p8_skeleton"/>
 			<item value="C:\Users\byjon\OneDrive\Escritorio\uni\3o\1 cuatri\RI\JPA\WS\util"/>
-			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\util"/>
-			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\cws_services_p8_skeleton"/>
 			<item value="C:\Users\byjon\OneDrive\Escritorio\uni\3o\1 cuatri\RI\JPA\WS\cws_services_p7_skeleton"/>
 			<item value=""/>
 		</list>

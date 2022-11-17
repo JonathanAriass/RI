@@ -26,6 +26,29 @@
 		</query>
 	</named-query>
 	
+	<!-- Payroll queries -->
+	<named-query name="Payroll.getCurrentMonthPayrolls">
+        <query>
+            select p
+            from Payroll p
+            where EXTRACT(MONTH from p.date) = ?1 and EXTRACT(YEAR from p.date) = ?2
+        </query>
+    </named-query>
+	<named-query name="Payroll.getPayrollByMechanicId">
+        <query>
+            select p
+            from Payroll p
+            where p.contract.mechanic.id = ?1
+        </query>
+    </named-query>
+    <named-query name="Payroll.getPayrollByProfessionalGroup">
+        <query>
+            select p
+            from Payroll p
+            where p.contract.professionalGroup.name = ?1
+        </query>
+    </named-query>
+	
 	<!-- ProfessionalGroup queries -->
 	<named-query name="ProfessionalGroup.findByName">
 		<query>

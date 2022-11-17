@@ -24,7 +24,7 @@ import uo.ri.util.assertion.ArgumentChecks;
 //		"mechanic_id", "professionalgroup_id", "contracttype_id" }))
 
 @Table(name = "tcontracts", uniqueConstraints = @UniqueConstraint(columnNames = {
-		"mechanic_id", "firedmechanic_id", "startdate" }))
+		"mechanic_id", "firedmechanic_id", "startdate", "contracttype_id" }))
 public class Contract extends BaseEntity {
 
 	// Atributos naturales
