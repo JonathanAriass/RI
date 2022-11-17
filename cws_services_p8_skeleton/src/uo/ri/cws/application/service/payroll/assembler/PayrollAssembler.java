@@ -43,6 +43,17 @@ public class PayrollAssembler {
 		return result;
 	}
 
+	public static List<PayrollSummaryBLDto> toBLDtoSummaryList(
+			List<PayrollBLDto> payrolls) {
+		List<PayrollSummaryBLDto> aux = new ArrayList<PayrollSummaryBLDto>();
+
+		for (PayrollBLDto p : payrolls) {
+			aux.add(toBLDtoSummary(p));
+		}
+
+		return aux;
+	}
+
 	public static PayrollSummaryBLDto toBLDtoSummary(PayrollBLDto p) {
 		PayrollSummaryBLDto result = new PayrollSummaryBLDto();
 

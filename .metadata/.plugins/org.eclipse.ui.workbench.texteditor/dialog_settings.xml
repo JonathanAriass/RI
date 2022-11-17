@@ -8,14 +8,14 @@
 		<item key="wrap" value="true"/>
 		<item key="incremental" value="false"/>
 		<list key="findhistory">
+			<item value="net"/>
+			<item value="m"/>
+			<item value="payroll"/>
 			<item value="payr"/>
 			<item value="// TODO Auto-generated method stub"/>
 			<item value="update"/>
 			<item value="print"/>
 			<item value="createWorkOrders"/>
-			<item value="june"/>
-			<item value="work"/>
-			<item value="hire"/>
 		</list>
 		<list key="replacehistory">
 		</list>

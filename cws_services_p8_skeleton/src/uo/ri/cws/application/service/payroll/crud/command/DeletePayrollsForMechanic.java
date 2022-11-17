@@ -1,7 +1,5 @@
 package uo.ri.cws.application.service.payroll.crud.command;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import uo.ri.conf.Factory;
@@ -35,15 +33,8 @@ public class DeletePayrollsForMechanic implements Command<Void> {
 
 		check(m);
 
-		List<Payroll> payrolls = repoPayrolls.findPayrollsForMechanicId(
-				mechanicId);
-
-		for (Payroll p : payrolls) {
-			if (p.getDate().getMonthValue() == (LocalDate.now().getMonthValue())
-					&& p.getDate().getYear() == LocalDate.now().getYear()) {
-				System.out.println("ENTRA");
-				repoPayrolls.remove(p);
-			}
+		for (Payroll p : repoPayrolls.findPayrollsForMechanicId(mechanicId)) {
+			repoPayrolls.remove(p);
 		}
 
 		return null;
@@ -52,8 +43,6 @@ public class DeletePayrollsForMechanic implements Command<Void> {
 	private void check(Optional<Mechanic> m) throws BusinessException {
 		BusinessChecks.isNotNull(m, "Mechanic does not exist");
 		BusinessChecks.isTrue(m.isPresent(), "Mechanic is not present");
-//		BusinessChecks.isTrue(!m.get()._getContract().getPayrolls().isEmpty(),
-//				"Mechanic has no payrolls");
 
 	}
 

@@ -33,9 +33,4 @@ public class FindPayrollDetails implements Command<Optional<PayrollBLDto>> {
 				PayrollAssembler.toBLDto(repoPayrolls.findById(id).get()));
 	}
 
-//	private void check(Optional<Payroll> p) throws BusinessException {
-//		BusinessChecks.isNotNull(p, "Payroll does not exist");
-//		BusinessChecks.isTrue(p.isPresent(), "Payroll is not present");
-//	}
-
 }

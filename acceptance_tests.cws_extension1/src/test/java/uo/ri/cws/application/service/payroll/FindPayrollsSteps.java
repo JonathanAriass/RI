@@ -80,7 +80,6 @@ public class FindPayrollsSteps {
 				+ existentPayroll.productivityBonus
 				+ existentPayroll.trienniumPayment - existentPayroll.incomeTax
 				- existentPayroll.nic;
-		System.out.println(optionalPayroll.get().netWage + " | " + net);
 		assertTrue(Math.abs(
 				optionalPayroll.get().netWage - net) < Double.MIN_NORMAL);
 	}

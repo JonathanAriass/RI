@@ -12,12 +12,7 @@ public class DeleteAllLastMonthPayrolls implements Command<Void> {
 
 	@Override
 	public Void execute() throws BusinessException {
-//		for (Payroll p : repoPayrolls.findAll()) {
-//			if (p.getDate().getMonthValue() == (LocalDate.now().getMonthValue())
-//					&& p.getDate().getYear() == LocalDate.now().getYear()) {
-//				repoPayrolls.remove(p);
-//			}
-//		}
+
 		for (Payroll p : repoPayrolls.findCurrentMonthPayrolls()) {
 			repoPayrolls.remove(p);
 		}

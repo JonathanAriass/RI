@@ -29,28 +29,10 @@ public class FindAllPayrolls implements Command<List<PayrollSummaryBLDto>> {
 				repoPayrolls.findAll());
 
 		for (PayrollBLDto p : payrolls) {
-			aux.add(buildSummaryPayroll(p));
+			aux.add(PayrollAssembler.toBLDtoSummary(p));
 		}
 
 		return aux;
-	}
-
-	private PayrollSummaryBLDto buildSummaryPayroll(PayrollBLDto p) {
-		PayrollSummaryBLDto result = new PayrollSummaryBLDto();
-
-		result.id = p.id;
-		result.version = p.version;
-
-		result.date = p.date;
-
-		double earnings = p.monthlyWage + p.bonus + p.productivityBonus
-				+ p.trienniumPayment;
-		double deductions = p.incomeTax + p.nic;
-		double netWage = Math.round(earnings * 100.0) / 100.0
-				- Math.round(deductions * 100.0) / 100.0;
-		result.netWage = netWage;
-
-		return result;
 	}
 
 }

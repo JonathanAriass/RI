@@ -20,7 +20,6 @@ public class PayrollJpaRepository extends BaseJpaRepository<Payroll>
 		return null;
 	}
 
-//	Payroll.getCurrentMonthPayrolls
 	@Override
 	public List<Payroll> findCurrentMonthPayrolls() {
 		EntityManager em = Jpa.getManager();
@@ -37,8 +36,20 @@ public class PayrollJpaRepository extends BaseJpaRepository<Payroll>
 
 	@Override
 	public Optional<Payroll> findCurrentMonthByContractId(String contractId) {
-		// TODO Auto-generated method stub
-		return null;
+		EntityManager em = Jpa.getManager();
+		Payroll payroll = em.createNamedQuery("Payroll.getPayrollByContractId",
+				Payroll.class)
+							.setParameter(1, contractId)
+							.getResultStream()
+							.findFirst()
+							.orElse(null);
+		;
+
+		if (payroll == null) {
+			return Optional.empty();
+		}
+		return Optional.of(payroll);
+
 	}
 
 	@Override
@@ -48,6 +59,9 @@ public class PayrollJpaRepository extends BaseJpaRepository<Payroll>
 											"Payroll.getPayrollByMechanicId",
 											Payroll.class)
 									.setParameter(1, mechanicId)
+									.setParameter(2,
+											LocalDate.now().getMonthValue())
+									.setParameter(3, LocalDate.now().getYear())
 									.getResultList();
 
 		return payrolls;

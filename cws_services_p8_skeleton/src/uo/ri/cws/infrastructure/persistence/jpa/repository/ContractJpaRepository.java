@@ -39,23 +39,25 @@ public class ContractJpaRepository extends BaseJpaRepository<Contract>
 
 	@Override
 	public List<Contract> findAllInForceThisMonth(LocalDate present) {
-
 		return null;
 	}
 
 	@Override
 	public List<Contract> findAllForPayrolls(LocalDate present) {
 		EntityManager em = Jpa.getManager();
-//		List<Contract> contracts = em	.createNamedQuery(
-//												"Contract.findContractsForPayrolls",
-//												Contract.class)
-//										.setParameter(1, present)
-//										.getResultList();
-
 		List<Contract> contracts = em	.createNamedQuery(
 												"Contract.findContractsForPayrolls",
 												Contract.class)
+										.setParameter(1, present.getYear())
+										.setParameter(2,
+												present.getMonthValue())
+
 										.getResultList();
+
+//		List<Contract> contracts = em	.createNamedQuery(
+//												"Contract.findContractsForPayrolls",
+//												Contract.class)
+//										.getResultList();
 
 		return contracts;
 	}

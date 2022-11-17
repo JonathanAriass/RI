@@ -16,9 +16,6 @@ public class FindAllProfessionalGroups
 
 	@Override
 	public List<ProfessionalGroupBLDto> execute() throws BusinessException {
-//		List<ProfessionalGroupBLDto> dto = new ArrayList<>();
-//		dto = ProfessionalGroupAssembler.toListDto(repo.findAll());
-//		return dto;
 		return ProfessionalGroupAssembler.toListDto(repo.findAll());
 	}
 

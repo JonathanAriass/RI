@@ -38,7 +38,8 @@
         <query>
             select p
             from Payroll p
-            where p.contract.mechanic.id = ?1
+            where p.contract.mechanic.id = ?1 and EXTRACT(MONTH from p.date) = ?2
+             and EXTRACT(YEAR from p.date) = ?3
         </query>
     </named-query>
     <named-query name="Payroll.getPayrollByProfessionalGroup">
@@ -46,6 +47,13 @@
             select p
             from Payroll p
             where p.contract.professionalGroup.name = ?1
+        </query>
+    </named-query>
+	<named-query name="Payroll.getPayrollByContractId">
+        <query>
+            select p
+            from Payroll p
+            where p.contract.id = ?1
         </query>
     </named-query>
 	
@@ -59,24 +67,16 @@
 	</named-query>
 	
 	<!-- Contract queries -->
-	<!--<named-query name="Contract.findContractsForPayrolls">
+	<named-query name="Contract.findContractsForPayrolls">
 		<query>
 			select c 
 			from Contract c
 			where c.state = uo.ri.cws.domain.Contract.ContractState.IN_FORCE
 			or (c.state = uo.ri.cws.domain.Contract.ContractState.TERMINATED and 
-			YEAR(c.endDate) = YEAR(?1) and 
-			MONTH(c.endDate) >= MONTH(?1))
+			EXTRACT(YEAR from c.endDate) = ?1 and 
+			EXTRACT(MONTH from c.endDate) >= ?2)
 		</query>
-	</named-query>-->
-	<!--<named-query name="Contract.findContractsForPayrolls">
-		<query>
-			select c 
-			from Contract c
-			where c.state = uo.ri.cws.domain.Contract.ContractState.IN_FORCE
-			or (c.state = uo.ri.cws.domain.Contract.ContractState.TERMINATED)
-		</query>
-	</named-query>-->
+	</named-query>
 	
 	<!-- ContractType queries -->
 	<named-query name="ContractType.findByName">
