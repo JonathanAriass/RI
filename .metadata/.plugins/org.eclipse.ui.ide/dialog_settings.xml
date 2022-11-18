@@ -7,6 +7,10 @@
 		<item key="WizardProjectsImportPage.STORE_NESTED_PROJECTS" value="false"/>
 		<item key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID" value="false"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\cws_client_foreman"/>
+			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\cws_client_cashier"/>
+			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\cws_client_manager"/>
+			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\cws_client_mechanic"/>
 			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\acceptance_tests.cws_extension1"/>
 			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\util"/>
 			<item value="C:\Users\byjon\Desktop\UNI\3o\RI\Practica\JPA\WS\cws_services_p8_skeleton"/>

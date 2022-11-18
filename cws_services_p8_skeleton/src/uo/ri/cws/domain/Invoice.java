@@ -105,7 +105,8 @@ public class Invoice extends BaseEntity {
 	 */
 	public void addWorkOrder(WorkOrder workOrder) {
 		StateChecks.isTrue(InvoiceState.NOT_YET_PAID.equals(this.state));
-		StateChecks.isTrue(workOrder.getState() == WorkOrderState.FINISHED);
+		StateChecks.isTrue(workOrder.getState() == WorkOrderState.FINISHED,
+				"Invalid WorkOrder state");
 		Associations.ToInvoice.link(this, workOrder);
 		workOrder.markAsInvoiced();
 //		workOrders.add(workOrder);

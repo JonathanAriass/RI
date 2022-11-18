@@ -5,9 +5,9 @@ import java.util.Optional;
 import uo.ri.cws.application.repository.InvoiceRepository;
 import uo.ri.cws.domain.Invoice;
 import uo.ri.cws.infrastructure.persistence.jpa.util.BaseJpaRepository;
+import uo.ri.cws.infrastructure.persistence.jpa.util.Jpa;
 
-public class InvoiceJpaRepository 
-		extends BaseJpaRepository<Invoice>
+public class InvoiceJpaRepository extends BaseJpaRepository<Invoice>
 		implements InvoiceRepository {
 
 	@Override
@@ -18,8 +18,10 @@ public class InvoiceJpaRepository
 
 	@Override
 	public Long getNextInvoiceNumber() {
-		// TODO Auto-generated method stub
-		return null;
+		return Jpa	.getManager()
+					.createNamedQuery("Invoice.getNextInvoiceNumber",
+							Long.class)
+					.getSingleResult();
 	}
 
 }

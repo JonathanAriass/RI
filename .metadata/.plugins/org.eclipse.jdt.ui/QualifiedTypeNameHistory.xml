@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="uo.ri.cws.infrastructure.persistence.jpa.repository.JpaRepositoryFactory"/>
-    <fullyQualifiedTypeName name="uo.ri.cws.application.repository.MechanicRepository"/>
-    <fullyQualifiedTypeName name="com.sun.tools.classfile.Attribute.Factory"/>
-    <fullyQualifiedTypeName name="uo.ri.conf.Factory"/>
-    <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
-    <fullyQualifiedTypeName name="uo.ri.cws.domain.ContractType"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Associations"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Associations.Fire"/>
     <fullyQualifiedTypeName name="org.eclipse.persistence.jpa.jpql.parser.DateTime"/>
     <fullyQualifiedTypeName name="java.time.temporal.ChronoField"/>
     <fullyQualifiedTypeName name="java.time.temporal.ChronoUnit"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Associations.Run"/>
-    <fullyQualifiedTypeName name="uo.ri.cws.domain.WorkOrder.WorkOrderState"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.base.BaseEntity"/>
     <fullyQualifiedTypeName name="javax.persistence.Entity"/>
     <fullyQualifiedTypeName name="javax.persistence.Table"/>
@@ -29,7 +22,6 @@
     <fullyQualifiedTypeName name="javax.persistence.Enumerated"/>
     <fullyQualifiedTypeName name="javax.persistence.EnumType"/>
     <fullyQualifiedTypeName name="javax.persistence.Basic"/>
-    <fullyQualifiedTypeName name="uo.ri.cws.infrastructure.persistence.jpa.util.Jpa"/>
     <fullyQualifiedTypeName name="javax.persistence.EntityManager"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Associations.Hire"/>
     <fullyQualifiedTypeName name="java.lang.System"/>
@@ -47,17 +39,25 @@
     <fullyQualifiedTypeName name="uo.ri.util.assertion.ArgumentChecks"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.service.payroll.crud.command.FindAllPayrolls"/>
     <fullyQualifiedTypeName name="java.util.List"/>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.service.payroll.PayrollService.PayrollBLDto"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.service.payroll.crud.command.FindPayrollDetails"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.service.payroll.crud.command.FindPayrollsByProfessionalGroup"/>
-    <fullyQualifiedTypeName name="uo.ri.cws.application.util.BusinessChecks"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.service.payroll.crud.command.FindPayrollForMechanic"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.util.command.Command"/>
     <fullyQualifiedTypeName name="uo.ri.util.math.Round"/>
     <fullyQualifiedTypeName name="java.time.LocalDate"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.service.payroll.PayrollService.PayrollSummaryBLDto"/>
-    <fullyQualifiedTypeName name="java.util.Optional"/>
     <fullyQualifiedTypeName name="uo.ri.cws.domain.Payroll"/>
     <fullyQualifiedTypeName name="uo.ri.cws.application.service.payroll.assembler.PayrollAssembler"/>
+    <fullyQualifiedTypeName name="java.util.Optional"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.domain.WorkOrder"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.application.service.invoice.InvoicingService.InvoiceDto"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.domain.Invoice"/>
+    <fullyQualifiedTypeName name="javax.persistence.Query"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.infrastructure.persistence.jpa.repository.JpaRepositoryFactory"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.infrastructure.persistence.jpa.repository.InvoiceJpaRepository"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.infrastructure.persistence.jpa.util.Jpa"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.domain.WorkOrder.WorkOrderState"/>
+    <fullyQualifiedTypeName name="uo.ri.cws.application.util.BusinessChecks"/>
 </qualifiedTypeNameHistroy>
