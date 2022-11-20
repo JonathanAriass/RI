@@ -12,31 +12,31 @@ public class ClientJpaRepository extends BaseJpaRepository<Client>
 
 	@Override
 	public Optional<Client> findByDni(String dni) {
-		// TODO Auto-generated method stub
+
 		return Optional.empty();
 	}
 
 	@Override
 	public List<Client> findSponsoredByClient(String id) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public List<Client> findRecomendedBy(String id) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public List<Client> findWithThreeUnusedWorkOrders() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public List<Client> findWithRecomendationsDone() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

@@ -14,43 +14,43 @@ public class PaymentMeanJpaRepository extends BaseJpaRepository<PaymentMean>
 
 	@Override
 	public List<PaymentMean> findPaymentMeansByClientId(String id) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public List<PaymentMean> findPaymentMeansByInvoiceId(String idFactura) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public List<PaymentMean> findByClientId(String id) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public Object[] findAggregateVoucherDataByClientId(String id) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public Optional<CreditCard> findCreditCardByNumber(String pan) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public List<Voucher> findVouchersByClientId(String id) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public Optional<Voucher> findVoucherByCode(String code) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

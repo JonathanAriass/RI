@@ -15,9 +15,9 @@ public class Address {
 	}
 
 	public Address(String street, String city, String zipCode) {
-		ArgumentChecks.isNotEmpty( street );
-		ArgumentChecks.isNotEmpty( city );
-		ArgumentChecks.isNotEmpty( zipCode );
+		ArgumentChecks.isNotEmpty(street);
+		ArgumentChecks.isNotEmpty(city);
+		ArgumentChecks.isNotEmpty(zipCode);
 
 		this.street = street;
 		this.city = city;
@@ -75,10 +75,8 @@ public class Address {
 
 	@Override
 	public String toString() {
-		return "Address [street=" + street
-				+ ", city=" + city
-				+ ", zipCode=" + zipCode
-				+ "]";
+		return "Address [street=" + street + ", city=" + city + ", zipCode="
+				+ zipCode + "]";
 	}
 
 }

@@ -53,7 +53,6 @@ public class Payroll extends BaseEntity {
 	public Payroll(Contract contract2, LocalDate d, double monthlyWage2,
 			double extra, double productivity, double trienniums, double tax,
 			double nic2) {
-		// TODO validaciones
 		ArgumentChecks.isNotNull(d, "PAYROLL: invalid date.");
 		ArgumentChecks.isNotNull(contract2, "PAYROLL: invalid contract.");
 
@@ -64,7 +63,6 @@ public class Payroll extends BaseEntity {
 		this.productivityBonus = productivity;
 		this.trienniumPayment = trienniums;
 		this.date = d;
-//		this.contract = contract2;
 
 		Associations.Run.link(this, contract2);
 	}
@@ -81,8 +79,6 @@ public class Payroll extends BaseEntity {
 
 		// PARA EL PRODUCTIVITYWAGE
 		double auxWorkorders = 0;
-
-		System.out.println(contract.getMechanic().toString());
 
 		if (contract.getMechanic().isPresent()) {
 			for (WorkOrder w : contract.getMechanic().get().getAssigned()) {
@@ -112,11 +108,10 @@ public class Payroll extends BaseEntity {
 
 		// PARA EL TRIENNIUM
 		int trienniumAcumulatted = 0;
-//		if (contract.getState() == ContractState.IN_FORCE) {
+
 		trienniumAcumulatted = date.getYear()
 				- contract.getStartDate().getYear();
 
-//		}
 		double triennium_payment = contract	.getProfessionalGroup()
 											.getTrienniumPayment();
 
@@ -157,10 +152,6 @@ public class Payroll extends BaseEntity {
 	}
 
 	public double getBonus() {
-//		if (date.getMonth().getValue() == 12 || date.getMonth().getValue() == 6) {
-//			return monthlyWage;
-//		}
-//		return 0;
 		return bonus;
 	}
 

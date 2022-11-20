@@ -51,13 +51,7 @@ public class ContractJpaRepository extends BaseJpaRepository<Contract>
 										.setParameter(1, present.getYear())
 										.setParameter(2,
 												present.getMonthValue())
-
 										.getResultList();
-
-//		List<Contract> contracts = em	.createNamedQuery(
-//												"Contract.findContractsForPayrolls",
-//												Contract.class)
-//										.getResultList();
 
 		return contracts;
 	}

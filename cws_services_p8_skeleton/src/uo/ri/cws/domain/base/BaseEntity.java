@@ -14,7 +14,8 @@ public abstract class BaseEntity {
 	@Column(length = 36)
 	private String id = UUID.randomUUID().toString();
 
-	@Version private long version;
+	@Version
+	private long version;
 
 	public BaseEntity() {
 		super();

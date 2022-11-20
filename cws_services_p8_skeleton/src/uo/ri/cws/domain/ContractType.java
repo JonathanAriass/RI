@@ -13,25 +13,27 @@ import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
-@Table(name="tcontracttypes")
+@Table(name = "tcontracttypes")
 public class ContractType extends BaseEntity {
 
-	@Basic(optional=false) private String name;
+	@Basic(optional = false)
+	private String name;
 	private double compensationDays;
-	
-	@OneToMany(mappedBy="contracttype") private Set<Contract> contracts = new HashSet<>();
-	
-	ContractType() {}
-	
+
+	@OneToMany(mappedBy = "contracttype")
+	private Set<Contract> contracts = new HashSet<>();
+
+	ContractType() {
+	}
+
 	public ContractType(String string, double d) {
 		ArgumentChecks.isNotBlank(string, "CONTRACTTYPE: invalid name");
 		ArgumentChecks.isNotNull(string, "CONTRACTTYPE: invalid name");
 		ArgumentChecks.isTrue(d > 0, "CONTRACTTYPE: invalid compensation days");
-		
+
 		this.name = string;
 		this.compensationDays = d;
 	}
-	
 
 	public String getName() {
 		return name;
@@ -41,18 +43,16 @@ public class ContractType extends BaseEntity {
 		return compensationDays;
 	}
 
-	
 	@Override
 	public String toString() {
-		return "ContractType [name=" + name + ", compensationDays=" + compensationDays + "]";
+		return "ContractType [name=" + name + ", compensationDays="
+				+ compensationDays + "]";
 	}
-
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(name);
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -66,11 +66,9 @@ public class ContractType extends BaseEntity {
 		return Objects.equals(name, other.name);
 	}
 
-
 	public Set<Contract> getContracts() {
 		return new HashSet<>(contracts);
 	}
-
 
 	Set<Contract> _getContracts() {
 		return contracts;

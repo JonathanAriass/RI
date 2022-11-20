@@ -22,7 +22,7 @@
             <property name="eclipselink.logging.parameters" value="true" />
 			<property name="eclipselink.logging.file" value="eclipselink.log"/>
 						
- 			<property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:hsql://localhost:1522/" />
+ 			<property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:hsql://localhost/" />
 <!-- 
 			<property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
 -->

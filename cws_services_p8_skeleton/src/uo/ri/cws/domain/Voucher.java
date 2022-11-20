@@ -11,14 +11,17 @@ import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
 @Entity
-@Table(name="tvouchers")
+@Table(name = "tvouchers")
 public class Voucher extends PaymentMean {
-	@Column(unique=true) @Basic(optional=false) private String code;
+	@Column(unique = true)
+	@Basic(optional = false)
+	private String code;
 	private double available = 0.0;
 	private String description;
 
-	Voucher() {}
-	
+	Voucher() {
+	}
+
 	public Voucher(String codigo, double d) {
 		// validaciones de parametros
 		this(codigo, "no-description", d);
@@ -31,8 +34,7 @@ public class Voucher extends PaymentMean {
 		ArgumentChecks.isNotEmpty(descrip, "VOUCHER: invalid description");
 		ArgumentChecks.isNotNull(descrip, "VOUCHER: invalid description");
 		ArgumentChecks.isTrue(d >= 0);
-		
-		
+
 		this.code = codigo;
 		this.description = descrip;
 		this.available = d;
@@ -50,12 +52,10 @@ public class Voucher extends PaymentMean {
 		return description;
 	}
 
-	
-
 	@Override
 	public String toString() {
-		return "Voucher [code=" + code + ", available=" + available +
-				", description=" + description + "]";
+		return "Voucher [code=" + code + ", available=" + available
+				+ ", description=" + description + "]";
 	}
 
 	@Override
@@ -79,7 +79,9 @@ public class Voucher extends PaymentMean {
 	}
 
 	/**
-	 * Augments the accumulated (super.pay(amount) ) and decrements the available
+	 * Augments the accumulated (super.pay(amount) ) and decrements the
+	 * available
+	 * 
 	 * @throws IllegalStateException if not enough available to pay
 	 */
 	@Override

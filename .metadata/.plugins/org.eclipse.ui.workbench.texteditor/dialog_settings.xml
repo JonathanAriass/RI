@@ -4,18 +4,18 @@
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="checkWorkOrdersFinished"/>
+		<item key="selection" value="print"/>
 		<item key="wrap" value="true"/>
 		<item key="incremental" value="false"/>
 		<list key="findhistory">
+			<item value="print"/>
+			<item value="// TODO Auto-generated method stub"/>
 			<item value="checkWorkOrdersFinished"/>
 			<item value="na"/>
 			<item value="net"/>
 			<item value="m"/>
 			<item value="payroll"/>
 			<item value="payr"/>
-			<item value="// TODO Auto-generated method stub"/>
-			<item value="update"/>
 		</list>
 		<list key="replacehistory">
 		</list>

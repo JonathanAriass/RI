@@ -20,13 +20,13 @@ public class WorkOrderJpaRepository extends BaseJpaRepository<WorkOrder>
 
 	@Override
 	public List<WorkOrder> findNotInvoicedWorkOrdersByClientDni(String dni) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public List<WorkOrder> findByMechanic(String mechanic_id) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

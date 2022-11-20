@@ -10,15 +10,14 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
-@Table(name="tinterventions", 
-uniqueConstraints=@UniqueConstraint(columnNames = {"workOrder_id", "mechanic_id"}))
+@Table(name = "tinterventions", uniqueConstraints = @UniqueConstraint(columnNames = {
+		"workOrder_id", "mechanic_id" }))
 
 public class Intervention extends BaseEntity {
 	// natural attributes
@@ -26,25 +25,31 @@ public class Intervention extends BaseEntity {
 	private int minutes;
 
 	// accidental attributes
-	@ManyToOne private WorkOrder workOrder;
-	@ManyToOne private Mechanic mechanic;
-	@OneToMany(mappedBy="intervention") private Set<Substitution> substitutions = new HashSet<>();
+	@ManyToOne
+	private WorkOrder workOrder;
+	@ManyToOne
+	private Mechanic mechanic;
+	@OneToMany(mappedBy = "intervention")
+	private Set<Substitution> substitutions = new HashSet<>();
 
-	Intervention() {}
-	
-	public Intervention(Mechanic m, WorkOrder wo, int i) {
-		this (m, wo, LocalDateTime.now(), i);
+	Intervention() {
 	}
 
-	public Intervention(Mechanic mechanic2, WorkOrder workOrder2, LocalDateTime date2, int i) {
+	public Intervention(Mechanic m, WorkOrder wo, int i) {
+		this(m, wo, LocalDateTime.now(), i);
+	}
+
+	public Intervention(Mechanic mechanic2, WorkOrder workOrder2,
+			LocalDateTime date2, int i) {
 		ArgumentChecks.isTrue(i >= 0, "INTERVENTIONS: invalid minutes");
 		ArgumentChecks.isNotNull(mechanic2, "INTERVENTIONS: mechanic invalid");
-		ArgumentChecks.isNotNull(workOrder2, "INTERVENTIONS: workorder invalid");
+		ArgumentChecks.isNotNull(workOrder2,
+				"INTERVENTIONS: workorder invalid");
 		ArgumentChecks.isNotNull(date2, "INTERVENTIONS: date invalid");
-		
+
 		this.minutes = i;
 		this.date = date2.truncatedTo(ChronoUnit.MILLIS);
-		
+
 		Associations.Intervene.link(workOrder2, this, mechanic2);
 	}
 
@@ -59,7 +64,7 @@ public class Intervention extends BaseEntity {
 	void _setWorkOrder(WorkOrder workOrder) {
 		this.workOrder = workOrder;
 	}
-	
+
 	public WorkOrder getWorkOrder() {
 		return this.workOrder;
 	}
@@ -73,13 +78,13 @@ public class Intervention extends BaseEntity {
 	}
 
 	public Set<Substitution> getSubstitutions() {
-		return new HashSet<>( substitutions );
+		return new HashSet<>(substitutions);
 	}
 
 	Set<Substitution> _getSubstitutions() {
 		return substitutions;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(date, mechanic, workOrder);
@@ -94,10 +99,11 @@ public class Intervention extends BaseEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		Intervention other = (Intervention) obj;
-		return Objects.equals(date, other.date) && Objects.equals(mechanic, other.mechanic)
+		return Objects.equals(date, other.date)
+				&& Objects.equals(mechanic, other.mechanic)
 				&& Objects.equals(workOrder, other.workOrder);
 	}
-	
+
 	public double getAmount() {
 		double a = 0;
 		for (Substitution s : substitutions) {
@@ -111,8 +117,8 @@ public class Intervention extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return "Intervention [date=" + date + ", minutes=" + minutes + ", workOrder=" + workOrder + ", mechanic="
-				+ mechanic + "]";
+		return "Intervention [date=" + date + ", minutes=" + minutes
+				+ ", workOrder=" + workOrder + ", mechanic=" + mechanic + "]";
 	}
 
 }

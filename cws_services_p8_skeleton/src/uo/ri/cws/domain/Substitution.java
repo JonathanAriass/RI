@@ -11,29 +11,28 @@ import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
-@Table(name="tsubstitutions",
-uniqueConstraints=@UniqueConstraint(columnNames = {"sparePart_id", "intervention_id"}))
+@Table(name = "tsubstitutions", uniqueConstraints = @UniqueConstraint(columnNames = {
+		"sparePart_id", "intervention_id" }))
 public class Substitution extends BaseEntity {
 	// natural attributes
 	private int quantity;
 
 	// accidental attributes
-//	@ManyToOne(optional=false) private SparePart sparePart;
-//	@ManyToOne(optional=false) private Intervention intervention;
-	@ManyToOne private SparePart sparePart;
-	@ManyToOne private Intervention intervention;
+	@ManyToOne
+	private SparePart sparePart;
+	@ManyToOne
+	private Intervention intervention;
 
-	Substitution() {}
+	Substitution() {
+	}
 
 	public Substitution(SparePart r, Intervention interv, int i) {
 		// validar parametros
 		ArgumentChecks.isNotNull(r);
 		ArgumentChecks.isNotNull(interv);
 		ArgumentChecks.isTrue(i > 0);
-		
+
 		this.quantity = i;
-//		this.intervention = interv;
-//		this.sparePart = r;
 		Associations.Substitute.link(r, this, interv);
 	}
 
@@ -78,8 +77,8 @@ public class Substitution extends BaseEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		Substitution other = (Substitution) obj;
-		return Objects.equals(intervention, other.intervention) && Objects.equals(sparePart, other.sparePart);
+		return Objects.equals(intervention, other.intervention)
+				&& Objects.equals(sparePart, other.sparePart);
 	}
-
 
 }

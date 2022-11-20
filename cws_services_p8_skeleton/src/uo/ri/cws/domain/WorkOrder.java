@@ -1,10 +1,6 @@
 package uo.ri.cws.domain;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Objects;
@@ -18,7 +14,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import uo.ri.cws.domain.base.BaseEntity;
@@ -26,72 +21,76 @@ import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
 @Entity
-@Table(name="tworkorders", 
-uniqueConstraints=@UniqueConstraint(columnNames = {"date", "vehicle_id"}))
+@Table(name = "tworkorders", uniqueConstraints = @UniqueConstraint(columnNames = {
+		"date", "vehicle_id" }))
 public class WorkOrder extends BaseEntity {
 
 	public enum WorkOrderState {
-		OPEN,
-		ASSIGNED,
-		FINISHED,
-		INVOICED
+		OPEN, ASSIGNED, FINISHED, INVOICED
 	}
 
 	// natural attributes
-	@Basic(optional=false) private LocalDateTime date;
+	@Basic(optional = false)
+	private LocalDateTime date;
 	private String description;
 
 	private double amount = 0.0;
-	
-	@Column(name="status") @Enumerated(EnumType.STRING)
+
+	@Column(name = "status")
+	@Enumerated(EnumType.STRING)
 	private WorkOrderState state = WorkOrderState.OPEN;
 
 	// accidental attributes
-	@ManyToOne private Vehicle vehicle;
-	@ManyToOne private Mechanic mechanic;
-	@ManyToOne private Invoice invoice;
-	@OneToMany(mappedBy="workOrder") private Set<Intervention> interventions = new HashSet<>();
+	@ManyToOne
+	private Vehicle vehicle;
+	@ManyToOne
+	private Mechanic mechanic;
+	@ManyToOne
+	private Invoice invoice;
+	@OneToMany(mappedBy = "workOrder")
+	private Set<Intervention> interventions = new HashSet<>();
 
-	WorkOrder() {}
-	
+	WorkOrder() {
+	}
+
 	public WorkOrder(Vehicle vehicle) {
 		this(vehicle, LocalDateTime.now(), "");
 	}
 
 	public WorkOrder(Vehicle v, String descr) {
-	
+
 		this(v, LocalDateTime.now(), descr);
 	}
-	
+
 	public WorkOrder(Vehicle v, LocalDateTime atStartOfDay) {
 		ArgumentChecks.isNotNull(v, "TWORKORDERS: invalid vehicle.");
 		ArgumentChecks.isNotNull(atStartOfDay, "TWORKORDERS: invalid date.");
-		
+
 		this.vehicle = v;
 		this.date = atStartOfDay.truncatedTo(ChronoUnit.MILLIS);
 		Associations.Fix.link(vehicle, this);
 	}
-	
+
 	public WorkOrder(Vehicle vehicle, LocalDateTime now, String descr) {
 		ArgumentChecks.isNotNull(vehicle, "TWORKORDERS: invalid vehicle.");
 		ArgumentChecks.isNotNull(now, "TWORKORDERS: invalid date.");
-		ArgumentChecks.isNotNull(descr, "TWORKORDERS: invalid description.");		
+		ArgumentChecks.isNotNull(descr, "TWORKORDERS: invalid description.");
 
 		this.vehicle = vehicle;
 		this.date = now.truncatedTo(ChronoUnit.MILLIS);
 		this.description = descr;
-		
+
 		Associations.Fix.link(vehicle, this);
 	}
 
-
 	/**
-	 * Changes it to INVOICED state given the right conditions
-	 * This method is called from Invoice.addWorkOrder(...)
+	 * Changes it to INVOICED state given the right conditions This method is
+	 * called from Invoice.addWorkOrder(...)
+	 * 
 	 * @see UML_State diagrams on the problem statement document
-	 * @throws IllegalStateException if
-	 * 	- The work order is not FINISHED, or
-	 *  - The work order is not linked with the invoice
+	 * @throws IllegalStateException if - The work order is not FINISHED, or -
+	 *                               The work order is not linked with the
+	 *                               invoice
 	 */
 	public void markAsInvoiced() {
 		StateChecks.isTrue(state != WorkOrderState.ASSIGNED);
@@ -100,13 +99,13 @@ public class WorkOrder extends BaseEntity {
 	}
 
 	/**
-	 * Changes it to FINISHED state given the right conditions and
-	 * computes the amount
+	 * Changes it to FINISHED state given the right conditions and computes the
+	 * amount
 	 *
 	 * @see UML_State diagrams on the problem statement document
-	 * @throws IllegalStateException if
-	 * 	- The work order is not in ASSIGNED state, or
-	 *  - The work order is not linked with a mechanic
+	 * @throws IllegalStateException if - The work order is not in ASSIGNED
+	 *                               state, or - The work order is not linked
+	 *                               with a mechanic
 	 */
 	public void markAsFinished() {
 		StateChecks.isTrue(state == WorkOrderState.ASSIGNED);
@@ -117,21 +116,22 @@ public class WorkOrder extends BaseEntity {
 
 	private void computeAmount() {
 		double total = 0;
-		
+
 		for (Intervention i : interventions) {
 			total += i.getAmount();
 		}
-		
+
 		this.amount = total;
 	}
 
 	/**
-	 * Changes it back to FINISHED state given the right conditions
-	 * This method is called from Invoice.removeWorkOrder(...)
+	 * Changes it back to FINISHED state given the right conditions This method
+	 * is called from Invoice.removeWorkOrder(...)
+	 * 
 	 * @see UML_State diagrams on the problem statement document
-	 * @throws IllegalStateException if
-	 * 	- The work order is not INVOICED, or
-	 *  - The work order is still linked with the invoice
+	 * @throws IllegalStateException if - The work order is not INVOICED, or -
+	 *                               The work order is still linked with the
+	 *                               invoice
 	 */
 	public void markBackToFinished() {
 		StateChecks.isTrue(state == WorkOrderState.INVOICED);
@@ -143,10 +143,11 @@ public class WorkOrder extends BaseEntity {
 	/**
 	 * Links (assigns) the work order to a mechanic and then changes its state
 	 * to ASSIGNED
+	 * 
 	 * @see UML_State diagrams on the problem statement document
-	 * @throws IllegalStateException if
-	 * 	- The work order is not in OPEN state, or
-	 *  - The work order is already linked with another mechanic
+	 * @throws IllegalStateException if - The work order is not in OPEN state,
+	 *                               or - The work order is already linked with
+	 *                               another mechanic
 	 */
 	public void assignTo(Mechanic mechanic) {
 		StateChecks.isTrue(WorkOrderState.OPEN == state);
@@ -156,22 +157,24 @@ public class WorkOrder extends BaseEntity {
 	}
 
 	/**
-	 * Unlinks (deassigns) the work order and the mechanic and then changes
-	 * its state back to OPEN
+	 * Unlinks (deassigns) the work order and the mechanic and then changes its
+	 * state back to OPEN
+	 * 
 	 * @see UML_State diagrams on the problem statement document
-	 * @throws IllegalStateException if
-	 * 	- The work order is not in ASSIGNED state
+	 * @throws IllegalStateException if - The work order is not in ASSIGNED
+	 *                               state
 	 */
 	public void desassign() {
 		Associations.Assign.unlink(mechanic, this);
 	}
 
 	/**
-	 * In order to assign a work order to another mechanic is first have to
-	 * be moved back to OPEN state and unlinked from the previous mechanic.
+	 * In order to assign a work order to another mechanic is first have to be
+	 * moved back to OPEN state and unlinked from the previous mechanic.
+	 * 
 	 * @see UML_State diagrams on the problem statement document
-	 * @throws IllegalStateException if
-	 * 	- The work order is not in FINISHED state
+	 * @throws IllegalStateException if - The work order is not in FINISHED
+	 *                               state
 	 */
 	public void reopen() {
 		StateChecks.isTrue(state == WorkOrderState.FINISHED,
@@ -181,7 +184,7 @@ public class WorkOrder extends BaseEntity {
 	}
 
 	public Set<Intervention> getInterventions() {
-		return new HashSet<>( interventions );
+		return new HashSet<>(interventions);
 	}
 
 	Set<Intervention> _getInterventions() {
@@ -223,7 +226,7 @@ public class WorkOrder extends BaseEntity {
 	public Vehicle getVehicle() {
 		return vehicle;
 	}
-	
+
 	public LocalDateTime getDate() {
 		return date;
 	}
@@ -235,7 +238,7 @@ public class WorkOrder extends BaseEntity {
 	public WorkOrderState getState() {
 		return state;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(date, vehicle);
@@ -250,13 +253,15 @@ public class WorkOrder extends BaseEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		WorkOrder other = (WorkOrder) obj;
-		return Objects.equals(date, other.date) && Objects.equals(vehicle, other.vehicle);
+		return Objects.equals(date, other.date)
+				&& Objects.equals(vehicle, other.vehicle);
 	}
 
 	@Override
 	public String toString() {
-		return "WorkOrder [date=" + date + ", description=" + description + ", amount=" + amount + ", state=" + state
-				+ ", vehicle=" + vehicle + "]";
+		return "WorkOrder [date=" + date + ", description=" + description
+				+ ", amount=" + amount + ", state=" + state + ", vehicle="
+				+ vehicle + "]";
 	}
 
 	public void setStatusForTesting(WorkOrderState invoiced) {

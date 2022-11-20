@@ -9,34 +9,36 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
-@Table(name="tspareparts")
+@Table(name = "tspareparts")
 public class SparePart extends BaseEntity {
 	// natural attributes
-	@Column(unique=true)@Basic(optional=false) private String code;
+	@Column(unique = true)
+	@Basic(optional = false)
+	private String code;
 	private String description;
 	private double price;
 
 	// accidental attributes
-	@OneToMany(mappedBy="sparePart") private Set<Substitution> substitutions = new HashSet<>();
+	@OneToMany(mappedBy = "sparePart")
+	private Set<Substitution> substitutions = new HashSet<>();
 
-	SparePart() {}
-	
+	SparePart() {
+	}
+
 	public SparePart(String codigo, String descripcion, double precio) {
-		//Validacion
+		// Validacion
 		ArgumentChecks.isNotBlank(codigo, "SPAREPART: invalid code");
 		ArgumentChecks.isNotEmpty(codigo, "SPAREPART: invalid code");
-		
+
 		this.code = codigo;
 		this.description = descripcion;
 		this.price = precio;
 	}
-
 
 	public SparePart(String code2) {
 		this(code2, "", 0.0);
@@ -46,22 +48,18 @@ public class SparePart extends BaseEntity {
 		return code;
 	}
 
-
 	public String getDescription() {
 		return description;
 	}
-
 
 	public double getPrice() {
 		return price;
 	}
 
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(code);
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -75,15 +73,14 @@ public class SparePart extends BaseEntity {
 		return Objects.equals(code, other.code);
 	}
 
-
 	@Override
 	public String toString() {
-		return "SparePart [code=" + code + ", description=" + description + ", price=" + price + "]";
+		return "SparePart [code=" + code + ", description=" + description
+				+ ", price=" + price + "]";
 	}
 
-
 	public Set<Substitution> getSubstitutions() {
-		return new HashSet<>( substitutions );
+		return new HashSet<>(substitutions);
 	}
 
 	Set<Substitution> _getSubstitutions() {

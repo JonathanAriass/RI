@@ -10,24 +10,24 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import uo.ri.cws.domain.base.BaseEntity;
 
 @Entity
-@Table(name="tpaymentmeans")
-@Inheritance(strategy=InheritanceType.JOINED)
+@Table(name = "tpaymentmeans")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class PaymentMean extends BaseEntity {
 	// natural attributes
 	private double accumulated = 0.0;
 
 	// accidental attributes
-	@ManyToOne private Client client;
-	@OneToMany(mappedBy="paymentMean") private Set<Charge> charges = new HashSet<>();
+	@ManyToOne
+	private Client client;
+	@OneToMany(mappedBy = "paymentMean")
+	private Set<Charge> charges = new HashSet<>();
 
-
-	PaymentMean() {}
-
+	PaymentMean() {
+	}
 
 	public void pay(double importe) {
 		this.accumulated += importe;
@@ -38,13 +38,13 @@ public abstract class PaymentMean extends BaseEntity {
 	}
 
 	public Set<Charge> getCharges() {
-		return new HashSet<>( charges );
+		return new HashSet<>(charges);
 	}
 
 	Set<Charge> _getCharges() {
 		return charges;
 	}
-	
+
 	public double getAccumulated() {
 		return accumulated;
 	}
@@ -52,7 +52,6 @@ public abstract class PaymentMean extends BaseEntity {
 	public Client getClient() {
 		return client;
 	}
-	
 
 	@Override
 	public int hashCode() {
@@ -71,12 +70,10 @@ public abstract class PaymentMean extends BaseEntity {
 		return Objects.equals(client, other.client);
 	}
 
-
 	@Override
 	public String toString() {
-		return "PaymentMean [accumulated=" + accumulated + ", client=" + client + "]";
+		return "PaymentMean [accumulated=" + accumulated + ", client=" + client
+				+ "]";
 	}
-	
-	
 
 }

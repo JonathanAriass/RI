@@ -16,7 +16,7 @@ public class PayrollJpaRepository extends BaseJpaRepository<Payroll>
 
 	@Override
 	public List<Payroll> findByContract(String contractId) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

@@ -6,7 +6,7 @@ public class PersistenceXmlScanner {
 		ConnectionData res = new ConnectionData();
 		res.driver = "org.hsqldb.jdbcDriver";
 		res.pass = "";
-		res.url = "jdbc:hsqldb:hsql://localhost:1522/";
+		res.url = "jdbc:hsqldb:hsql://localhost/";
 		res.user = "sa";
 		return res;
 

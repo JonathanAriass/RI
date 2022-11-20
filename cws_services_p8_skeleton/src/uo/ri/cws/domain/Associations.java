@@ -165,9 +165,7 @@ public class Associations {
 
 		public static void unlink(Contract contract, Mechanic mechanic) {
 			mechanic._setContract(null);
-			contract._setMechanic(null); // TODO: no me gusta mucho
-											// que no se tenga que
-											// eliminar el contrato
+			contract._setMechanic(null);
 		}
 
 	}
@@ -183,8 +181,7 @@ public class Associations {
 		}
 
 		public static void unlink(Contract contract) {
-//			contract.getMechanic().get()._getTerminatedContracts().remove(contract);
-//			contract.setFiredMechanic(null);
+
 		}
 
 	}

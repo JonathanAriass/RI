@@ -9,58 +9,55 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity
-@Table(name="tvehicletypes", 
-uniqueConstraints=@UniqueConstraint(columnNames = {"name"}))
+@Table(name = "tvehicletypes", uniqueConstraints = @UniqueConstraint(columnNames = {
+		"name" }))
 
 public class VehicleType extends BaseEntity {
 	// natural attributes
-	@Column(unique=true) @Basic(optional=false) private String name;
+	@Column(unique = true)
+	@Basic(optional = false)
+	private String name;
 	private double pricePerHour;
 
 	// accidental attributes
-	@OneToMany(mappedBy="vehicletype") private Set<Vehicle> vehicles = new HashSet<>();
+	@OneToMany(mappedBy = "vehicletype")
+	private Set<Vehicle> vehicles = new HashSet<>();
 
-	VehicleType() {}
-	
+	VehicleType() {
+	}
+
 	public VehicleType(String name2) {
 		this(name2, 0.0);
 	}
-	
+
 	public VehicleType(String nombre, double precio) {
 		// validar argumentos
 		ArgumentChecks.isNotBlank(nombre, "VEHICLE_TYPE: invalid name");
 		ArgumentChecks.isNotEmpty(nombre, "VEHICLE_TYPE: invalid name");
 		ArgumentChecks.isTrue(precio >= 0.0);
-//		ArgumentChecks.isNotBlank(precio, "VEHICLE_TYPE: invalid price");
-//		ArgumentChecks.isNotEmpty(precio, "VEHICLE_TYPE: invalid price");
-		
+
 		this.name = nombre;
 		this.pricePerHour = precio;
 	}
-
 
 	public String getName() {
 		return name;
 	}
 
-
 	public double getPricePerHour() {
 		return pricePerHour;
 	}
-
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(name);
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -74,15 +71,14 @@ public class VehicleType extends BaseEntity {
 		return Objects.equals(name, other.name);
 	}
 
-
 	@Override
 	public String toString() {
-		return "VehicleType [name=" + name + ", pricePerHour=" + pricePerHour + "]";
+		return "VehicleType [name=" + name + ", pricePerHour=" + pricePerHour
+				+ "]";
 	}
 
-
 	public Set<Vehicle> getVehicles() {
-		return new HashSet<>( vehicles );
+		return new HashSet<>(vehicles);
 	}
 
 	Set<Vehicle> _getVehicles() {

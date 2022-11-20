@@ -109,7 +109,6 @@ public class Invoice extends BaseEntity {
 				"Invalid WorkOrder state");
 		Associations.ToInvoice.link(this, workOrder);
 		workOrder.markAsInvoiced();
-//		workOrders.add(workOrder);
 		computeAmount();
 	}
 
